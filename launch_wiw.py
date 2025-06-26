@@ -1,9 +1,25 @@
 import dash
+import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
-from dash import Input, Output
+from dash import Input, Output, State
 from dash import html, dcc
+from dash_bootstrap_templates import ThemeSwitchAIO
 
 dcc.Store(id="graph-store")
+
+# todo read input tree file
+# todo use pyccd package to compute wiw from posterior, ccd
+# todo option to add a true tree, copy paste input
+# todo dark and light mode cytoscope background is wrong....
+
+template_theme1 = "morph"
+template_theme2 = "slate"
+url_theme1 = dbc.themes.MORPH
+url_theme2 = dbc.themes.SLATE
+
+dbc_css = (
+    "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.1/dbc.min.css"
+)
 
 
 def build_graph(scale_factor=1):
@@ -31,76 +47,97 @@ def build_graph(scale_factor=1):
     return nodes, edges
 
 
-app = dash.Dash(__name__)
-app.layout = html.Div([
-    dcc.Store(id="graph-store"),  # <-- moved inside layout
-    dcc.Checklist(
-        id="darkmode-toggle",
-        options=[{"label": "Dark mode", "value": "dark"}],
-        value=[],  # or ["dark"] if you want it on by default
-        inline=True,
-        style={"margin-bottom": "10px"}
-    ),
+app = dash.Dash(__name__, external_stylesheets=[url_theme1, dbc_css])
 
-    dcc.Dropdown(
-        id="label-filter",
-        options=[{"label": "set1", "value": "set1"}, {"label": "set2", "value": "set2"}],
-        value=["set1", "set2"],
-        multi=True
-    ),
-    dcc.Dropdown(
-        id="layout-selector",
-        options=[
-            {"label": "Cose (Spring)", "value": "cose"},
-            {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
-            {"label": "Grid", "value": "grid"},
-            {"label": "Circle", "value": "circle"},
-        ],
-        value="cose",
-        clearable=False,
-        style={"width": "200px", "margin-bottom": "10px"}
-    ),
-    dcc.Checklist(  # <-- moved inside layout
-        id="scale-width-toggle",
-        options=[{"label": "Scale edge width by weight", "value": "scale"}],
-        value=["scale"],  # checked by default
-        inline=True,
-        style={"margin-bottom": "10px"}
-    ),
-    dcc.Dropdown(
-        id="edge-annotation-selector",
-        options=[
-            {"label": "None", "value": "none"},
-            {"label": "Label", "value": "label"},
-            {"label": "Weight", "value": "weight"},
-        ],
-        value="label",
-        clearable=False,
-        style={"width": "250px", "margin-bottom": "10px"},
-    ),
-    dcc.Dropdown(
-        id="edge-label-position",
-        options=[
-            {"label": "Centered", "value": "center"},
-            {"label": "Above Edge", "value": "above"},
-            {"label": "Below Edge", "value": "below"},
-            {"label": "Follow Edge", "value": "autorotate"},
-        ],
-        value="center",
-        clearable=False,
-        style={"width": "250px", "margin-bottom": "10px"},
-    ),
-    html.Button("Recenter Graph", id="recenter-btn", style={"margin-bottom": "10px"}),
-    cyto.Cytoscape(
-        id='cytoscape',
-        elements=build_graph()[0] + build_graph()[1],
-        layout={'name': 'cose'},
-        # style={'width': '100%', 'height': '100%'},
-        style={'width': '100%', 'height': '100%', 'background-color': '#ffffff'},
-        zoom=1,
-        pan={'x': 0, 'y': 0}
-    )
-], style={'height': '100vh', 'display': 'flex', 'flexDirection': 'column'})
+
+
+app.layout = html.Div([
+    dcc.Store(id="graph-store"),
+    dbc.Row([
+        # Sidebar
+        dbc.Col(
+            [
+                html.H5("Graph Controls", className="mt-2"),
+                ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
+                               switch_props={"value": False}),
+                html.Hr(),
+
+                dcc.Dropdown(
+                    id="label-filter",
+                    options=[{"label": "set1", "value": "set1"},
+                             {"label": "set2", "value": "set2"}],
+                    value=["set1", "set2"],
+                    multi=True,
+                    style={"margin-bottom": "10px"}
+                ),
+                dcc.Dropdown(
+                    id="layout-selector",
+                    options=[
+                        {"label": "Cose (Spring)", "value": "cose"},
+                        {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
+                        {"label": "Grid", "value": "grid"},
+                        {"label": "Circle", "value": "circle"},
+                    ],
+                    value="cose",
+                    clearable=False,
+                    style={"margin-bottom": "10px"}
+                ),
+                dcc.Checklist(
+                    id="scale-width-toggle",
+                    options=[{"label": "Scale edge width by weight", "value": "scale"}],
+                    value=["scale"],
+                    inline=True,
+                    style={"margin-bottom": "10px"}
+                ),
+                dcc.Dropdown(
+                    id="edge-annotation-selector",
+                    options=[
+                        {"label": "None", "value": "none"},
+                        {"label": "Label", "value": "label"},
+                        {"label": "Weight", "value": "weight"},
+                    ],
+                    value="label",
+                    clearable=False,
+                    style={"margin-bottom": "10px"}
+                ),
+                dcc.Dropdown(
+                    id="edge-label-position",
+                    options=[
+                        {"label": "Centered", "value": "center"},
+                        {"label": "Above Edge", "value": "above"},
+                        {"label": "Below Edge", "value": "below"},
+                        {"label": "Follow Edge", "value": "autorotate"},
+                    ],
+                    value="center",
+                    clearable=False,
+                    style={"margin-bottom": "10px"}
+                ),
+                html.Button("Recenter Graph", id="recenter-btn",
+                            style={"margin-bottom": "10px"}),
+            ],
+            width=3,  # 3 of 12 columns
+            style={
+                # "backgroundColor": "#f8f9fa",
+                "padding": "15px",
+                "height": "100vh",
+                "overflowY": "auto"
+            }
+        ),
+        # Graph Area
+        dbc.Col(
+            cyto.Cytoscape(
+                id='cytoscape',
+                elements=build_graph()[0] + build_graph()[1],
+                layout={'name': 'cose'},
+                style={'width': '100%', 'height': '100vh', 'background-color': '#ffffff'},
+                zoom=1,
+                pan={'x': 0, 'y': 0}
+            ),
+            width=9,
+            style={"padding": "0"}  # Remove padding for full-width visualization
+        )
+    ], style={"margin": "0", "width": "100%", "height": "100vh", "overflow": "hidden"})
+])
 
 
 @app.callback(
@@ -113,15 +150,15 @@ app.layout = html.Div([
     Input('scale-width-toggle', 'value'),
     Input('edge-annotation-selector', 'value'),
     Input("edge-label-position", "value"),
-    Input('darkmode-toggle', 'value')
+    Input(ThemeSwitchAIO.ids.switch("theme"), "value")
 )
 def update_elements(selected_labels, selected_layout, scale_toggle, annotation_field,
-                    label_position, darkmode_toggle):
-    is_dark = "dark" in darkmode_toggle
+                    label_position, toggle):
+    template = template_theme1 if toggle else template_theme2
     cy_style = {
         "width": "100%",
         "height": "100%",
-        "background-color": "#1e1e1e" if is_dark else "#ffffff",
+        "background-color": "#ffffff" if toggle else "#1e1e1e",
     }
 
     scale_edges = "scale" in scale_toggle
@@ -136,9 +173,9 @@ def update_elements(selected_labels, selected_layout, scale_toggle, annotation_f
         "curve-style": "bezier",
         "control-point-step-size": 20,
         "target-arrow-shape": "triangle-backcurve",
-        "color": "#fff" if is_dark else "#000",
+        "color": "#fff" if not toggle else "#000",
         "text-outline-width": 0.2,
-        "text-outline-color": "#000" if not is_dark else "#ccc",
+        "text-outline-color": "#000" if toggle else "#ccc",
     }
 
     # Control the edge label based on dropdown
@@ -203,6 +240,4 @@ app.clientside_callback(
 )
 
 if __name__ == '__main__':
-    # todo works but scaling of view window off, parallel edges not properly shown
-    # todo lots of work to be done for testing if this will be useful...
     app.run(debug=True)
