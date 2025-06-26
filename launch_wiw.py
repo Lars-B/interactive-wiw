@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
-from dash import Input, Output, State
+from dash import Input, Output
 from dash import html, dcc
 from dash_bootstrap_templates import ThemeSwitchAIO
 
@@ -48,8 +48,6 @@ def build_graph(scale_factor=1):
 
 
 app = dash.Dash(__name__, external_stylesheets=[url_theme1, dbc_css])
-
-
 
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
