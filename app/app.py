@@ -101,8 +101,13 @@ app.layout = html.Div([
                     value=[],  # default: unchecked
                     inline=True,
                     style={"margin-bottom": "10px"}
+                ),
+                dcc.Store(id="label-color-store"),
+                dbc.Collapse(
+                    html.Div(id="color-pickers-container", style={"marginTop": "20px"}),
+                    id="color-pickers-collapse",
+                    is_open=False
                 )
-
             ],
             width=3,  # 3 of 12 columns
             style={

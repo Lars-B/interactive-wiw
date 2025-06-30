@@ -1,31 +1,30 @@
-def build_graph(scale_factor=1):
+from collections import defaultdict
+
+
+def build_graph(scale_factor=1, label_colors=None):
     # todo this should be a selection when inputting the trees later on, give a color...
-    LABEL_COLORS = {
-        "set1": "green",
-        "set2": "blue",
-        "set3": "#2ECC40",
-    }
+    label_colors = defaultdict(lambda: "purple", label_colors or {})
 
     edges = [
         {"data": {
             "source": "A", "target": "B", "label": "set1",
             "weight": 0.01,  # original semantic value
             "penwidth": 0.01 * scale_factor,
-            "color": LABEL_COLORS["set1"],
+            "color": label_colors["set1"],
             "id": "e1"
         }},
         {"data": {
             "source": "A", "target": "B", "label": "set2",
             "weight": 0.5,
             "penwidth": 0.5 * scale_factor,
-            "color": LABEL_COLORS["set2"],
+            "color": label_colors["set2"],
             "id": "e2"
         }},
         {"data": {
             "source": "B", "target": "C", "label": "set1",
             "weight": 0.3,
             "penwidth": 0.3 * scale_factor,
-            "color": LABEL_COLORS["set1"],
+            "color": label_colors["set1"],
             "id": "e3"
         }},
     ]
