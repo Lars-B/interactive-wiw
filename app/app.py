@@ -84,6 +84,25 @@ app.layout = html.Div([
                 ),
                 html.Button("Recenter Graph", id="recenter-btn",
                             style={"marginBottom": "10px"}),
+                dcc.Input(
+                    id="weight-threshold",
+                    type="number",
+                    min=0,
+                    max=1,
+                    step=0.01,
+                    value=0.0,  # Default threshold
+                    debounce=True,  # Only trigger callback when user stops typing
+                    style={"width": "200px", "margin-bottom": "10px"},
+                    placeholder="Edge weight threshold"
+                ),
+                dcc.Checklist(
+                    id="color-by-label-toggle",
+                    options=[{"label": "Color edges by label", "value": "color"}],
+                    value=[],  # default: unchecked
+                    inline=True,
+                    style={"margin-bottom": "10px"}
+                )
+
             ],
             width=3,  # 3 of 12 columns
             style={

@@ -1,25 +1,38 @@
 def build_graph(scale_factor=1):
+    # todo this should be a selection when inputting the trees later on, give a color...
+    LABEL_COLORS = {
+        "set1": "green",
+        "set2": "blue",
+        "set3": "#2ECC40",
+    }
+
     edges = [
         {"data": {
             "source": "A", "target": "B", "label": "set1",
             "weight": 0.01,  # original semantic value
             "penwidth": 0.01 * scale_factor,
+            "color": LABEL_COLORS["set1"],
             "id": "e1"
         }},
         {"data": {
             "source": "A", "target": "B", "label": "set2",
             "weight": 0.5,
             "penwidth": 0.5 * scale_factor,
+            "color": LABEL_COLORS["set2"],
             "id": "e2"
         }},
         {"data": {
             "source": "B", "target": "C", "label": "set1",
             "weight": 0.3,
             "penwidth": 0.3 * scale_factor,
+            "color": LABEL_COLORS["set1"],
             "id": "e3"
         }},
     ]
     nodes = [{"data": {"id": node, "label": node}} for node in {"A", "B", "C"}]
+    # for edge in edges:
+    #     label = edge["data"].get("label")
+    #     edge["data"]["color"] = LABEL_COLORS.get(label, "gray")
     return nodes, edges
 
 
@@ -44,7 +57,8 @@ def get_node_style() -> dict:
     }
 
 
-def get_edge_style(annotation_field, label_position, scale_edges, is_light_theme) -> dict:
+def get_edge_style(annotation_field, label_position, scale_edges,
+                   color_by_label, is_light_theme) -> dict:
     edge_style = {"curve-style": "bezier", "control-point-step-size": 20,
                   "target-arrow-shape": "triangle-backcurve",
                   "color": "#000" if is_light_theme else "#fff", "text-outline-width": 0.2,
@@ -67,5 +81,9 @@ def get_edge_style(annotation_field, label_position, scale_edges, is_light_theme
     else:
         edge_style["text-margin-y"] = 0
         edge_style["edge-text-rotation"] = "none"
+
+    if color_by_label:
+        # edge_style["color"] = "data(color)"  # this is the label text color
+        edge_style["line-color"] = "data(color)"  # this is the edge color
 
     return edge_style

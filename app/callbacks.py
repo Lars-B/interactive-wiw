@@ -1,5 +1,5 @@
-from dash_bootstrap_templates import ThemeSwitchAIO
 from dash import Output, Input
+from dash_bootstrap_templates import ThemeSwitchAIO
 
 from .app import app as myapp
 from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style
@@ -15,16 +15,21 @@ from .graph_elements import build_graph, get_node_style, get_cytoscape_style, ge
     Input('scale-width-toggle', 'value'),
     Input('edge-annotation-selector', 'value'),
     Input("edge-label-position", "value"),
+    Input('weight-threshold', 'value'),
+    Input("color-by-label-toggle", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value")
 )
 def update_elements(selected_labels, selected_layout, scale_toggle, annotation_field,
-                    label_position, is_light_theme):
+                    label_position, threshold, color_toggle, is_light_theme):
     cy_style = get_cytoscape_style(is_light_theme)
     scale_edges = "scale" in scale_toggle
     scale = 5 if scale_edges else 1
 
+    threshold = min(max(threshold or 0, 0), 1)
+
     nodes, edges = build_graph(scale_factor=scale)
-    filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels]
+    filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
+                      and e["data"].get("weight", 0) >= threshold]
     elements = nodes + filtered_edges
     layout = {"name": selected_layout}
 
@@ -34,6 +39,7 @@ def update_elements(selected_labels, selected_layout, scale_toggle, annotation_f
         {"selector": "edge", "style": get_edge_style(annotation_field,
                                                      label_position,
                                                      scale_edges,
+                                                     color_toggle,
                                                      is_light_theme)},
     ]
 
@@ -64,4 +70,3 @@ myapp.clientside_callback(
     Input('recenter-btn', 'n_clicks'),
     prevent_initial_call=True
 )
-
