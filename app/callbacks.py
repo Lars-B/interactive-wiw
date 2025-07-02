@@ -1,10 +1,13 @@
-from dash import Output, Input, html, State, dcc
 import dash_bootstrap_components as dbc
+from dash import Input, Output, State
+from dash import html
 from dash.dependencies import ALL
+from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from .app import app as myapp
-from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style
+from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style, \
+    build_graph_from_file
 
 
 @myapp.callback(
@@ -12,6 +15,7 @@ from .graph_elements import build_graph, get_node_style, get_cytoscape_style, ge
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
     Output('cytoscape', 'style'),
+    Input("graph-store", "data"),
     Input('label-filter', 'value'),
     Input('layout-selector', 'value'),
     Input('scale-width-toggle', 'value'),
@@ -22,7 +26,7 @@ from .graph_elements import build_graph, get_node_style, get_cytoscape_style, ge
     Input("label-color-store", "data"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value")
 )
-def update_elements(selected_labels, selected_layout, scale_toggle, annotation_field,
+def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, annotation_field,
                     label_position, threshold, color_toggle, label_colors, is_light_theme):
     cy_style = get_cytoscape_style(is_light_theme)
     scale_edges = "scale" in scale_toggle
@@ -30,9 +34,15 @@ def update_elements(selected_labels, selected_layout, scale_toggle, annotation_f
 
     threshold = min(max(threshold or 0, 0), 1)
 
+    # if not graph_data:
+    print(graph_data)
     nodes, edges = build_graph(scale_factor=scale, label_colors=label_colors)
+
     filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
                       and e["data"].get("weight", 0) >= threshold]
+    # todo add it to dcc store graph data
+    # todo then use that for plotting?....
+
     elements = nodes + filtered_edges
     layout = {"name": selected_layout}
 
@@ -104,7 +114,8 @@ def generate_color_pickers(_):
                             id={"type": "color-input", "index": label},
                             type="color",
                             value=default_colors.get(label, "#AAAAAA"),
-                            style={"width": 90, "height": 35, "verticalAlign": "middle"}
+                            style={"width": 60, "height": 40, "marginBottom": "2px", "padding": 0,
+                                   "border": "none"}
                         ),
                         width="auto",
                     ),
@@ -139,3 +150,86 @@ def collect_colors(values, ids):
 def toggle_color_pickers(toggle_values):
     # Show if 'color' is in checklist values, else hide
     return "color" in toggle_values
+
+
+@myapp.callback(
+    Output("uploaded-datasets-store", "data", allow_duplicate=True),
+    Input("confirm-dataset-btn", "n_clicks"),
+    State("upload-data", "contents"),
+    State("upload-data", "filename"),
+    State("dataset-label", "value"),
+    State("dataset-color", "value"),
+    State("uploaded-datasets-store", "data"),
+    prevent_initial_call=True
+)
+def store_uploaded_dataset(n_clicks, contents, filename, label, color, existing_data):
+    if not contents or not label:
+        raise PreventUpdate
+
+    new_dataset = {
+        "filename": filename,
+        "contents": contents,  # base64 string
+        "label": label,
+        "color": color,
+    }
+
+    existing_data = existing_data or []
+    existing_data.append(new_dataset)
+    return existing_data
+
+
+@myapp.callback(
+    Output("selected-filename", "children"),
+    Input("upload-data", "filename"),
+)
+def display_filename(filename):
+    if filename:
+        return f"Selected file: {filename}"
+    return "No file selected yet."
+
+
+@myapp.callback(
+    Output("graph-store", "data", allow_duplicate=True),
+    Input("confirm-dataset-btn", "n_clicks"),
+    State("upload-data", "contents"),
+    State("dataset-label", "value"),
+    State("dataset-color", "value"),
+    State("graph-store", "data"),
+    prevent_initial_call=True
+)
+def update_graph_with_dataset(n_clicks, contents, label, color, current_graph_data):
+    if not contents or not label:
+        raise PreventUpdate
+
+    # Decode the uploaded file
+    # content_type, content_string = contents.split(',')
+    # decoded = base64.b64decode(content_string).decode("utf-8")
+    #
+    # # Replace this with actual logic based on your file format
+    # try:
+    #     data = json.loads(decoded)  # or CSV parser, etc.
+    # except Exception as e:
+    #     print("File parsing error:", e)
+    #     raise PreventUpdate
+
+    print(f"Got label: {label}")
+    print(f"Got color: {color}")
+    print(f"Got file: {current_graph_data}")
+
+    # Custom logic to generate new nodes/edges
+    # todo figure out how to pass along the filename
+    data = {}
+    new_nodes, new_edges = build_graph_from_file(data, label, color)
+
+    # Merge with current graph (if any)
+    current_graph_data = current_graph_data or {"nodes": [], "edges": []}
+    all_nodes = current_graph_data["nodes"] + new_nodes
+    all_edges = current_graph_data["edges"] + new_edges
+
+    print(all_nodes)
+    print(all_edges)
+    print("------")
+    print(f"Got file: {current_graph_data}")
+    print("------")
+
+    return {"nodes": all_nodes, "edges": all_edges}

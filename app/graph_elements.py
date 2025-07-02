@@ -3,6 +3,8 @@ from collections import defaultdict
 
 def build_graph(scale_factor=1, label_colors=None):
     # todo this should be a selection when inputting the trees later on, give a color...
+    # todo figure out how to  make this dccStore default without calling the function
+    #  this is for testing the update function and making it work with file input...
     label_colors = defaultdict(lambda: "purple", label_colors or {})
 
     edges = [
@@ -32,6 +34,55 @@ def build_graph(scale_factor=1, label_colors=None):
     # for edge in edges:
     #     label = edge["data"].get("label")
     #     edge["data"]["color"] = LABEL_COLORS.get(label, "gray")
+    return nodes, edges
+
+
+def build_graph_from_file(file_path, label, color):
+    nodes = [{"data": {"id": node, "label": node}} for node in {"C", "D", "E"}]
+    edges = []
+
+    print("Building graph from file")
+    print(f"Got label: {label}")
+    print(f"Got color: {color}")
+    print(f"Got file: {file_path}")
+
+    # todo proper logic later...
+    # todo figure out how to add a spinner for progress, make a little wait thing here for testing
+    # todo return a new node and new edges for current easy graph here, print the file out to
+    #  somehting....
+    # with open(file_path, "r") as f:
+    #     data = json.load(f)  # Or replace with csv.DictReader, etc.
+    #
+    # for row in data["edges"]:  # customize to match your data structure
+    #     source = row["source"]
+    #     target = row["target"]
+    #     weight = row.get("weight", 1)
+    #
+    #     nodes.extend([
+    #         {"data": {"id": source, "label": source}},
+    #         {"data": {"id": target, "label": target}},
+    #     ])
+    #     edges.append({
+    #         "data": {
+    #             "source": source,
+    #             "target": target,
+    #             "label": label,
+    #             "weight": weight,
+    #             "penwidth": weight * 5,
+    #             "color": color,
+    #             "id": f"{source}-{target}-{label}"
+    #         }
+    #     })
+    #
+    # # De-duplicate nodes
+    # seen = set()
+    # unique_nodes = []
+    # for node in nodes:
+    #     if node["data"]["id"] not in seen:
+    #         seen.add(node["data"]["id"])
+    #         unique_nodes.append(node)
+    #
+    # return unique_nodes, edges
     return nodes, edges
 
 

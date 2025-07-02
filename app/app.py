@@ -4,8 +4,6 @@ import dash_cytoscape as cyto
 from dash import html, dcc
 from dash_bootstrap_templates import ThemeSwitchAIO
 
-from .graph_elements import build_graph
-
 dcc.Store(id="graph-store")
 template_theme1 = "morph"
 template_theme2 = "slate"
@@ -27,10 +25,46 @@ app.layout = html.Div([
         # Sidebar
         dbc.Col(
             [
-                html.H5("Graph Controls", className="mt-2"),
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Hr(),
+
+                dbc.Card([
+                    dbc.CardHeader("Upload Dataset"),
+                    dbc.CardBody([
+                        dcc.Upload(
+                            id="upload-data",
+                            children=html.Div(["Click to upload or drag a file here"]),
+                            style={
+                                "width": "100%",
+                                "height": "60px",
+                                "lineHeight": "60px",
+                                "borderWidth": "1px",
+                                "borderStyle": "dashed",
+                                "borderRadius": "5px",
+                                "textAlign": "center",
+                                "margin-bottom": "10px"
+                            },
+                            multiple=False,
+                        ),
+                        html.Div(id="selected-filename", style={"marginBottom": "10px",
+                                                                "fontStyle": "italic"}),
+                        dbc.Input(id="dataset-label", placeholder="Enter dataset label...",
+                                  type="text",
+                                  style={"marginBottom": "10px"}),
+                        dbc.Input(
+                            id="dataset-color",
+                            type="color",
+                            value="#8888ff",
+                            style={"width": 60, "height": 40, "marginBottom": "10px", "padding": 0,
+                                   "border": "none"}
+                        ),
+                        dbc.Button("Confirm Dataset", id="confirm-dataset-btn", color="primary"),
+                        dcc.Store(id="uploaded-datasets-store"),
+                    ])
+                ]),
+
+                html.H5("Graph Controls", className="mt-2"),
 
                 dcc.Dropdown(
                     id="label-filter",
@@ -119,14 +153,21 @@ app.layout = html.Div([
         ),
         # Graph Area
         dbc.Col(
+            # dcc.Loading(
+            #     id="loading-spinner",
+            #     type="circle",  # or "default", "dot"
+            #     fullscreen=False,  # set to True if you want a big overlay spinner
+            #     children=[
             cyto.Cytoscape(
                 id='cytoscape',
-                elements=build_graph()[0] + build_graph()[1],
+                elements=[],
                 layout={'name': 'cose'},
                 style={'width': '100%', 'height': '100vh', 'backgroundColor': '#ffffff'},
                 zoom=1,
                 pan={'x': 0, 'y': 0}
-            ),
+            )
+            # ])
+            ,
             width=10,
             style={"padding": "0"}  # Remove padding for full-width visualization
         )
