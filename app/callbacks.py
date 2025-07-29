@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State
+from dash import Input, Output, State, dash
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -8,6 +8,18 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from .app import app as myapp
 from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style, \
     build_graph_from_file
+from .utils import assign_default_colors
+
+
+@myapp.callback(
+    Output("graph-store", "data"),
+    Input("url", "pathname"),  # dcc.Location(id="url") must be in layout
+    prevent_initial_call=True
+)
+def initialize_graph(_):
+    # todo this is the init when realoading the page, will be removed in the future
+    nodes, edges = build_graph(scale_factor=1)  # use your defaults
+    return {"nodes": nodes, "edges": edges}
 
 
 @myapp.callback(
@@ -34,14 +46,23 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
 
     threshold = min(max(threshold or 0, 0), 1)
 
-    # if not graph_data:
-    print(graph_data)
-    nodes, edges = build_graph(scale_factor=scale, label_colors=label_colors)
+    if not graph_data:
+        raise PreventUpdate
+
+    nodes = graph_data.get("nodes", [])
+    edges = graph_data.get("edges", [])
+
+    # nodes, edges = build_graph(scale_factor=scale, label_colors=label_colors)
 
     filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
                       and e["data"].get("weight", 0) >= threshold]
-    # todo add it to dcc store graph data
-    # todo then use that for plotting?....
+
+    # this updates to the correct colors
+    for edge in filtered_edges:
+        label = edge["data"]["label"]
+        edge["data"]["color"] = label_colors.get(label, "purple")  # fallback color
+        if scale_edges:
+            edge["data"]["penwidth"] = edge["data"].get("weight", 1) * scale
 
     elements = nodes + filtered_edges
     layout = {"name": selected_layout}
@@ -89,17 +110,37 @@ myapp.clientside_callback(
     Output("color-pickers-container", "children"),
     Input("graph-store", "data")  # or trigger when scale/layout/etc. change
 )
-def generate_color_pickers(_):
-    _, edges = build_graph()
-    labels = sorted(set(edge["data"]["label"] for edge in edges))
-    default_colors = {
-        "set1": "#2ECC40",
-        "set2": "#0074D9"
-    }
+def create_color_picker_panel(graph_data, label_colors=None):
+    if not graph_data:
+        return html.Div("No graph data loaded.")
 
-    my_color_picker = html.Div(
+    edges = graph_data.get("edges", [])
+    labels = sorted(set(edge["data"]["label"] for edge in edges))
+
+    # Get dynamic default colors
+    default_colors = assign_default_colors(labels)
+
+    # Override with label_colors if given
+    if label_colors:
+        default_colors.update(label_colors)
+
+    def color_dropdown(label):
+        return dbc.Input(
+            id={"type": "color-input", "index": label},
+            type="color",
+            value=default_colors[label],
+            style={
+                "width": 60,
+                "height": 40,
+                "marginBottom": "2px",
+                "padding": 0,
+                "border": "none"
+            }
+        )
+
+    return html.Div(
         style={
-            "maxHeight": "300px",  # approx height for ~6 rows, adjust as needed
+            "maxHeight": "300px",
             "overflowY": "auto",
             "overflowX": "hidden",
             "width": "100%",
@@ -109,29 +150,16 @@ def generate_color_pickers(_):
         children=[
             dbc.Row(
                 [
-                    dbc.Col(
-                        dbc.Input(
-                            id={"type": "color-input", "index": label},
-                            type="color",
-                            value=default_colors.get(label, "#AAAAAA"),
-                            style={"width": 60, "height": 40, "marginBottom": "2px", "padding": 0,
-                                   "border": "none"}
-                        ),
-                        width="auto",
-                    ),
-                    dbc.Col(
-                        dbc.Label(label, style={"lineHeight": "35px", "marginLeft": "10px"}),
-                        width="auto",
-                    ),
+                    dbc.Col(color_dropdown(label), width="auto"),
+                    dbc.Col(dbc.Label(label, style={"lineHeight": "35px", "marginLeft": "10px"}), width="auto"),
                 ],
-                align="center",  # vertically center row items
+                align="center",
                 style={"marginBottom": "8px"},
                 key=label
             )
             for label in labels
         ]
     )
-    return my_color_picker
 
 
 @myapp.callback(
@@ -139,7 +167,7 @@ def generate_color_pickers(_):
     Input({"type": "color-input", "index": ALL}, "value"),
     State({"type": "color-input", "index": ALL}, "id")
 )
-def collect_colors(values, ids):
+def update_label_color_store(values, ids):
     return {id["index"]: val for id, val in zip(ids, values)}
 
 
@@ -158,11 +186,10 @@ def toggle_color_pickers(toggle_values):
     State("upload-data", "contents"),
     State("upload-data", "filename"),
     State("dataset-label", "value"),
-    State("dataset-color", "value"),
     State("uploaded-datasets-store", "data"),
     prevent_initial_call=True
 )
-def store_uploaded_dataset(n_clicks, contents, filename, label, color, existing_data):
+def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
     if not contents or not label:
         raise PreventUpdate
 
@@ -170,7 +197,6 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, color, existing_
         "filename": filename,
         "contents": contents,  # base64 string
         "label": label,
-        "color": color,
     }
 
     existing_data = existing_data or []
@@ -193,43 +219,36 @@ def display_filename(filename):
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-data", "contents"),
     State("dataset-label", "value"),
-    State("dataset-color", "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_dataset(n_clicks, contents, label, color, current_graph_data):
+def update_graph_with_dataset(n_clicks, contents, label, current_graph_data):
     if not contents or not label:
         raise PreventUpdate
 
-    # Decode the uploaded file
-    # content_type, content_string = contents.split(',')
-    # decoded = base64.b64decode(content_string).decode("utf-8")
-    #
-    # # Replace this with actual logic based on your file format
-    # try:
-    #     data = json.loads(decoded)  # or CSV parser, etc.
-    # except Exception as e:
-    #     print("File parsing error:", e)
-    #     raise PreventUpdate
-
-    print(f"Got label: {label}")
-    print(f"Got color: {color}")
-    print(f"Got file: {current_graph_data}")
-
     # Custom logic to generate new nodes/edges
-    # todo figure out how to pass along the filename
-    data = {}
-    new_nodes, new_edges = build_graph_from_file(data, label, color)
+    new_nodes, new_edges = build_graph_from_file(contents, label)
 
     # Merge with current graph (if any)
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
     all_nodes = current_graph_data["nodes"] + new_nodes
     all_edges = current_graph_data["edges"] + new_edges
 
-    print(all_nodes)
-    print(all_edges)
-    print("------")
-    print(f"Got file: {current_graph_data}")
-    print("------")
-
     return {"nodes": all_nodes, "edges": all_edges}
+
+
+@myapp.callback(
+    Output("label-filter", "options"),
+    Output("label-filter", "value"),
+    Input("graph-store", "data"),
+    prevent_initial_call=True
+)
+def update_label_filter_options(graph_data):
+    if not graph_data:
+        raise PreventUpdate
+
+    edges = graph_data.get("edges", [])
+    labels = sorted({edge["data"].get("label") for edge in edges if "label" in edge["data"]})
+
+    options = [{"label": label, "value": label} for label in labels]
+    return options, labels
