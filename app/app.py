@@ -145,7 +145,6 @@ app.layout = html.Div([
             ],
             width=2,  # out of 12 total columns
             style={
-                # "backgroundColor": "#f8f9fa",
                 "padding": "15px",
                 "height": "100vh",
                 "overflowY": "auto"
@@ -153,11 +152,6 @@ app.layout = html.Div([
         ),
         # Graph Area
         dbc.Col(
-            # dcc.Loading(
-            #     id="loading-spinner",
-            #     type="circle",  # or "default", "dot"
-            #     fullscreen=False,  # set to True if you want a big overlay spinner
-            #     children=[
             cyto.Cytoscape(
                 id='cytoscape',
                 elements=[],
