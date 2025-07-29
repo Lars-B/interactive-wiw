@@ -40,12 +40,11 @@ def build_graph_from_file(file_content, label):
     content_type, content_string = file_content.split(",")
     decoded_content = base64.b64decode(content_string)
 
-    print("-------- build_graph_from_file start --------\n")
     # todo need to read this to compute the real network...
-    print(decoded_content.decode("utf-8")[1:30])
-    print("-------- build_graph_from_file end --------\n")
+    # print("-------- build_graph_from_file start --------\n")
+    # print(decoded_content.decode("utf-8")[1:30])
+    # print("-------- build_graph_from_file end --------\n")
 
-    # todo proper logic later...
     # todo figure out how to add a spinner for progress, make a little wait thing here for testing
     # todo return a new node and new edges for current easy graph here, print the file out to
     #  somehting....

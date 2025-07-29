@@ -29,7 +29,6 @@ app.layout = html.Div([
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Hr(),
-
                 dbc.Card([
                     dbc.CardHeader("Upload Dataset"),
                     dbc.CardBody([
@@ -132,10 +131,17 @@ app.layout = html.Div([
                 ),
                 dcc.Store(id="label-color-store"),
                 dbc.Collapse(
-                    html.Div(id="color-pickers-container", style={"marginTop": "20px"}),
+                    html.Div(
+                        [
+                            html.Div(id="rename-error",
+                                     style={"color": "red", "marginBottom": "10px"}),
+                            html.Div(id="color-pickers-container", style={"marginTop": "10px"})
+                        ]
+                    ),
                     id="color-pickers-collapse",
                     is_open=False
                 )
+
             ],
             width=2,  # out of 12 total columns
             style={

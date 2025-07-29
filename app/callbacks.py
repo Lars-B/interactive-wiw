@@ -1,5 +1,7 @@
+from collections import Counter
+
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dash
+from dash import Input, Output, State, dash, no_update
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -118,6 +120,7 @@ def create_color_picker_panel(graph_data, label_colors=None):
     labels = sorted(set(edge["data"]["label"] for edge in edges))
 
     # Get dynamic default colors
+    # todo this redundant can just do the default colors here?...
     default_colors = assign_default_colors(labels)
 
     # Override with label_colors if given
@@ -151,7 +154,15 @@ def create_color_picker_panel(graph_data, label_colors=None):
             dbc.Row(
                 [
                     dbc.Col(color_dropdown(label), width="auto"),
-                    dbc.Col(dbc.Label(label, style={"lineHeight": "35px", "marginLeft": "10px"}), width="auto"),
+                    dbc.Col(
+                        dbc.Input(
+                            id={"type": "label-rename-input", "index": label},
+                            type="text",
+                            value=label,
+                            debounce=True,
+                            style={"width": 120, "height": 40, "marginLeft": "10px"}
+                        ),
+                        width="auto"),
                 ],
                 align="center",
                 style={"marginBottom": "8px"},
@@ -160,6 +171,41 @@ def create_color_picker_panel(graph_data, label_colors=None):
             for label in labels
         ]
     )
+
+
+@myapp.callback(
+    Output("graph-store", "data", allow_duplicate=True),
+    Output("rename-error", "children"),
+    Input({"type": "label-rename-input", "index": ALL}, "value"),
+    State({"type": "label-rename-input", "index": ALL}, "id"),
+    State("graph-store", "data"),
+    prevent_initial_call=True
+)
+def rename_labels(new_labels, ids, graph_data):
+    if not graph_data:
+        raise dash.exceptions.PreventUpdate
+
+    label_map = {id_["index"]: new_label for id_, new_label in zip(ids, new_labels)}
+
+    # Validate: check for duplicates in target new labels
+    label_counts = Counter(label_map.values())
+    duplicates = [label for label, count in label_counts.items() if count > 1]
+
+    if duplicates:
+        return no_update, f"Error: Duplicate label names are not allowed: {', '.join(duplicates)}"
+
+    # Proceed with update
+    updated_edges = []
+    for edge in graph_data["edges"]:
+        old_label = edge["data"]["label"]
+        new_label = label_map.get(old_label, old_label)
+        edge["data"]["label"] = new_label
+        updated_edges.append(edge)
+
+    return {
+        "nodes": graph_data["nodes"],
+        "edges": updated_edges
+    }, ""
 
 
 @myapp.callback(
