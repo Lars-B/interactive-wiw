@@ -1,11 +1,12 @@
+import base64
 from collections import defaultdict
 
 
-def build_graph(scale_factor=1, label_colors=None):
+def build_graph(scale_factor=1):
     # todo this should be a selection when inputting the trees later on, give a color...
     # todo figure out how to  make this dccStore default without calling the function
     #  this is for testing the update function and making it work with file input...
-    label_colors = defaultdict(lambda: "purple", label_colors or {})
+    label_colors = defaultdict(lambda: "purple", {})
 
     edges = [
         {"data": {
@@ -31,20 +32,18 @@ def build_graph(scale_factor=1, label_colors=None):
         }},
     ]
     nodes = [{"data": {"id": node, "label": node}} for node in {"A", "B", "C"}]
-    # for edge in edges:
-    #     label = edge["data"].get("label")
-    #     edge["data"]["color"] = LABEL_COLORS.get(label, "gray")
     return nodes, edges
 
 
-def build_graph_from_file(file_path, label, color):
-    nodes = [{"data": {"id": node, "label": node}} for node in {"C", "D", "E"}]
-    edges = []
+def build_graph_from_file(file_content, label):
 
-    print("Building graph from file")
-    print(f"Got label: {label}")
-    print(f"Got color: {color}")
-    print(f"Got file: {file_path}")
+    content_type, content_string = file_content.split(",")
+    decoded_content = base64.b64decode(content_string)
+
+    print("-------- build_graph_from_file start --------\n")
+    # todo need to read this to compute the real network...
+    print(decoded_content.decode("utf-8")[1:30])
+    print("-------- build_graph_from_file end --------\n")
 
     # todo proper logic later...
     # todo figure out how to add a spinner for progress, make a little wait thing here for testing
@@ -83,6 +82,12 @@ def build_graph_from_file(file_path, label, color):
     #         unique_nodes.append(node)
     #
     # return unique_nodes, edges
+    nodes = [{"data": {"id": node, "label": node}} for node in {"C", "D", "E"}]
+    edges = [{"data": {"source": "C", "target": "D", "label": label, "weight": 0.1,
+                       "penwidth": 1, 'color': "black", 'id': 'e10'}},
+             {"data": {"source": "E", "target": "D", "label": label, "weight": 0.1,
+                       "penwidth": 1, 'color': "black", 'id': 'e11'}}]
+
     return nodes, edges
 
 
