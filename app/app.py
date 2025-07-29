@@ -21,6 +21,7 @@ app = dash.Dash(__name__,
 
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
+    dcc.Location(id="url"),
     dbc.Row([
         # Sidebar
         dbc.Col(
@@ -52,13 +53,6 @@ app.layout = html.Div([
                         dbc.Input(id="dataset-label", placeholder="Enter dataset label...",
                                   type="text",
                                   style={"marginBottom": "10px"}),
-                        dbc.Input(
-                            id="dataset-color",
-                            type="color",
-                            value="#8888ff",
-                            style={"width": 60, "height": 40, "marginBottom": "10px", "padding": 0,
-                                   "border": "none"}
-                        ),
                         dbc.Button("Confirm Dataset", id="confirm-dataset-btn", color="primary"),
                         dcc.Store(id="uploaded-datasets-store"),
                     ])
@@ -132,7 +126,7 @@ app.layout = html.Div([
                 dcc.Checklist(
                     id="color-by-label-toggle",
                     options=[{"label": "Color edges by label", "value": "color"}],
-                    value=[],  # default: unchecked
+                    value=[],
                     inline=True,
                     style={"margin-bottom": "10px"}
                 ),
