@@ -20,6 +20,20 @@ app = dash.Dash(__name__,
                 )
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
+    dbc.Modal(
+        [
+            dbc.ModalHeader(dbc.ModalTitle("Processing Dataset")),
+            dbc.ModalBody([
+                html.P("Please wait while we process your file..."),
+                dbc.Spinner(size="md", color="primary", type="border"),
+            ]),
+        ],
+        id="loading-modal",
+        is_open=False,
+        backdrop="static",  # prevents closing by clicking outside
+        keyboard=False,  # disables Esc key
+        centered=True,
+    ),
     dbc.Row([
         # Sidebar
         dbc.Col(
@@ -139,8 +153,19 @@ app.layout = html.Div([
                     ),
                     id="color-pickers-collapse",
                     is_open=False
-                )
-
+                ),
+                html.Div([
+                    html.H5("Log Information:"),
+                    html.Pre(id="log-output", style={
+                        "maxHeight": "250px",
+                        "overflowY": "auto",
+                        "whiteSpace": "pre-wrap",
+                        "backgroundColor": "#111",
+                        "color": "#0f0",
+                        "padding": "10px",
+                        "borderRadius": "8px"
+                    })
+                ])
             ],
             width=2,  # out of 12 total columns
             style={
@@ -155,7 +180,8 @@ app.layout = html.Div([
                 id='cytoscape',
                 elements=[],
                 layout={'name': 'cose'},
-                style={'width': '100%', 'height': '100vh', 'backgroundColor': '#1e1e1e'},
+                style={'width': '100%', 'height': '100vh',
+                       'backgroundColor': '#1e1e1e'},
                 zoom=1,
                 pan={'x': 0, 'y': 0}
             )
@@ -166,4 +192,3 @@ app.layout = html.Div([
         )
     ], style={"margin": "0", "width": "100%", "height": "100vh", "overflow": "hidden"})
 ])
-

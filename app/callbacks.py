@@ -1,13 +1,14 @@
 from collections import Counter
 
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dash, no_update
+from dash import Input, Output, State, dash, no_update, callback_context
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from .app import app as myapp
+from .dash_logger import log_buffer, logger
 from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style, \
     build_graph_from_file
 from .utils import assign_default_colors
@@ -262,6 +263,8 @@ def display_filename(filename):
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output("loading-modal", "is_open", allow_duplicate=True),
+    Output("log-output", "children"),
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-data", "contents"),
     State("upload-data", "filename"),
@@ -273,6 +276,9 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph
     if not contents:
         raise PreventUpdate
 
+    from .dash_logger import log_buffer
+    log_buffer.clear()
+
     effective_label = label or filename
 
     # Custom logic to generate new nodes/edges
@@ -283,7 +289,14 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph
     all_nodes = current_graph_data["nodes"] + new_nodes
     all_edges = current_graph_data["edges"] + new_edges
 
-    return {"nodes": all_nodes, "edges": all_edges}
+    logger.info("Finished updating the graph.")
+
+    return (
+        {"nodes": current_graph_data["nodes"] + new_nodes,
+         "edges": current_graph_data["edges"] + new_edges},
+        False,  # Close modal
+        "\n".join(log_buffer)
+    )
 
 
 @myapp.callback(
@@ -301,3 +314,25 @@ def update_label_filter_options(graph_data):
 
     options = [{"label": label, "value": label} for label in labels]
     return options, labels
+
+
+@myapp.callback(
+    Output("loading-modal", "is_open"),
+    [
+        Input("confirm-dataset-btn", "n_clicks"),
+        Input("graph-store", "data"),  # closes modal after dataset loads
+    ],
+    [
+        State("loading-modal", "is_open"),
+        State("upload-data", "contents"),
+    ],
+    prevent_initial_call=True,
+)
+def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
+    triggered_id = callback_context.triggered_id
+
+    if triggered_id == "confirm-dataset-btn" and contents:
+        return True  # show modal on button click
+    elif triggered_id == "graph-store":
+        return False  # hide modal when graph data is updated
+    return is_open

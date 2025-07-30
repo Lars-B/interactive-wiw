@@ -1,6 +1,8 @@
 import base64
 from collections import defaultdict
 
+from .dash_logger import logger
+
 
 def build_graph(scale_factor=1):
     # todo this should be a selection when inputting the trees later on, give a color...
@@ -37,8 +39,12 @@ def build_graph(scale_factor=1):
 
 def build_graph_from_file(file_content, label):
 
+    logger.info("Testing this")
+
     content_type, content_string = file_content.split(",")
     decoded_content = base64.b64decode(content_string)
+
+    logger.warning("This is a warning...")
 
     # todo need to read this to compute the real network...
     # print("-------- build_graph_from_file start --------\n")
