@@ -15,15 +15,6 @@ from .utils import assign_default_colors
 
 
 @myapp.callback(
-    Output("graph-store", "data"),
-    Input("reset-graph-btn", "n_clicks"),
-    prevent_initial_call=True
-)
-def reset_graph(n_clicks):
-    return {"nodes": [], "edges": []}
-
-
-@myapp.callback(
     Output('cytoscape', 'elements'),
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
@@ -335,3 +326,21 @@ def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
 )
 def update_cytoscape_style(is_light_theme):
     return get_cytoscape_style(is_light_theme)
+
+
+@myapp.callback(
+    Output("confirm-reset", "displayed"),
+    Input("reset-graph-btn", "n_clicks"),
+    prevent_initial_call=True
+)
+def show_reset_popup(n_clicks):
+    return True
+
+
+@myapp.callback(
+    Output("graph-store", "data"),
+    Input("confirm-reset", "submit_n_clicks"),
+    prevent_initial_call=True
+)
+def reset_graph(confirm_clicks):
+    return {"nodes": [], "edges": []}

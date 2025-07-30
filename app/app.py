@@ -43,7 +43,6 @@ app.layout = html.Div([
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Hr(),
-                html.Button("Reset Graph", id="reset-graph-btn", n_clicks=0),
                 dbc.Card([
                     dbc.CardHeader("Upload Dataset"),
                     dbc.CardBody([
@@ -72,89 +71,129 @@ app.layout = html.Div([
                     ])
                 ]),
 
-                html.H5("Graph Controls", className="mt-2"),
+                html.H2("Graph Controls", className="mt-2"),
 
-                dcc.Dropdown(
-                    id="label-filter",
-                    options=[{"label": "set1", "value": "set1"},
-                             {"label": "set2", "value": "set2"}],
-                    value=["set1", "set2"],
-                    multi=True,
-                    style={"marginBottom": "10px"}
-                ),
-                dcc.Dropdown(
-                    id="layout-selector",
-                    options=[
-                        {"label": "Cose (Spring)", "value": "cose"},
-                        {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
-                        {"label": "Grid", "value": "grid"},
-                        {"label": "Circle", "value": "circle"},
-                    ],
-                    value="cose",
-                    clearable=False,
-                    style={"marginBottom": "10px"}
-                ),
-                dcc.Checklist(
-                    id="scale-width-toggle",
-                    options=[{"label": "Scale edge width by weight", "value": "scale"}],
-                    value=["scale"],
-                    inline=True,
-                    style={"marginBottom": "10px"}
-                ),
-                dcc.Dropdown(
-                    id="edge-annotation-selector",
-                    options=[
-                        {"label": "None", "value": "none"},
-                        {"label": "Label", "value": "label"},
-                        {"label": "Weight", "value": "weight"},
-                    ],
-                    value="label",
-                    clearable=False,
-                    style={"marginBottom": "10px"}
-                ),
-                dcc.Dropdown(
-                    id="edge-label-position",
-                    options=[
-                        {"label": "Centered", "value": "center"},
-                        {"label": "Above Edge", "value": "above"},
-                        {"label": "Below Edge", "value": "below"},
-                        {"label": "Follow Edge", "value": "autorotate"},
-                    ],
-                    value="center",
-                    clearable=False,
-                    style={"marginBottom": "10px"}
-                ),
-                html.Button("Recenter Graph", id="recenter-btn",
-                            style={"marginBottom": "10px"}),
-                dcc.Input(
-                    id="weight-threshold",
-                    type="number",
-                    min=0,
-                    max=1,
-                    step=0.01,
-                    value=0.0,  # Default threshold
-                    debounce=True,  # Only trigger callback when user stops typing
-                    style={"width": "200px", "margin-bottom": "10px"},
-                    placeholder="Edge weight threshold"
-                ),
-                dcc.Input(
-                    id="edge-label-font-size",
-                    type="number",
-                    min=1,
-                    max=30,
-                    step=1,
-                    value=5,
-                    debounce=True,
-                    style={"width": "200px", "margin-bottom": "10px"},
-                    placeholder="Edge label font size"
-                ),
-                dcc.Checklist(
-                    id="color-by-label-toggle",
-                    options=[{"label": "Color edges by label", "value": "color"}],
-                    value=[],
-                    inline=True,
-                    style={"margin-bottom": "10px"}
-                ),
+                html.Div([
+                    html.Div([
+                        html.Button("Recenter Graph", id="recenter-btn")
+                    ], style={"marginBottom": "15px"}),
+
+                    html.Div([
+                        html.Label("Edge label sets to display:", htmlFor="label-filter",
+                                   style={"fontWeight": "bold", "marginBottom": "5px"}),
+                        dcc.Dropdown(
+                            id="label-filter",
+                            options=[
+                                {"label": "set1", "value": "set1"},
+                                {"label": "set2", "value": "set2"}
+                            ],
+                            value=["set1", "set2"],
+                            multi=True,
+                            style={"marginBottom": "10px"}
+                        )
+                    ], style={"marginBottom": "15px"}),
+
+                    html.Div([
+                        html.Label("Graph Layout:", htmlFor="layout-selector",
+                                   style={"fontWeight": "bold", "marginBottom": "5px"}),
+                        dcc.Dropdown(
+                            id="layout-selector",
+                            options=[
+                                {"label": "Cose (Spring)", "value": "cose"},
+                                {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
+                                {"label": "Grid", "value": "grid"},
+                                {"label": "Circle", "value": "circle"},
+                            ],
+                            value="cose",
+                            clearable=False,
+                            style={"marginBottom": "15px"}
+                        )
+                    ]),
+
+                    html.Div([
+                        html.Label("Edge Annotation:", htmlFor="edge-annotation-selector",
+                                   style={"fontWeight": "bold", "marginBottom": "5px"}),
+                        dcc.Dropdown(
+                            id="edge-annotation-selector",
+                            options=[
+                                {"label": "None", "value": "none"},
+                                {"label": "Label", "value": "label"},
+                                {"label": "Weight", "value": "weight"},
+                            ],
+                            value="label",
+                            clearable=False,
+                            style={"marginBottom": "15px"}
+                        )
+                    ]),
+
+                    html.Div([
+                        html.Label("Edge Label Position:", htmlFor="edge-label-position",
+                                   style={"fontWeight": "bold", "marginBottom": "5px"}),
+                        dcc.Dropdown(
+                            id="edge-label-position",
+                            options=[
+                                {"label": "Centered", "value": "center"},
+                                {"label": "Above Edge", "value": "above"},
+                                {"label": "Below Edge", "value": "below"},
+                                {"label": "Follow Edge", "value": "autorotate"},
+                            ],
+                            value="center",
+                            clearable=False,
+                            style={"marginBottom": "15px"}
+                        )
+                    ])
+                ]),
+                html.Hr(),
+                html.Div([
+                    html.Div([
+                        html.Label("Edge weight threshold:", htmlFor="weight-threshold",
+                                   style={"width": "200px", "display": "inline-block"}),
+                        dcc.Input(
+                            id="weight-threshold",
+                            type="number",
+                            min=0,
+                            max=1,
+                            step=0.01,
+                            value=0.0,
+                            debounce=True,
+                            style={"width": "200px"},
+                            placeholder="e.g. 0.25"
+                        ),
+                    ], style={"margin-bottom": "10px"}),
+
+                    html.Div([
+                        html.Label("Edge label font size:", htmlFor="edge-label-font-size",
+                                   style={"width": "200px", "display": "inline-block"}),
+                        dcc.Input(
+                            id="edge-label-font-size",
+                            type="number",
+                            min=1,
+                            max=30,
+                            step=1,
+                            value=5,
+                            debounce=True,
+                            style={"width": "200px"},
+                            placeholder="e.g. 12"
+                        ),
+                    ])
+                ]),
+                html.Hr(),
+                html.Div([
+                    dcc.Checklist(
+                        id="scale-width-toggle",
+                        options=[{"label": "Scale edge width by weight", "value": "scale"}],
+                        value=["scale"],
+                        inline=True,
+                        style={"marginBottom": "10px"}
+                    ),
+                    dcc.Checklist(
+                        id="color-by-label-toggle",
+                        options=[{"label": "Color edges by label", "value": "color"}],
+                        value=[],
+                        inline=True,
+                        style={"marginBottom": "10px"}
+                    )
+                ]),
                 dcc.Store(id="label-color-store"),
                 dbc.Collapse(
                     html.Div(
@@ -178,7 +217,17 @@ app.layout = html.Div([
                         "padding": "10px",
                         "borderRadius": "8px"
                     })
-                ])
+                ]),
+                html.Div([
+                    html.Div([
+                        dcc.ConfirmDialog(
+                            id="confirm-reset",
+                            message="Do you really want to reset the graph to be empty?"
+                        ),
+                        html.Button("Reset Graph", id="reset-graph-btn", n_clicks=0,
+                                    style={"marginRight": "10px"})
+                    ]),
+                ], style={"display": "flex", "marginBottom": "10px"})
             ],
             width=2,  # out of 12 total columns
             style={
