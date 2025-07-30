@@ -1,99 +1,72 @@
 import base64
+import tempfile
 from collections import defaultdict
 
+from pyccd.read_nexus import read_nexus_trees
+from pyccd.wiw_network import find_infector
 from .dash_logger import logger
+from .utils import log_time
 
 
-def build_graph(scale_factor=1):
-    # todo this should be a selection when inputting the trees later on, give a color...
-    # todo figure out how to  make this dccStore default without calling the function
-    #  this is for testing the update function and making it work with file input...
-    label_colors = defaultdict(lambda: "purple", {})
+def handle_uploaded_nexus_file(base64_content):
+    content_type, content_string = base64_content.split(",", 1)
+    decoded_content = base64.b64decode(content_string)
 
-    edges = [
-        {"data": {
-            "source": "A", "target": "B", "label": "set1",
-            "weight": 0.01,  # original semantic value
-            "penwidth": 0.01 * scale_factor,
-            "color": label_colors["set1"],
-            "id": "e1"
-        }},
-        {"data": {
-            "source": "A", "target": "B", "label": "set2",
-            "weight": 0.5,
-            "penwidth": 0.5 * scale_factor,
-            "color": label_colors["set2"],
-            "id": "e2"
-        }},
-        {"data": {
-            "source": "B", "target": "C", "label": "set1",
-            "weight": 0.3,
-            "penwidth": 0.3 * scale_factor,
-            "color": label_colors["set1"],
-            "id": "e3"
-        }},
-    ]
-    nodes = [{"data": {"id": node, "label": node}} for node in {"A", "B", "C"}]
-    return nodes, edges
+    with tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=True) as tmp:
+        tmp.write(decoded_content)
+        tmp.flush()  # Ensure all data is written before using it
+        trees = read_nexus_trees(tmp.name, breath_trees=True, label_transm_history=True)
+
+    return trees
 
 
 def build_graph_from_file(file_content, label):
+    logger.info("Processing file content and building WIW network...")
 
-    # todo log information and log time it took, will be displayed after finishing
+    # todo add burning option for file upload....
+    burn_in = 0.1
 
-    logger.info("Testing this")
+    with log_time("Handling and reading uploaded nexus file"):
+        trees = handle_uploaded_nexus_file(file_content)
 
-    content_type, content_string = file_content.split(",")
-    decoded_content = base64.b64decode(content_string)
+    logger.info(f"Found {len(trees)} trees")
 
-    logger.warning("This is a warning...")
+    trees = trees[int(burn_in * len(trees)):]
+    num_trees = len(trees)
+    logger.info(f"After burn-in there are {num_trees} trees")
 
-    # todo need to read this to compute the real network...
-    # print("-------- build_graph_from_file start --------\n")
-    # print(decoded_content.decode("utf-8")[1:30])
-    # print("-------- build_graph_from_file end --------\n")
+    logger.info("Processing trees...")
+    with log_time("Processing trees"):
+        posterior_wiw_edges = defaultdict(lambda: defaultdict(int))
+        for t in trees:
+            for leaf in t.get_leaves():
+                cur_infector = find_infector(leaf)
+                posterior_wiw_edges[leaf.name][cur_infector] += 1
 
-    # todo figure out how to add a spinner for progress, make a little wait thing here for testing
-    # todo return a new node and new edges for current easy graph here, print the file out to
-    #  somehting....
-    # with open(file_path, "r") as f:
-    #     data = json.load(f)  # Or replace with csv.DictReader, etc.
-    #
-    # for row in data["edges"]:  # customize to match your data structure
-    #     source = row["source"]
-    #     target = row["target"]
-    #     weight = row.get("weight", 1)
-    #
-    #     nodes.extend([
-    #         {"data": {"id": source, "label": source}},
-    #         {"data": {"id": target, "label": target}},
-    #     ])
-    #     edges.append({
-    #         "data": {
-    #             "source": source,
-    #             "target": target,
-    #             "label": label,
-    #             "weight": weight,
-    #             "penwidth": weight * 5,
-    #             "color": color,
-    #             "id": f"{source}-{target}-{label}"
-    #         }
-    #     })
-    #
-    # # De-duplicate nodes
-    # seen = set()
-    # unique_nodes = []
-    # for node in nodes:
-    #     if node["data"]["id"] not in seen:
-    #         seen.add(node["data"]["id"])
-    #         unique_nodes.append(node)
-    #
-    # return unique_nodes, edges
-    nodes = [{"data": {"id": node, "label": node}} for node in {"C", "D", "E"}]
-    edges = [{"data": {"source": "C", "target": "D", "label": label, "weight": 0.1,
-                       "penwidth": 1, 'color': "black", 'id': 'e10'}},
-             {"data": {"source": "E", "target": "D", "label": label, "weight": 0.1,
-                       "penwidth": 1, 'color': "black", 'id': 'e11'}}]
+    logger.info("Trees processed, now building the WIW network to add...")
+
+    nodes = []
+    for leaf in trees[0].get_leaves():
+        nodes.append({"data": {"id": leaf.name, "label": leaf.name}})
+
+    edges = []
+    edge_count = 1
+    for leaf in posterior_wiw_edges:
+        for transm_ancestor in posterior_wiw_edges[leaf]:
+            if not transm_ancestor.startswith("Unknown"):
+                if not transm_ancestor == leaf:
+                    posterior_support = posterior_wiw_edges[leaf][transm_ancestor] / num_trees
+                    edges.append(
+                        {"data": {
+                            "source": transm_ancestor,
+                            "target": leaf,
+                            "label": label,
+                            "weight": round(posterior_support, 2),
+                            "penwidth": 1,
+                            'color': "black",
+                            'id': f'{label}-{edge_count}'}}
+                    )
+                    edge_count += 1
 
     return nodes, edges
 
@@ -120,12 +93,16 @@ def get_node_style() -> dict:
 
 
 def get_edge_style(annotation_field, label_position, scale_edges,
-                   color_by_label, is_light_theme) -> dict:
-    edge_style = {"curve-style": "bezier", "control-point-step-size": 20,
+                   color_by_label, is_light_theme, font_size) -> dict:
+    edge_style = {"curve-style": "bezier",
+                  "control-point-step-size": 20,
                   "target-arrow-shape": "triangle-backcurve",
-                  "color": "#000" if is_light_theme else "#fff", "text-outline-width": 0.2,
+                  "color": "#000" if is_light_theme else "#fff",
+                  "text-outline-width": 0.2,
                   "text-outline-color": "#000" if is_light_theme else "#ccc",
-                  "label": f"data({annotation_field})" if annotation_field != "none" else ""}
+                  "label": f"data({annotation_field})" if annotation_field != "none" else "",
+                  "font-size": font_size
+                  }
 
     if scale_edges:
         edge_style["width"] = "data(penwidth)"

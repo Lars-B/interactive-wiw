@@ -137,6 +137,17 @@ app.layout = html.Div([
                     style={"width": "200px", "margin-bottom": "10px"},
                     placeholder="Edge weight threshold"
                 ),
+                dcc.Input(
+                    id="edge-label-font-size",
+                    type="number",
+                    min=1,
+                    max=30,
+                    step=1,
+                    value=5,
+                    debounce=True,
+                    style={"width": "200px", "margin-bottom": "10px"},
+                    placeholder="Edge label font size"
+                ),
                 dcc.Checklist(
                     id="color-by-label-toggle",
                     options=[{"label": "Color edges by label", "value": "color"}],
@@ -159,7 +170,7 @@ app.layout = html.Div([
                 html.Div([
                     html.H5("Log Information:"),
                     html.Pre(id="log-output", style={
-                        "maxHeight": "250px",
+                        "maxHeight": "400px",
                         "overflowY": "auto",
                         "whiteSpace": "pre-wrap",
                         "backgroundColor": "#111",

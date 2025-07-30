@@ -8,8 +8,8 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from .app import app as myapp
-from .dash_logger import log_buffer, logger
-from .graph_elements import build_graph, get_node_style, get_cytoscape_style, get_edge_style, \
+from .dash_logger import logger
+from .graph_elements import get_node_style, get_cytoscape_style, get_edge_style, \
     build_graph_from_file
 from .utils import assign_default_colors
 
@@ -20,9 +20,7 @@ from .utils import assign_default_colors
     prevent_initial_call=True
 )
 def reset_graph(n_clicks):
-    nodes, edges = build_graph(scale_factor=1)
-    # return {"nodes": [], "edges": []}  # todo for future...
-    return {"nodes": nodes, "edges": edges}
+    return {"nodes": [], "edges": []}
 
 
 @myapp.callback(
@@ -36,12 +34,14 @@ def reset_graph(n_clicks):
     Input('edge-annotation-selector', 'value'),
     Input("edge-label-position", "value"),
     Input('weight-threshold', 'value'),
+    Input('edge-label-font-size', 'value'),
     Input("color-by-label-toggle", "value"),
     Input("label-color-store", "data"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value")
 )
 def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, annotation_field,
-                    label_position, threshold, color_toggle, label_colors, is_light_theme):
+                    label_position, threshold, edge_label_font_size, color_toggle, label_colors,
+                    is_light_theme):
     scale_edges = "scale" in scale_toggle
     scale = 5 if scale_edges else 1
 
@@ -52,8 +52,6 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
 
     nodes = graph_data.get("nodes", [])
     edges = graph_data.get("edges", [])
-
-    # nodes, edges = build_graph(scale_factor=scale, label_colors=label_colors)
 
     filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
                       and e["data"].get("weight", 0) >= threshold]
@@ -75,15 +73,9 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
                                                      label_position,
                                                      scale_edges,
                                                      color_toggle,
-                                                     is_light_theme)},
+                                                     is_light_theme,
+                                                     edge_label_font_size)},
     ]
-
-    # print("--- DEBUG ---")
-    # print("Elements (first 2):", elements[:2])  # Show first two elements
-    # print("Layout:", layout)
-    # print("Stylesheet:", stylesheet)
-    # print("Style:", cy_style)
-    # print("------------------")
 
     return elements, layout, stylesheet
 
