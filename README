@@ -1,9 +1,0 @@
-# Interactive WIW visualization
-
-This provides a browser app for visualizing the WIW network of BREATH trees.
-
-## Installation
-
-Right now you should download the release 1.0.0 that comes bundled with a venv.
-After unzipping that file run the `run_app.sh` script and that will start the browser application at
- http://127.0.0.1:8050/
