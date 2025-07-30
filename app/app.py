@@ -18,10 +18,8 @@ app = dash.Dash(__name__,
                 external_stylesheets=[url_theme1, dbc_css],
                 assets_folder="../assets",
                 )
-
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
-    dcc.Location(id="url"),
     dbc.Row([
         # Sidebar
         dbc.Col(
@@ -29,6 +27,7 @@ app.layout = html.Div([
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Hr(),
+                html.Button("Reset Graph", id="reset-graph-btn", n_clicks=0),
                 dbc.Card([
                     dbc.CardHeader("Upload Dataset"),
                     dbc.CardBody([
@@ -156,7 +155,7 @@ app.layout = html.Div([
                 id='cytoscape',
                 elements=[],
                 layout={'name': 'cose'},
-                style={'width': '100%', 'height': '100vh', 'backgroundColor': '#ffffff'},
+                style={'width': '100%', 'height': '100vh', 'backgroundColor': '#1e1e1e'},
                 zoom=1,
                 pan={'x': 0, 'y': 0}
             )
@@ -167,3 +166,4 @@ app.layout = html.Div([
         )
     ], style={"margin": "0", "width": "100%", "height": "100vh", "overflow": "hidden"})
 ])
+

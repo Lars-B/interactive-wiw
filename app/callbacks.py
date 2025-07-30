@@ -15,12 +15,12 @@ from .utils import assign_default_colors
 
 @myapp.callback(
     Output("graph-store", "data"),
-    Input("url", "pathname"),  # dcc.Location(id="url") must be in layout
+    Input("reset-graph-btn", "n_clicks"),
     prevent_initial_call=True
 )
-def initialize_graph(_):
-    # todo this is the init when realoading the page, will be removed in the future
-    nodes, edges = build_graph(scale_factor=1)  # use your defaults
+def reset_graph(n_clicks):
+    nodes, edges = build_graph(scale_factor=1)
+    # return {"nodes": [], "edges": []}  # todo for future...
     return {"nodes": nodes, "edges": edges}
 
 
