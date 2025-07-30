@@ -23,5 +23,5 @@ Then you should be able to execute the app with
 python run.py
 ```
 
-This will host the app in your browser of choice at [http://127.0.0.1:8050/](http://127.0.0.
-1:8050/).
+This will host the app in your browser of choice at 
+[http://127.0.0.1:8050/](http://127.0.0.1:8050/).
