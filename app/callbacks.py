@@ -29,7 +29,6 @@ def reset_graph(n_clicks):
     Output('cytoscape', 'elements'),
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
-    Output('cytoscape', 'style'),
     Input("graph-store", "data"),
     Input('label-filter', 'value'),
     Input('layout-selector', 'value'),
@@ -43,7 +42,6 @@ def reset_graph(n_clicks):
 )
 def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, annotation_field,
                     label_position, threshold, color_toggle, label_colors, is_light_theme):
-    cy_style = get_cytoscape_style(is_light_theme)
     scale_edges = "scale" in scale_toggle
     scale = 5 if scale_edges else 1
 
@@ -87,7 +85,7 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
     # print("Style:", cy_style)
     # print("------------------")
 
-    return elements, layout, stylesheet, cy_style
+    return elements, layout, stylesheet
 
 
 myapp.clientside_callback(
@@ -336,3 +334,12 @@ def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
     elif triggered_id == "graph-store":
         return False  # hide modal when graph data is updated
     return is_open
+
+
+@myapp.callback(
+    Output("cytoscape", "style", allow_duplicate=True),
+    Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
+    prevent_initial_call=True
+)
+def update_cytoscape_style(is_light_theme):
+    return get_cytoscape_style(is_light_theme)

@@ -4,6 +4,8 @@ import dash_cytoscape as cyto
 from dash import html, dcc
 from dash_bootstrap_templates import ThemeSwitchAIO
 
+from .graph_elements import get_cytoscape_style
+
 dcc.Store(id="graph-store")
 template_theme1 = "morph"
 template_theme2 = "slate"
@@ -180,8 +182,9 @@ app.layout = html.Div([
                 id='cytoscape',
                 elements=[],
                 layout={'name': 'cose'},
-                style={'width': '100%', 'height': '100vh',
-                       'backgroundColor': '#1e1e1e'},
+                style=get_cytoscape_style(False),
+                # style={'width': '100%', 'height': '100vh',
+                #        'backgroundColor': '#1e1e1e'},
                 zoom=1,
                 pan={'x': 0, 'y': 0}
             )

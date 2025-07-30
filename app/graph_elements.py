@@ -39,6 +39,8 @@ def build_graph(scale_factor=1):
 
 def build_graph_from_file(file_content, label):
 
+    # todo log information and log time it took, will be displayed after finishing
+
     logger.info("Testing this")
 
     content_type, content_string = file_content.split(",")
