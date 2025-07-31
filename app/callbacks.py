@@ -1,7 +1,7 @@
 from collections import Counter
 
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dash, no_update, callback_context
+from dash import Input, Output, State, dash, no_update, callback_context, ctx
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -12,6 +12,9 @@ from .dash_logger import logger
 from .graph_elements import get_node_style, get_cytoscape_style, get_edge_style, \
     build_graph_from_file
 from .utils import assign_default_colors
+import dash_cytoscape as cyto
+
+cyto.load_extra_layouts()
 
 
 @myapp.callback(
@@ -344,3 +347,28 @@ def show_reset_popup(n_clicks):
 )
 def reset_graph(confirm_clicks):
     return {"nodes": [], "edges": []}
+
+
+@myapp.callback(
+    Output("cytoscape", "generateImage"),
+    [
+        Input("btn-get-jpg", "n_clicks"),
+        Input("btn-get-png", "n_clicks"),
+        Input("btn-get-svg", "n_clicks"),
+        Input("image-filename-input", "value")
+    ]
+)
+def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
+    action = 'store'
+    ftype = 'png'
+    filename = filename.strip() # if filename else "wiw-network"
+
+    if ctx.triggered_id and ctx.triggered_id.startswith("btn-get-"):
+        action = "download"
+        ftype = ctx.triggered_id.split("-")[-1]
+
+    return {
+        'type': ftype,
+        'action': action,
+        "filename": filename
+    }

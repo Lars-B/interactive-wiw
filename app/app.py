@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import html, dcc
 from dash_bootstrap_templates import ThemeSwitchAIO
+from dash_iconify import DashIconify
 
 from .graph_elements import get_cytoscape_style
 
@@ -75,7 +76,18 @@ app.layout = html.Div([
 
                 html.Div([
                     html.Div([
-                        html.Button("Recenter Graph", id="recenter-btn")
+                        dbc.Button(
+                            [
+                                DashIconify(icon="mdi:crosshairs-gps", width=16,
+                                            style={"marginRight": "6px"}),
+                                "Recenter Graph"
+                            ],
+                            id="recenter-btn",
+                            n_clicks=0,
+                            color="primary",
+                            outline=True,
+                            style={"marginRight": "10px"}
+                        )
                     ], style={"marginBottom": "15px"}),
 
                     html.Div([
@@ -206,6 +218,75 @@ app.layout = html.Div([
                     id="color-pickers-collapse",
                     is_open=False
                 ),
+
+                html.Div(
+                    className='four columns',
+                    children=[
+                        html.H4("Export Graph", style={"marginBottom": "15px"}),
+
+                        html.Div(
+                            style={"display": "flex", "alignItems": "center", "gap": "10px",
+                                   "marginBottom": "15px"},
+                            children=[
+                                html.Div("Filename:",
+                                         style={"whiteSpace": "nowrap", "fontWeight": "500"}),
+                                dcc.Input(
+                                    id="image-filename-input",
+                                    type="text",
+                                    value="wiw-network",
+                                    debounce=True,
+                                    style={"width": "100%"}
+                                )
+                            ]
+                        ),
+                        html.Div(
+                            children=[
+                                dbc.ButtonGroup([
+                                    dbc.Button([
+                                        DashIconify(icon="mdi:download", width=16),
+                                        " JPG"
+                                    ], id="btn-get-jpg", n_clicks=0,
+                                        color="secondary", outline=True),
+
+                                    dbc.Button([
+                                        DashIconify(icon="mdi:download", width=16),
+                                        " PNG"
+                                    ], id="btn-get-png", n_clicks=0,
+                                        color="secondary", outline=True),
+
+                                    dbc.Button([
+                                        DashIconify(icon="mdi:download", width=16),
+                                        " SVG"
+                                    ], id="btn-get-svg", n_clicks=0,
+                                        color="secondary", outline=True)
+                                ])
+                            ])
+                    ]
+                ),
+
+                html.Hr(),
+                html.Div([
+                    html.Div([
+                        dcc.ConfirmDialog(
+                            id="confirm-reset",
+                            message="Do you really want to reset the graph to be empty?"
+                        ),
+                        dbc.Button(
+                            [
+                                DashIconify(icon="mdi:restart-alert", width=16,
+                                            style={"marginRight": "6px"}),
+                                "Reset Graph"
+                            ],
+                            id="reset-graph-btn",
+                            n_clicks=0,
+                            color="danger",
+                            outline=True,
+                            style={"marginRight": "10px"}
+                        )
+                    ]),
+                ], style={"display": "flex", "marginBottom": "10px"}),
+
+                html.Hr(),
                 html.Div([
                     html.H5("Log Information:"),
                     html.Pre(id="log-output", style={
@@ -217,17 +298,7 @@ app.layout = html.Div([
                         "padding": "10px",
                         "borderRadius": "8px"
                     })
-                ]),
-                html.Div([
-                    html.Div([
-                        dcc.ConfirmDialog(
-                            id="confirm-reset",
-                            message="Do you really want to reset the graph to be empty?"
-                        ),
-                        html.Button("Reset Graph", id="reset-graph-btn", n_clicks=0,
-                                    style={"marginRight": "10px"})
-                    ]),
-                ], style={"display": "flex", "marginBottom": "10px"})
+                ])
             ],
             width=2,  # out of 12 total columns
             style={
@@ -243,13 +314,9 @@ app.layout = html.Div([
                 elements=[],
                 layout={'name': 'cose'},
                 style=get_cytoscape_style(False),
-                # style={'width': '100%', 'height': '100vh',
-                #        'backgroundColor': '#1e1e1e'},
                 zoom=1,
                 pan={'x': 0, 'y': 0}
-            )
-            # ])
-            ,
+            ),
             width=10,
             style={"padding": "0"}  # Remove padding for full-width visualization
         )
