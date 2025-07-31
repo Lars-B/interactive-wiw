@@ -2,6 +2,9 @@ import base64
 import tempfile
 from collections import defaultdict
 
+import networkx as nx
+from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
+
 from pyccd.read_nexus import read_nexus_trees
 from pyccd.wiw_network import find_infector
 from .dash_logger import logger
@@ -51,22 +54,47 @@ def build_graph_from_file(file_content, label):
 
     edges = []
     edge_count = 1
+
+    net = nx.DiGraph()
+
     for leaf in posterior_wiw_edges:
         for transm_ancestor in posterior_wiw_edges[leaf]:
             if not transm_ancestor.startswith("Unknown"):
                 if not transm_ancestor == leaf:
-                    posterior_support = posterior_wiw_edges[leaf][transm_ancestor] / num_trees
+                    posterior_support = round(posterior_wiw_edges[leaf][transm_ancestor] /
+                                              num_trees, 2)
+
                     edges.append(
                         {"data": {
                             "source": transm_ancestor,
                             "target": leaf,
                             "label": label,
-                            "weight": round(posterior_support, 2),
+                            "weight": posterior_support,
                             "penwidth": 1,
                             'color': "black",
                             'id': f'{label}-{edge_count}'}}
                     )
+                    net.add_edge(transm_ancestor, leaf, weight=posterior_support)
                     edge_count += 1
+
+    mst = maximum_spanning_arborescence(net)
+    mst_edges = []
+    edge_count = 1
+    for u, v, data in mst.edges(data=True):
+        mst_edges.append({
+            "data": {
+                "source": u,
+                "target": v,
+                "label": f"MST-{label}",
+                "weight": round(data["weight"], 2),
+                "penwidth": 1,
+                "color": "black",
+                "id": f'MST-{edge_count}'
+            }
+        })
+        edge_count += 1
+
+    edges.extend(mst_edges)
 
     return nodes, edges
 
