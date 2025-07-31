@@ -64,6 +64,23 @@ app.layout = html.Div([
                         ),
                         html.Div(id="selected-filename", style={"marginBottom": "10px",
                                                                 "fontStyle": "italic"}),
+
+                        html.Div([
+                            html.Label("Burn-in choose [0.0, 1.0):",
+                                       htmlFor="burn-in-selection",
+                                       style={"width": "200px", "display": "inline-block"}),
+                            dcc.Input(
+                                id="burn-in-selection",
+                                type="number",
+                                min=0,
+                                max=0.99,
+                                step=0.01,
+                                value=0.1,
+                                debounce=True,
+                                style={"width": "200px"},
+                            ),
+                        ], style={"margin-bottom": "10px"}),
+
                         dbc.Input(id="dataset-label", placeholder="Enter dataset label...",
                                   type="text",
                                   style={"marginBottom": "10px"}),
@@ -169,7 +186,6 @@ app.layout = html.Div([
                             value=0.0,
                             debounce=True,
                             style={"width": "200px"},
-                            placeholder="e.g. 0.25"
                         ),
                     ], style={"margin-bottom": "10px"}),
 
@@ -185,7 +201,6 @@ app.layout = html.Div([
                             value=5,
                             debounce=True,
                             style={"width": "200px"},
-                            placeholder="e.g. 12"
                         ),
                     ])
                 ]),

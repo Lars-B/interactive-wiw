@@ -23,11 +23,8 @@ def handle_uploaded_nexus_file(base64_content):
     return trees
 
 
-def build_graph_from_file(file_content, label):
+def build_graph_from_file(file_content, label, burn_in):
     logger.info("Processing file content and building WIW network...")
-
-    # todo add burning option for file upload....
-    burn_in = 0.1
 
     with log_time("Handling and reading uploaded nexus file"):
         trees = handle_uploaded_nexus_file(file_content)
@@ -77,24 +74,25 @@ def build_graph_from_file(file_content, label):
                     net.add_edge(transm_ancestor, leaf, weight=posterior_support)
                     edge_count += 1
 
-    mst = maximum_spanning_arborescence(net)
-    mst_edges = []
-    edge_count = 1
-    for u, v, data in mst.edges(data=True):
-        mst_edges.append({
-            "data": {
-                "source": u,
-                "target": v,
-                "label": f"MST-{label}",
-                "weight": round(data["weight"], 2),
-                "penwidth": 1,
-                "color": "black",
-                "id": f'MST-{edge_count}'
-            }
-        })
-        edge_count += 1
+    if num_trees > 1:
+        mst = maximum_spanning_arborescence(net)
+        mst_edges = []
+        edge_count = 1
+        for u, v, data in mst.edges(data=True):
+            mst_edges.append({
+                "data": {
+                    "source": u,
+                    "target": v,
+                    "label": f"MST-{label}",
+                    "weight": round(data["weight"], 2),
+                    "penwidth": 1,
+                    "color": "black",
+                    "id": f'MST-{edge_count}'
+                }
+            })
+            edge_count += 1
 
-    edges.extend(mst_edges)
+        edges.extend(mst_edges)
 
     return nodes, edges
 

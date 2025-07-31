@@ -253,10 +253,11 @@ def display_filename(filename):
     State("upload-data", "contents"),
     State("upload-data", "filename"),
     State("dataset-label", "value"),
+    State("burn-in-selection", "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph_data):
+def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, current_graph_data):
     if not contents:
         raise PreventUpdate
 
@@ -266,7 +267,7 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph
     effective_label = label or filename
 
     # Custom logic to generate new nodes/edges
-    new_nodes, new_edges = build_graph_from_file(contents, effective_label)
+    new_nodes, new_edges = build_graph_from_file(contents, effective_label, burnin)
 
     # Merge with current graph (if any)
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
