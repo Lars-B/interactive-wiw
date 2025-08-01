@@ -37,7 +37,6 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
                     label_position, threshold, edge_label_font_size, color_toggle, label_colors,
                     is_light_theme):
     scale_edges = "scale" in scale_toggle
-    scale = 5 if scale_edges else 1
 
     threshold = min(max(threshold or 0, 0), 1)
 
@@ -53,9 +52,7 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
     # this updates to the correct colors
     for edge in filtered_edges:
         label = edge["data"]["label"]
-        edge["data"]["color"] = label_colors.get(label, "purple")  # fallback color
-        if scale_edges:
-            edge["data"]["penwidth"] = edge["data"].get("weight", 1) * scale
+        edge["data"]["color"] = label_colors.get(label, "purple")
 
     elements = nodes + filtered_edges
     layout = {"name": selected_layout}
@@ -266,13 +263,10 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
 
     effective_label = label or filename
 
-    # Custom logic to generate new nodes/edges
     new_nodes, new_edges = build_graph_from_file(contents, effective_label, burnin)
 
     # Merge with current graph (if any)
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
-    all_nodes = current_graph_data["nodes"] + new_nodes
-    all_edges = current_graph_data["edges"] + new_edges
 
     logger.info("Finished updating the graph.")
 
@@ -337,7 +331,7 @@ def update_cytoscape_style(is_light_theme):
     Input("reset-graph-btn", "n_clicks"),
     prevent_initial_call=True
 )
-def show_reset_popup(n_clicks):
+def show_reset_popup(_):
     return True
 
 
@@ -346,7 +340,7 @@ def show_reset_popup(n_clicks):
     Input("confirm-reset", "submit_n_clicks"),
     prevent_initial_call=True
 )
-def reset_graph(confirm_clicks):
+def reset_graph(_):
     return {"nodes": [], "edges": []}
 
 
@@ -362,7 +356,7 @@ def reset_graph(confirm_clicks):
 def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
     action = 'store'
     ftype = 'png'
-    filename = filename.strip() # if filename else "wiw-network"
+    filename = filename.strip()
 
     if ctx.triggered_id and ctx.triggered_id.startswith("btn-get-"):
         action = "download"

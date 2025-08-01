@@ -112,11 +112,8 @@ app.layout = html.Div([
                                    style={"fontWeight": "bold", "marginBottom": "5px"}),
                         dcc.Dropdown(
                             id="label-filter",
-                            options=[
-                                {"label": "set1", "value": "set1"},
-                                {"label": "set2", "value": "set2"}
-                            ],
-                            value=["set1", "set2"],
+                            options=[],
+                            value=[],
                             multi=True,
                             style={"marginBottom": "10px"}
                         )
@@ -132,6 +129,17 @@ app.layout = html.Div([
                                 {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
                                 {"label": "Grid", "value": "grid"},
                                 {"label": "Circle", "value": "circle"},
+                                # todo add these from https://dash.plotly.com/cytoscape/layout
+                                # The following external layouts are distributed with the official dash-cytoscape library:
+                                #
+                                #     cose-bilkent
+                                #     cola
+                                #     euler
+                                #     spread
+                                #     dagre
+                                #     klay
+                                #
+                                # In order to use them, you will need to use the load_extra_layouts() function from dash_cytoscape:
                             ],
                             value="cose",
                             clearable=False,
@@ -147,7 +155,7 @@ app.layout = html.Div([
                             options=[
                                 {"label": "None", "value": "none"},
                                 {"label": "Label", "value": "label"},
-                                {"label": "Weight", "value": "weight"},
+                                {"label": "Posterior", "value": "posterior"}
                             ],
                             value="label",
                             clearable=False,

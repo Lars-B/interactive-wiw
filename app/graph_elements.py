@@ -24,6 +24,8 @@ def handle_uploaded_nexus_file(base64_content):
 
 
 def build_graph_from_file(file_content, label, burn_in):
+    EDGE_SCALE = 10
+
     logger.info("Processing file content and building WIW network...")
 
     with log_time("Handling and reading uploaded nexus file"):
@@ -66,16 +68,19 @@ def build_graph_from_file(file_content, label, burn_in):
                             "source": transm_ancestor,
                             "target": leaf,
                             "label": label,
-                            "weight": posterior_support,
+                            "posterior": posterior_support,
+                            "weight": round(posterior_support * EDGE_SCALE, 2),
                             "penwidth": 1,
                             'color': "black",
                             'id': f'{label}-{edge_count}'}}
                     )
-                    net.add_edge(transm_ancestor, leaf, weight=posterior_support)
+                    net.add_edge(transm_ancestor, leaf,
+                                 weight=round(posterior_support * EDGE_SCALE, 2),
+                                 posterior=posterior_support)
                     edge_count += 1
 
     if num_trees > 1:
-        mst = maximum_spanning_arborescence(net)
+        mst = maximum_spanning_arborescence(net, attr="posterior", preserve_attrs=True)
         mst_edges = []
         edge_count = 1
         for u, v, data in mst.edges(data=True):
@@ -84,7 +89,8 @@ def build_graph_from_file(file_content, label, burn_in):
                     "source": u,
                     "target": v,
                     "label": f"MST-{label}",
-                    "weight": round(data["weight"], 2),
+                    "posterior": round(data["posterior"], 2),
+                    "weight": data["weight"],
                     "penwidth": 1,
                     "color": "black",
                     "id": f'MST-{edge_count}'
@@ -131,8 +137,9 @@ def get_edge_style(annotation_field, label_position, scale_edges,
                   }
 
     if scale_edges:
-        edge_style["width"] = "data(penwidth)"
-        edge_style["arrow-scale"] = "data(penwidth)"
+        edge_style["width"] = "data(weight)"
+        # todo further adapt the arrow scaling, currently not nice...
+        edge_style["arrow-scale"] = "mapData(weight, 0, 1, 0.5, 2)"
     else:
         edge_style["width"] = 2
         edge_style["arrow-scale"] = 1
