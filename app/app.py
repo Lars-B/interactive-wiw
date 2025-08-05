@@ -125,23 +125,19 @@ app.layout = html.Div([
                         dcc.Dropdown(
                             id="layout-selector",
                             options=[
+                                {"label": "Dagre (Hierarchical) [best Graphviz alt]", "value":
+                                    "dagre"},
+                                {"label": "Breadthfirst (Hierarchical)", "value": "breadthfirst"},
                                 {"label": "Cose (Spring)", "value": "cose"},
-                                {"label": "Dot (Hierarchical)", "value": "breadthfirst"},
-                                {"label": "Grid", "value": "grid"},
-                                {"label": "Circle", "value": "circle"},
-                                # todo add these from https://dash.plotly.com/cytoscape/layout
-                                # The following external layouts are distributed with the official dash-cytoscape library:
-                                #
-                                #     cose-bilkent
-                                #     cola
-                                #     euler
-                                #     spread
-                                #     dagre
-                                #     klay
-                                #
-                                # In order to use them, you will need to use the load_extra_layouts() function from dash_cytoscape:
+                                {"label": "Cose-Bilkent (improved force)", "value": "cose-bilkent"},
+                                {"label": "Euler (force-directed)", "value": "euler"},
+                                {"label": "Grid (rows/columns)", "value": "grid"},
+                                {"label": "Circle (circular node layout)", "value": "circle"},
+                                {"label": "Cola (constraint-based)", "value": "cola"},
+                                {"label": "Spread (hybrid layout)", "value": "spread"},
+                                {"label": "Klay (layered)", "value": "klay"},
                             ],
-                            value="cose",
+                            value="dagre",
                             clearable=False,
                             style={"marginBottom": "15px"}
                         )
