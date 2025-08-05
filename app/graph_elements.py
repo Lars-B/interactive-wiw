@@ -138,8 +138,7 @@ def get_edge_style(annotation_field, label_position, scale_edges,
 
     if scale_edges:
         edge_style["width"] = "data(weight)"
-        # todo further adapt the arrow scaling, currently not nice...
-        edge_style["arrow-scale"] = "mapData(weight, 0, 1, 0.5, 2)"
+        edge_style["arrow-scale"] = "mapData(data(weight), 0, 1, 0.5, 2)"
     else:
         edge_style["width"] = 2
         edge_style["arrow-scale"] = 1
