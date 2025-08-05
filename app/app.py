@@ -238,10 +238,11 @@ app.layout = html.Div([
                     is_open=False
                 ),
 
+                html.Hr(),
                 html.Div(
                     className='four columns',
                     children=[
-                        html.H4("Export Graph", style={"marginBottom": "15px"}),
+                        html.H2("Export Graph", style={"marginBottom": "15px"}),
 
                         html.Div(
                             style={"display": "flex", "alignItems": "center", "gap": "10px",
@@ -313,18 +314,18 @@ app.layout = html.Div([
                 ], style={"display": "flex", "marginBottom": "10px"}),
 
                 html.Hr(),
-                html.Div([
-                    html.H5("Log Information:"),
-                    html.Pre(id="log-output", style={
-                        "maxHeight": "400px",
-                        "overflowY": "auto",
-                        "whiteSpace": "pre-wrap",
-                        "backgroundColor": "#111",
-                        "color": "#0f0",
-                        "padding": "10px",
-                        "borderRadius": "8px"
-                    })
-                ])
+                # html.Div([
+                #     html.H5("Log Information:"),
+                #     html.Pre(id="log-output", style={
+                #         "maxHeight": "400px",
+                #         "overflowY": "auto",
+                #         "whiteSpace": "pre-wrap",
+                #         "backgroundColor": "#111",
+                #         "color": "#0f0",
+                #         "padding": "10px",
+                #         "borderRadius": "8px"
+                #     })
+                # ])
             ],
             width=2,  # out of 12 total columns
             style={

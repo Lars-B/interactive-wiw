@@ -1,4 +1,3 @@
-import io
 from collections import Counter
 
 import dash_bootstrap_components as dbc
@@ -9,6 +8,7 @@ from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
+from networkx.drawing.nx_pydot import to_pydot
 
 from .app import app as myapp
 from .dash_logger import logger
@@ -49,7 +49,7 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
     edges = graph_data.get("edges", [])
 
     filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
-                      and e["data"].get("weight", 0) >= threshold]
+                      and e["data"].get("posterior", 0) >= threshold]
 
     # this updates to the correct colors
     for edge in filtered_edges:
@@ -247,7 +247,7 @@ def display_filename(filename):
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output("loading-modal", "is_open", allow_duplicate=True),
-    Output("log-output", "children"),
+    # Output("log-output", "children"),
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-data", "contents"),
     State("upload-data", "filename"),
@@ -276,7 +276,7 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
         {"nodes": current_graph_data["nodes"] + new_nodes,
          "edges": current_graph_data["edges"] + new_edges},
         False,  # Close modal
-        "\n".join(log_buffer)
+        # "\n".join(log_buffer)
     )
 
 
@@ -383,14 +383,11 @@ def export_to_dot(n_clicks, filename, elements):
     G = nx.DiGraph()
     for el in elements:
         data = el.get("data", {})
-        logger.info(data)
         if "source" in data and "target" in data:
             G.add_edge(data["source"], data["target"], **data)
         elif "id" in data:
             G.add_node(data["id"], **data)
-    # Write DOT to string
     logger.info("Writing current graph to dot string...")
-    from networkx.drawing.nx_pydot import to_pydot
     dot_str = to_pydot(G).to_string()
     logger.info("Returning dot string for download...")
     return dcc.send_string(dot_str, f"{filename}.dot")

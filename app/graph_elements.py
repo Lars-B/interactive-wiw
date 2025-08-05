@@ -156,5 +156,6 @@ def get_edge_style(annotation_field, label_position, scale_edges,
     if color_by_label:
         # edge_style["color"] = "data(color)"  # this is the label text color
         edge_style["line-color"] = "data(color)"  # this is the edge color
+        edge_style["target-arrow-color"] = "data(color)"
 
     return edge_style

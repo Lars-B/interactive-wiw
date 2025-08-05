@@ -17,7 +17,10 @@ logger = logging.getLogger("dash_app")
 logger.setLevel(logging.INFO)
 
 # Formatter for all handlers
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(levelname)s - %(module)s.%(funcName)s - %(message)s"
+)
+
 
 # Console output handler
 console_handler = logging.StreamHandler()
