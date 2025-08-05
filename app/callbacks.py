@@ -1,7 +1,10 @@
+import io
 from collections import Counter
 
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dash, no_update, callback_context, ctx
+import dash_cytoscape as cyto
+import networkx as nx
+from dash import Input, Output, State, dash, no_update, callback_context, ctx, dcc
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -12,7 +15,6 @@ from .dash_logger import logger
 from .graph_elements import get_node_style, get_cytoscape_style, get_edge_style, \
     build_graph_from_file
 from .utils import assign_default_colors
-import dash_cytoscape as cyto
 
 cyto.load_extra_layouts()
 
@@ -367,3 +369,28 @@ def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
         'action': action,
         "filename": filename
     }
+
+
+@myapp.callback(
+    Output("download-dot", 'data'),
+    Input("btn-get-dot", "n_clicks"),
+    Input("image-filename-input", "value"),
+    State("cytoscape", "elements"),
+    prevent_initial_call=True
+)
+def export_to_dot(n_clicks, filename, elements):
+    logger.info("Exporting to dot...")
+    G = nx.DiGraph()
+    for el in elements:
+        data = el.get("data", {})
+        logger.info(data)
+        if "source" in data and "target" in data:
+            G.add_edge(data["source"], data["target"], **data)
+        elif "id" in data:
+            G.add_node(data["id"], **data)
+    # Write DOT to string
+    logger.info("Writing current graph to dot string...")
+    from networkx.drawing.nx_pydot import to_pydot
+    dot_str = to_pydot(G).to_string()
+    logger.info("Returning dot string for download...")
+    return dcc.send_string(dot_str, f"{filename}.dot")

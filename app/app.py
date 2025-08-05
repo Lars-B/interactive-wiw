@@ -258,6 +258,7 @@ app.layout = html.Div([
                                 )
                             ]
                         ),
+                        dcc.Download(id="download-dot"),
                         html.Div(
                             children=[
                                 dbc.ButtonGroup([
@@ -277,7 +278,13 @@ app.layout = html.Div([
                                         DashIconify(icon="mdi:download", width=16),
                                         " SVG"
                                     ], id="btn-get-svg", n_clicks=0,
-                                        color="secondary", outline=True)
+                                        color="secondary", outline=True),
+
+                                    dbc.Button([
+                                        DashIconify(icon="mdi:code-tags", width=16),
+                                        " DOT"
+                                    ], id="btn-get-dot", n_clicks=0,
+                                        color="secondary", outline=True),
                                 ])
                             ])
                     ]
