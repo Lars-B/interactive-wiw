@@ -49,7 +49,11 @@ def build_graph_from_file(file_content, label, burn_in):
 
     nodes = []
     for leaf in trees[0].get_leaves():
-        nodes.append({"data": {"id": leaf.name, "label": leaf.name}})
+        nodes.append({"data": {
+            "id": leaf.name,
+            "label": leaf.name,
+            "testing": "Bla"  # todo actually fill this with the taxon map from a nexus file.
+        }})
 
     edges = []
     edge_count = 1
@@ -111,9 +115,9 @@ def get_cytoscape_style(is_light_theme: bool) -> dict:
     }
 
 
-def get_node_style() -> dict:
+def get_node_style(annotation_field) -> dict:
     return {
-        "label": "data(label)",
+        "label": f"data({annotation_field})",
         "text-valign": "center",
         "text-halign": "center",
         "text-outline-width": 1,
@@ -132,7 +136,7 @@ def get_edge_style(annotation_field, label_position, scale_edges,
                   "color": "#000" if is_light_theme else "#fff",
                   "text-outline-width": 0.2,
                   "text-outline-color": "#000" if is_light_theme else "#ccc",
-                  "label": f"data({annotation_field})" if annotation_field != "none" else "",
+                  "label": f"data({annotation_field})",
                   "font-size": font_size
                   }
 

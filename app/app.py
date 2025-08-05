@@ -45,7 +45,7 @@ app.layout = html.Div([
                                switch_props={"value": False}),
                 html.Hr(),
                 dbc.Card([
-                    dbc.CardHeader("Upload Dataset"),
+                    dbc.CardHeader(html.H2("Upload Dataset")),
                     dbc.CardBody([
                         dcc.Upload(
                             id="upload-data",
@@ -91,6 +91,7 @@ app.layout = html.Div([
 
                 html.H2("Graph Controls", className="mt-2"),
 
+                html.Hr(),
                 html.Div([
                     html.Div([
                         dbc.Button(
@@ -106,6 +107,7 @@ app.layout = html.Div([
                             style={"marginRight": "10px"}
                         )
                     ], style={"marginBottom": "15px"}),
+                    html.Hr(),
 
                     html.Div([
                         html.Label("Edge label sets to display:", htmlFor="label-filter",
@@ -174,7 +176,23 @@ app.layout = html.Div([
                             clearable=False,
                             style={"marginBottom": "15px"}
                         )
-                    ])
+                    ]),
+
+                    html.Div([
+                        html.Label("Node Annotation:", htmlFor="node-annotation-selector",
+                                   style={"fontWeight": "bold", "marginBottom": "5px"}),
+                        dcc.Dropdown(
+                            id="node-annotation-selector",
+                            options=[
+                                {"label": "None", "value": "none"},
+                                {"label": "Label", "value": "label"},
+                                {"label": "Test", "value": "testing"}
+                            ],
+                            value="label",
+                            clearable=False,
+                            style={"marginBottom": "15px"}
+                        )
+                    ]),
                 ]),
                 html.Hr(),
                 html.Div([
