@@ -7,7 +7,12 @@ This provides a browser app for visualizing the WIW network of
 ## Installation
 
 Requires a python installation.
-After cloning the repostory open a terminal and `cd` into its directory.
+The instructions below should be up to date when downloading the latest release source code and 
+unzipping it.
+Open a terminal and `cd` into the downloaded (and unzipped) directory.
+
+When cloning the repository instead, some requirements and new features might not be fully 
+functioning without additional tinkering and package installation.
 
 Create a python virtual environment named `appenv` with
 ```bash
