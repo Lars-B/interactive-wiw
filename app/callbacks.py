@@ -31,14 +31,15 @@ cyto.load_extra_layouts()
     Input("edge-label-position", "value"),
     Input('weight-threshold', 'value'),
     Input('edge-label-font-size', 'value'),
+    Input('node-label-font-size', 'value'),
     Input("color-by-label-toggle", "value"),
     Input("label-color-store", "data"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input("node-annotation-selector", "value")
 )
 def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, annotation_field,
-                    label_position, threshold, edge_label_font_size, color_toggle, label_colors,
-                    is_light_theme, node_annotation):
+                    label_position, threshold, edge_label_font_size, node_label_font_size,
+                    color_toggle, label_colors, is_light_theme, node_annotation):
     scale_edges = "scale" in scale_toggle
 
     threshold = min(max(threshold or 0, 0), 1)
@@ -62,7 +63,7 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
 
     stylesheet = [
         {"selector": "node",
-         "style": get_node_style(node_annotation)},
+         "style": get_node_style(node_annotation, node_label_font_size),},
         {"selector": "edge",
          "style": get_edge_style(annotation_field,
                                  label_position,

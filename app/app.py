@@ -197,34 +197,71 @@ app.layout = html.Div([
                 html.Hr(),
                 html.Div([
                     html.Div([
-                        html.Label("Edge weight threshold:", htmlFor="weight-threshold",
-                                   style={"width": "200px", "display": "inline-block"}),
-                        dcc.Input(
+                        html.Label(
+                            "Edge weight threshold:",
+                            htmlFor="weight-threshold",
+                            style={
+                                "display": "block",
+                                "marginBottom": "0.5rem",
+                                "fontWeight": "bold",
+                                "text-align": "left"
+                            }
+                        ),
+                        dcc.Slider(
                             id="weight-threshold",
-                            type="number",
-                            min=0,
-                            max=1,
+                            min=0.0,
+                            max=0.99,
                             step=0.01,
                             value=0.0,
-                            debounce=True,
-                            style={"width": "200px"},
-                        ),
-                    ], style={"margin-bottom": "10px"}),
+                            marks={i: str(i) for i in [i/10 for i in range(0, 11, 1)]},
+                            tooltip={"placement": "bottom", "always_visible": True},
+                        )
+                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
 
                     html.Div([
-                        html.Label("Edge label font size:", htmlFor="edge-label-font-size",
-                                   style={"width": "200px", "display": "inline-block"}),
-                        dcc.Input(
+                        html.Label(
+                            "Edge label font size:",
+                            htmlFor="edge-label-font-size",
+                            style={
+                                "display": "block",
+                                "marginBottom": "0.5rem",
+                                "fontWeight": "bold",
+                                "text-align": "left"
+                            }
+                        ),
+                        dcc.Slider(
                             id="edge-label-font-size",
-                            type="number",
                             min=1,
                             max=30,
                             step=1,
                             value=5,
-                            debounce=True,
-                            style={"width": "200px"},
+                            marks={i: str(i) for i in range(0, 31, 5)},
+                            tooltip={"placement": "bottom", "always_visible": True},
+                        )
+                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
+
+                    html.Div([
+                        html.Label(
+                            "Node label font size:",
+                            htmlFor="node-label-font-size",
+                            style={
+                                "display": "block",
+                                "marginBottom": "0.5rem",
+                                "fontWeight": "bold",
+                                "text-align": "left"
+                            }
                         ),
-                    ])
+                        dcc.Slider(
+                            id="node-label-font-size",
+                            min=1,
+                            max=30,
+                            step=1,
+                            value=12,
+                            marks={i: str(i) for i in range(0, 31, 5)},
+                            tooltip={"placement": "bottom", "always_visible": True},
+                        )
+                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
+
                 ]),
                 html.Hr(),
                 html.Div([
