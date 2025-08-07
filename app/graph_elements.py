@@ -18,9 +18,13 @@ def handle_uploaded_nexus_file(base64_content):
     with tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=True) as tmp:
         tmp.write(decoded_content)
         tmp.flush()  # Ensure all data is written before using it
-        trees = read_nexus_trees(tmp.name, breath_trees=True, label_transm_history=True)
-
-    return trees
+        trees, taxon_map = read_nexus_trees(
+            tmp.name,
+            breath_trees=True,
+            label_transm_history=True,
+            parse_taxon_map=True
+        )
+    return trees, taxon_map
 
 
 def build_graph_from_file(file_content, label, burn_in):
@@ -29,9 +33,10 @@ def build_graph_from_file(file_content, label, burn_in):
     logger.info("Processing file content and building WIW network...")
 
     with log_time("Handling and reading uploaded nexus file"):
-        trees = handle_uploaded_nexus_file(file_content)
+        trees, taxon_map = handle_uploaded_nexus_file(file_content)
 
     logger.info(f"Found {len(trees)} trees")
+    logger.info(f"Extracted taxon map of size: {len(taxon_map)}")
 
     trees = trees[int(burn_in * len(trees)):]
     num_trees = len(trees)
@@ -52,7 +57,7 @@ def build_graph_from_file(file_content, label, burn_in):
         nodes.append({"data": {
             "id": leaf.name,
             "label": leaf.name,
-            "testing": "Bla"  # todo actually fill this with the taxon map from a nexus file.
+            "taxon": taxon_map[int(leaf.name)]
         }})
 
     edges = []

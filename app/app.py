@@ -186,7 +186,7 @@ app.layout = html.Div([
                             options=[
                                 {"label": "None", "value": "none"},
                                 {"label": "Label", "value": "label"},
-                                {"label": "Test", "value": "testing"}
+                                {"label": "Taxon", "value": "taxon"}
                             ],
                             value="label",
                             clearable=False,

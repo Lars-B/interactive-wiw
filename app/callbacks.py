@@ -262,8 +262,8 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
     if not contents:
         raise PreventUpdate
 
-    from .dash_logger import log_buffer
-    log_buffer.clear()
+    # from .dash_logger import log_buffer
+    # log_buffer.clear()
 
     effective_label = label or filename
 
