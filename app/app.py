@@ -195,74 +195,96 @@ app.layout = html.Div([
                     ]),
                 ]),
                 html.Hr(),
-                html.Div([
-                    html.Div([
-                        html.Label(
-                            "Edge weight threshold:",
-                            htmlFor="weight-threshold",
-                            style={
-                                "display": "block",
-                                "marginBottom": "0.5rem",
-                                "fontWeight": "bold",
-                                "text-align": "left"
-                            }
+                html.Div(
+                    [
+                        dbc.Button([
+                                DashIconify(icon="mdi:cheese-off",
+                                            width=16,
+                                            id="value-selections-button-icon",
+                                            style={"marginRight": "6px"}),
+                                "Value selections"
+                            ],
+                            id="toggle-sliders-btn",
+                            outline=True,
+                            n_clicks=0,
                         ),
-                        dcc.Slider(
-                            id="weight-threshold",
-                            min=0.0,
-                            max=0.99,
-                            step=0.01,
-                            value=0.0,
-                            marks={i: str(i) for i in [i/10 for i in range(0, 11, 1)]},
-                            tooltip={"placement": "bottom", "always_visible": True},
-                        )
-                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
+                        dbc.Collapse(
+                            html.Div([
+                                html.Div([
+                                    html.Label(
+                                        "Edge weight threshold:",
+                                        htmlFor="weight-threshold",
+                                        style={
+                                            "display": "block",
+                                            "marginBottom": "0.5rem",
+                                            "fontWeight": "bold",
+                                            "text-align": "left"
+                                        }
+                                    ),
+                                    dcc.Slider(
+                                        id="weight-threshold",
+                                        min=0.0,
+                                        max=0.99,
+                                        step=0.01,
+                                        value=0.0,
+                                        marks={i: str(i) for i in
+                                               [i / 10 for i in range(0, 11, 1)]},
+                                        tooltip={"placement": "bottom", "always_visible": True},
+                                    )
+                                ], style={"width": "100%", "marginBottom": "1rem",
+                                          "marginTop": "1rem"}),
 
-                    html.Div([
-                        html.Label(
-                            "Edge label font size:",
-                            htmlFor="edge-label-font-size",
-                            style={
-                                "display": "block",
-                                "marginBottom": "0.5rem",
-                                "fontWeight": "bold",
-                                "text-align": "left"
-                            }
-                        ),
-                        dcc.Slider(
-                            id="edge-label-font-size",
-                            min=1,
-                            max=30,
-                            step=1,
-                            value=5,
-                            marks={i: str(i) for i in range(0, 31, 5)},
-                            tooltip={"placement": "bottom", "always_visible": True},
-                        )
-                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
+                                html.Div([
+                                    html.Label(
+                                        "Edge label font size:",
+                                        htmlFor="edge-label-font-size",
+                                        style={
+                                            "display": "block",
+                                            "marginBottom": "0.5rem",
+                                            "fontWeight": "bold",
+                                            "text-align": "left"
+                                        }
+                                    ),
+                                    dcc.Slider(
+                                        id="edge-label-font-size",
+                                        min=1,
+                                        max=30,
+                                        step=1,
+                                        value=5,
+                                        marks={i: str(i) for i in range(0, 31, 5)},
+                                        tooltip={"placement": "bottom", "always_visible": True},
+                                    )
+                                ], style={"width": "100%", "marginBottom": "1rem",
+                                          "marginTop": "1rem"}),
 
-                    html.Div([
-                        html.Label(
-                            "Node label font size:",
-                            htmlFor="node-label-font-size",
-                            style={
-                                "display": "block",
-                                "marginBottom": "0.5rem",
-                                "fontWeight": "bold",
-                                "text-align": "left"
-                            }
-                        ),
-                        dcc.Slider(
-                            id="node-label-font-size",
-                            min=1,
-                            max=30,
-                            step=1,
-                            value=12,
-                            marks={i: str(i) for i in range(0, 31, 5)},
-                            tooltip={"placement": "bottom", "always_visible": True},
+                                html.Div([
+                                    html.Label(
+                                        "Node label font size:",
+                                        htmlFor="node-label-font-size",
+                                        style={
+                                            "display": "block",
+                                            "marginBottom": "0.5rem",
+                                            "fontWeight": "bold",
+                                            "text-align": "left"
+                                        }
+                                    ),
+                                    dcc.Slider(
+                                        id="node-label-font-size",
+                                        min=1,
+                                        max=30,
+                                        step=1,
+                                        value=12,
+                                        marks={i: str(i) for i in range(0, 31, 5)},
+                                        tooltip={"placement": "bottom", "always_visible": True},
+                                    )
+                                ], style={"width": "100%", "marginBottom": "1rem"})
+                            ]),
+                            id="slider-collapse",
+                            is_open=False
                         )
-                    ], style={"width": "100%", "marginBottom": "1rem", "marginTop": "1rem"}),
+                    ]
+                ),
 
-                ]),
                 html.Hr(),
                 html.Div([
                     dcc.Checklist(

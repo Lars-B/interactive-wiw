@@ -395,3 +395,18 @@ def export_to_dot(n_clicks, filename, elements):
     dot_str = to_pydot(G).to_string()
     logger.info("Returning dot string for download...")
     return dcc.send_string(dot_str, f"{filename}.dot")
+
+
+@myapp.callback(
+    Output("slider-collapse", "is_open"),
+    Output("value-selections-button-icon", "icon"),
+    Input("toggle-sliders-btn", "n_clicks"),
+    State("slider-collapse", "is_open"),
+    prevent_initial_call=True
+)
+def toggle_slider_section(n_clicks, is_open):
+    if n_clicks is None:
+        raise PreventUpdate
+    new_is_open = not is_open
+    new_icon = "mdi:cheese" if new_is_open else "mdi:cheese-off"
+    return new_is_open, new_icon
