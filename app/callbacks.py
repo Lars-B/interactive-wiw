@@ -239,12 +239,13 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
 
 @myapp.callback(
     Output("selected-filename", "children"),
+    Output("dataset-label", "value"),
     Input("upload-data", "filename"),
 )
 def display_filename(filename):
     if filename:
-        return f"Selected file: {filename}"
-    return "No file selected yet."
+        return f"Selected file: {filename}", filename
+    return "No file selected yet.", ""
 
 
 @myapp.callback(
