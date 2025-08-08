@@ -1,7 +1,6 @@
 import logging
 from app import app as my_app
 import app.callbacks
-import app.my_callbacks
 
 from app.dash_logger import logger
 

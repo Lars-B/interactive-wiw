@@ -40,3 +40,39 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
         False,  # Close modal
         # "\n".join(log_buffer)
     )
+
+
+@myapp.callback(
+    Output("uploaded-datasets-store", "data", allow_duplicate=True),
+    Input("confirm-dataset-btn", "n_clicks"),
+    State("upload-data", "contents"),
+    State("upload-data", "filename"),
+    State("dataset-label", "value"),
+    State("uploaded-datasets-store", "data"),
+    prevent_initial_call=True
+)
+def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
+    if not contents or not label:
+        raise PreventUpdate
+
+    new_dataset = {
+        "filename": filename,
+        "contents": contents,  # base64 string
+        "label": label,
+    }
+
+    existing_data = existing_data or []
+    existing_data.append(new_dataset)
+    return existing_data
+
+
+@myapp.callback(
+    Output("selected-filename", "children"),
+    Output("dataset-label", "value"),
+    Input("upload-data", "filename"),
+)
+def display_filename(filename):
+    if filename:
+        return f"Selected file: {filename}", filename
+    return "No file selected yet.", ""
+
