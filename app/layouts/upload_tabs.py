@@ -10,7 +10,7 @@ upload_tabs = dbc.Tabs(
             children=[
                 html.Div([
                     dcc.Upload(
-                        id="upload-data",
+                        id="upload-trees-data",
                         children=html.Div(
                             ["Click to upload or drag a file here"]),
                         style={
@@ -25,7 +25,7 @@ upload_tabs = dbc.Tabs(
                         },
                         multiple=False,
                     ),
-                    html.Div(id="selected-filename",
+                    html.Div(id="selected-trees-filename",
                              style={"marginBottom": "10px",
                                     "fontStyle": "italic"}),
 
@@ -46,7 +46,7 @@ upload_tabs = dbc.Tabs(
                         ),
                     ], style={"margin-bottom": "10px"}),
 
-                    dbc.Input(id="dataset-label",
+                    dbc.Input(id="trees-dataset-label",
                               placeholder="Enter dataset label...",
                               type="text",
                               style={"marginBottom": "10px"}),

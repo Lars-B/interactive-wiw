@@ -11,9 +11,9 @@ from ..graph_elements import build_graph_from_file
     Output("loading-modal", "is_open", allow_duplicate=True),
     # Output("log-output", "children"),
     Input("confirm-dataset-btn", "n_clicks"),
-    State("upload-data", "contents"),
-    State("upload-data", "filename"),
-    State("dataset-label", "value"),
+    State("upload-trees-data", "contents"),
+    State("upload-trees-data", "filename"),
+    State("trees-dataset-label", "value"),
     State("burn-in-selection", "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
@@ -45,9 +45,9 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
 @myapp.callback(
     Output("uploaded-datasets-store", "data", allow_duplicate=True),
     Input("confirm-dataset-btn", "n_clicks"),
-    State("upload-data", "contents"),
-    State("upload-data", "filename"),
-    State("dataset-label", "value"),
+    State("upload-trees-data", "contents"),
+    State("upload-trees-data", "filename"),
+    State("trees-dataset-label", "value"),
     State("uploaded-datasets-store", "data"),
     prevent_initial_call=True
 )
@@ -67,12 +67,21 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
 
 
 @myapp.callback(
-    Output("selected-filename", "children"),
-    Output("dataset-label", "value"),
-    Input("upload-data", "filename"),
+    Output("selected-trees-filename", "children"),
+    Output("trees-dataset-label", "value"),
+    Input("upload-trees-data", "filename"),
 )
-def display_filename(filename):
+def display_tree_file_name(filename):
     if filename:
         return f"Selected file: {filename}", filename
     return "No file selected yet.", ""
 
+
+@myapp.callback(
+    Output("selected-node-annotations-file", "children"),
+    Input("upload-node-annotations", "filename"),
+)
+def display_node_annotation_file_name(filename):
+    if filename:
+        return f"Selected file: {filename}"
+    return "No file selected yet."

@@ -17,7 +17,7 @@ from ..utils import assign_default_colors
     ],
     [
         State("loading-modal", "is_open"),
-        State("upload-data", "contents"),
+        State("upload-trees-data", "contents"),
     ],
     prevent_initial_call=True,
 )
