@@ -7,17 +7,40 @@ from dash.exceptions import PreventUpdate
 
 from ..app import app as myapp
 from ..utils import assign_default_colors
+from ..ids import UploadIDs
 
 
 @myapp.callback(
-    Output("loading-modal", "is_open"),
+    Output("loading-modal", "is_open", allow_duplicate=True),
     [
-        Input("confirm-dataset-btn", "n_clicks"),
-        Input("graph-store", "data"),  # closes modal after dataset loads
+        Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
+        Input("graph-store", "data"),
     ],
     [
         State("loading-modal", "is_open"),
-        State("upload-trees-data", "contents"),
+        State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
+    ],
+    prevent_initial_call=True,
+)
+def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
+    triggered_id = callback_context.triggered_id
+
+    if triggered_id == "confirm-dataset-btn" and contents:
+        return True  # show modal on button click
+    elif triggered_id == "graph-store":
+        return False  # hide modal when graph data is updated
+    return is_open
+
+
+@myapp.callback(
+    Output("loading-modal", "is_open", allow_duplicate=True),
+    [
+        Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
+        Input(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
+    ],
+    [
+        State("loading-modal", "is_open"),
+        State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
     ],
     prevent_initial_call=True,
 )

@@ -4,6 +4,7 @@ from dash.exceptions import PreventUpdate
 from ..app import app as myapp
 from ..dash_logger import logger
 from ..graph_elements import build_graph_from_file
+from ..ids import UploadIDs
 
 
 @myapp.callback(
@@ -85,3 +86,34 @@ def display_node_annotation_file_name(filename):
     if filename:
         return f"Selected file: {filename}"
     return "No file selected yet."
+
+
+@myapp.callback(
+    Output(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data", allow_duplicate=True),
+    Output("loading-modal", "is_open", allow_duplicate=True),
+    Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
+    State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
+    State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "filename"),
+    State(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
+    prevent_initial_call=True
+)
+def update_node_annotations(n_clicks, contents, filename, current_node_annotations_data):
+    if not contents:
+        raise PreventUpdate
+    return None, None
+
+
+# @myapp.callback(
+#     Output("uploaded-node-annotations-store", "data", allow_duplicate=True),
+#     Input("confirm-node-annotation-btn", "n_clicks"),
+#     State("upload-trees-data", "contents"),
+#     State("upload-node-annotations", "filename"),
+#     State("trees-dataset-label", "value"),
+#     State("uploaded-datasets-store", "data"),
+#     prevent_initial_call=True
+# )
+# def store_uploaded_node_annotations(n_clicks, contents, filename, label, existing_data):
+#     if not contents or not label:
+#         raise PreventUpdate
+#
+#     return None

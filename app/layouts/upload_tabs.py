@@ -1,6 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
+from ..ids import UploadIDs
+
 upload_tabs = dbc.Tabs(
     children=
     [
@@ -10,7 +12,7 @@ upload_tabs = dbc.Tabs(
             children=[
                 html.Div([
                     dcc.Upload(
-                        id="upload-trees-data",
+                        id=UploadIDs.UPLOAD_TREES_DATA,
                         children=html.Div(
                             ["Click to upload or drag a file here"]),
                         style={
@@ -25,17 +27,17 @@ upload_tabs = dbc.Tabs(
                         },
                         multiple=False,
                     ),
-                    html.Div(id="selected-trees-filename",
+                    html.Div(id=UploadIDs.SELECTED_TREES_FILENAME,
                              style={"marginBottom": "10px",
                                     "fontStyle": "italic"}),
 
                     html.Div([
                         html.Label("Burn-in choose [0.0, 1.0):",
-                                   htmlFor="burn-in-selection",
+                                   htmlFor=UploadIDs.BURN_IN_SELECTION,
                                    style={"width": "200px",
                                           "display": "inline-block"}),
                         dcc.Input(
-                            id="burn-in-selection",
+                            id=UploadIDs.BURN_IN_SELECTION,
                             type="number",
                             min=0,
                             max=0.99,
@@ -46,13 +48,14 @@ upload_tabs = dbc.Tabs(
                         ),
                     ], style={"margin-bottom": "10px"}),
 
-                    dbc.Input(id="trees-dataset-label",
+                    dbc.Input(id=UploadIDs.TREES_DATASET_LABEL,
                               placeholder="Enter dataset label...",
                               type="text",
                               style={"marginBottom": "10px"}),
-                    dbc.Button("Confirm Dataset", id="confirm-dataset-btn",
+                    dbc.Button("Confirm Dataset",
+                               id=UploadIDs.CONFIRM_TREES_DATASET_BTN,
                                color="primary"),
-                    dcc.Store(id="uploaded-datasets-store"),
+                    dcc.Store(id=UploadIDs.UPLOADED_TREES_DATA_STORE),
                 ],
                     style={"paddingTop": "1.5rem"}
                 )
@@ -64,7 +67,7 @@ upload_tabs = dbc.Tabs(
             children=[
                 html.Div([
                     dcc.Upload(
-                        id="upload-node-annotations",
+                        id=UploadIDs.UPLOAD_NODE_ANNOTATIONS,
                         children=html.Div(
                             ["Click to upload or drag a file here"]),
                         style={
@@ -80,16 +83,16 @@ upload_tabs = dbc.Tabs(
                         multiple=False,
                     ),
                     html.Div(
-                        id="selected-node-annotations-file",
+                        id=UploadIDs.SELECTED_NODE_ANNOTATIONS_FILENAME,
                         style={"marginBottom": "10px",
                                "fontStyle": "italic"}
                     ),
                     dbc.Button(
                         "Confirm File",
-                        id="confirm-node-annotation-btn",
+                        id=UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN,
                         color="primary"
                     ),
-                    dcc.Store(id="uploaded-node-annotations-store"),
+                    dcc.Store(id=UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE),
                 ],
                     style={"paddingTop": "1.5rem"}
                 )
