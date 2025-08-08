@@ -249,6 +249,28 @@ def display_filename(filename):
 
 
 @myapp.callback(
+    Output("loading-modal", "is_open"),
+    [
+        Input("confirm-dataset-btn", "n_clicks"),
+        Input("graph-store", "data"),  # closes modal after dataset loads
+    ],
+    [
+        State("loading-modal", "is_open"),
+        State("upload-data", "contents"),
+    ],
+    prevent_initial_call=True,
+)
+def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
+    triggered_id = callback_context.triggered_id
+
+    if triggered_id == "confirm-dataset-btn" and contents:
+        return True  # show modal on button click
+    elif triggered_id == "graph-store":
+        return False  # hide modal when graph data is updated
+    return is_open
+
+
+@myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output("loading-modal", "is_open", allow_duplicate=True),
     # Output("log-output", "children"),
@@ -299,28 +321,6 @@ def update_label_filter_options(graph_data):
 
     options = [{"label": label, "value": label} for label in labels]
     return options, labels
-
-
-@myapp.callback(
-    Output("loading-modal", "is_open"),
-    [
-        Input("confirm-dataset-btn", "n_clicks"),
-        Input("graph-store", "data"),  # closes modal after dataset loads
-    ],
-    [
-        State("loading-modal", "is_open"),
-        State("upload-data", "contents"),
-    ],
-    prevent_initial_call=True,
-)
-def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
-    triggered_id = callback_context.triggered_id
-
-    if triggered_id == "confirm-dataset-btn" and contents:
-        return True  # show modal on button click
-    elif triggered_id == "graph-store":
-        return False  # hide modal when graph data is updated
-    return is_open
 
 
 @myapp.callback(

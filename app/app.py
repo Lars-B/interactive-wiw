@@ -6,6 +6,7 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from dash_iconify import DashIconify
 
 from .graph_elements import get_cytoscape_style
+from .layouts.modal import data_loading_modal
 
 dcc.Store(id="graph-store")
 template_theme1 = "morph"
@@ -23,20 +24,7 @@ app = dash.Dash(__name__,
                 )
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
-    dbc.Modal(
-        [
-            dbc.ModalHeader(dbc.ModalTitle("Processing Dataset")),
-            dbc.ModalBody([
-                html.P("Please wait while we process your file..."),
-                dbc.Spinner(size="md", color="primary", type="border"),
-            ]),
-        ],
-        id="loading-modal",
-        is_open=False,
-        backdrop="static",  # prevents closing by clicking outside
-        keyboard=False,  # disables Esc key
-        centered=True,
-    ),
+    data_loading_modal,
     dbc.Row([
         # Sidebar
         dbc.Col(
@@ -44,50 +32,107 @@ app.layout = html.Div([
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Hr(),
-                dbc.Card([
-                    dbc.CardHeader(html.H2("Upload Dataset")),
-                    dbc.CardBody([
-                        dcc.Upload(
-                            id="upload-data",
-                            children=html.Div(["Click to upload or drag a file here"]),
-                            style={
-                                "width": "100%",
-                                "height": "60px",
-                                "lineHeight": "60px",
-                                "borderWidth": "1px",
-                                "borderStyle": "dashed",
-                                "borderRadius": "5px",
-                                "textAlign": "center",
-                                "margin-bottom": "10px"
-                            },
-                            multiple=False,
-                        ),
-                        html.Div(id="selected-filename", style={"marginBottom": "10px",
-                                                                "fontStyle": "italic"}),
 
-                        html.Div([
-                            html.Label("Burn-in choose [0.0, 1.0):",
-                                       htmlFor="burn-in-selection",
-                                       style={"width": "200px", "display": "inline-block"}),
-                            dcc.Input(
-                                id="burn-in-selection",
-                                type="number",
-                                min=0,
-                                max=0.99,
-                                step=0.01,
-                                value=0.1,
-                                debounce=True,
-                                style={"width": "200px"},
+                html.Div([
+                    dbc.Tabs(
+                        children=
+                        [
+                            dbc.Tab(
+                                label="Upload Dataset",
+                                tab_id="tab-upload-dataset",
+                                children=[
+                                    html.Div([
+                                        dcc.Upload(
+                                            id="upload-data",
+                                            children=html.Div(
+                                                ["Click to upload or drag a file here"]),
+                                            style={
+                                                "width": "100%",
+                                                "height": "60px",
+                                                "lineHeight": "60px",
+                                                "borderWidth": "1px",
+                                                "borderStyle": "dashed",
+                                                "borderRadius": "5px",
+                                                "textAlign": "center",
+                                                "margin-bottom": "10px"
+                                            },
+                                            multiple=False,
+                                        ),
+                                        html.Div(id="selected-filename",
+                                                 style={"marginBottom": "10px",
+                                                        "fontStyle": "italic"}),
+
+                                        html.Div([
+                                            html.Label("Burn-in choose [0.0, 1.0):",
+                                                       htmlFor="burn-in-selection",
+                                                       style={"width": "200px",
+                                                              "display": "inline-block"}),
+                                            dcc.Input(
+                                                id="burn-in-selection",
+                                                type="number",
+                                                min=0,
+                                                max=0.99,
+                                                step=0.01,
+                                                value=0.1,
+                                                debounce=True,
+                                                style={"width": "200px"},
+                                            ),
+                                        ], style={"margin-bottom": "10px"}),
+
+                                        dbc.Input(id="dataset-label",
+                                                  placeholder="Enter dataset label...",
+                                                  type="text",
+                                                  style={"marginBottom": "10px"}),
+                                        dbc.Button("Confirm Dataset", id="confirm-dataset-btn",
+                                                   color="primary"),
+                                        dcc.Store(id="uploaded-datasets-store"),
+                                    ],
+                                        style={"paddingTop": "1.5rem"}
+                                    )
+                                ],
                             ),
-                        ], style={"margin-bottom": "10px"}),
-
-                        dbc.Input(id="dataset-label", placeholder="Enter dataset label...",
-                                  type="text",
-                                  style={"marginBottom": "10px"}),
-                        dbc.Button("Confirm Dataset", id="confirm-dataset-btn", color="primary"),
-                        dcc.Store(id="uploaded-datasets-store"),
-                    ])
-                ]),
+                            dbc.Tab(
+                                # todo this is a problem, some missing bracket or something...
+                                # label="Upload Node Annotations",
+                                # tab_id="tab-node-annotations",
+                                # children=[
+                                #     # todo add this to upload the node annotation list for coloring
+                                #     html.Div([
+                                #         dcc.Upload(
+                                #             id="upload-data",
+                                #             children=html.Div(
+                                #                 ["Click to upload or drag a file here"]),
+                                #             style={
+                                #                 "width": "100%",
+                                #                 "height": "60px",
+                                #                 "lineHeight": "60px",
+                                #                 "borderWidth": "1px",
+                                #                 "borderStyle": "dashed",
+                                #                 "borderRadius": "5px",
+                                #                 "textAlign": "center",
+                                #                 "margin-bottom": "10px"
+                                #             },
+                                #             multiple=False,
+                                #         ),
+                                #         html.Div(
+                                #             id="selected-node-annotation-file",
+                                #             style={"marginBottom": "10px",
+                                #                    "fontStyle": "italic"}
+                                #         ),
+                                #         dbc.Button(
+                                #             "Confirm File",
+                                #             id="confirm-node-annotation-btn",
+                                #             color="primary"
+                                #         ),
+                                #         dcc.Store(id="uploaded-node-annotation-store"),
+                                #     ],
+                                #         style={"paddingTop": "1.5rem"})
+                                # ],
+                            ),
+                        ],
+                        id="upload-tabs",
+                        active_tab="tab-upload-dataset",
+                    )]),
 
                 html.H2("Graph Controls", className="mt-2"),
 
@@ -129,9 +174,11 @@ app.layout = html.Div([
                             options=[
                                 {"label": "Dagre (Hierarchical) [best Graphviz alt]", "value":
                                     "dagre"},
-                                {"label": "Breadthfirst (Hierarchical)", "value": "breadthfirst"},
+                                {"label": "Breadthfirst (Hierarchical)",
+                                 "value": "breadthfirst"},
                                 {"label": "Cose (Spring)", "value": "cose"},
-                                {"label": "Cose-Bilkent (improved force)", "value": "cose-bilkent"},
+                                {"label": "Cose-Bilkent (improved force)",
+                                 "value": "cose-bilkent"},
                                 {"label": "Euler (force-directed)", "value": "euler"},
                                 {"label": "Grid (rows/columns)", "value": "grid"},
                                 {"label": "Circle (circular node layout)", "value": "circle"},
@@ -198,12 +245,12 @@ app.layout = html.Div([
                 html.Div(
                     [
                         dbc.Button([
-                                DashIconify(icon="mdi:cheese-off",
-                                            width=16,
-                                            id="value-selections-button-icon",
-                                            style={"marginRight": "6px"}),
-                                "Value selections"
-                            ],
+                            DashIconify(icon="mdi:cheese-off",
+                                        width=16,
+                                        id="value-selections-button-icon",
+                                        style={"marginRight": "6px"}),
+                            "Value selections"
+                        ],
                             id="toggle-sliders-btn",
                             outline=True,
                             n_clicks=0,
