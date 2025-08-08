@@ -8,20 +8,11 @@ from dash_iconify import DashIconify
 from .graph_elements import get_cytoscape_style
 from .layouts import *
 
+from . import app, url_theme1, url_theme2
+
+
 dcc.Store(id="graph-store")
-template_theme1 = "morph"
-template_theme2 = "slate"
-url_theme1 = dbc.themes.MORPH
-url_theme2 = dbc.themes.SLATE
 
-dbc_css = (
-    "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.1/dbc.min.css"
-)
-
-app = dash.Dash(__name__,
-                external_stylesheets=[url_theme1, dbc_css],
-                assets_folder="../assets",
-                )
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
     data_loading_modal,
