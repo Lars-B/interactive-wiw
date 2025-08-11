@@ -6,7 +6,7 @@ from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 
 from ..app import app as myapp
-from ..ids import UploadIDs
+from ..ids import UploadIDs, GraphOptions
 from ..utils import assign_default_colors
 
 
@@ -44,13 +44,28 @@ def toggle_loading_modal(n_clicks_trees, n_clicks_nodeann, is_open, trees_conten
 
 
 @myapp.callback(
-    Output("slider-collapse", "is_open"),
-    Output("value-selections-button-icon", "icon"),
-    Input("toggle-sliders-btn", "n_clicks"),
-    State("slider-collapse", "is_open"),
+    Output(GraphOptions.Edges.ADVANCED_OPTIONS_COLLAPSE, "is_open"),
+    Output(GraphOptions.Edges.ADVANCED_OPTIONS_ICON, "icon"),
+    Input(GraphOptions.Edges.ADVANCED_OPTION_TOGGLE_BTN, "n_clicks"),
+    State(GraphOptions.Edges.ADVANCED_OPTIONS_COLLAPSE, "is_open"),
     prevent_initial_call=True
 )
-def toggle_slider_section(n_clicks, is_open):
+def toggle_advanced_edge_options(n_clicks, is_open):
+    if n_clicks is None:
+        raise PreventUpdate
+    new_is_open = not is_open
+    new_icon = "mdi:cheese" if new_is_open else "mdi:cheese-off"
+    return new_is_open, new_icon
+
+
+@myapp.callback(
+    Output(GraphOptions.Nodes.ADVANCED_OPTIONS_COLLAPSE, "is_open"),
+    Output(GraphOptions.Nodes.ADVANCED_OPTIONS_ICON, "icon"),
+    Input(GraphOptions.Nodes.ADVANCED_OPTION_TOGGLE_BTN, "n_clicks"),
+    State(GraphOptions.Nodes.ADVANCED_OPTIONS_COLLAPSE, "is_open"),
+    prevent_initial_call=True
+)
+def toggle_advanced_node_options(n_clicks, is_open):
     if n_clicks is None:
         raise PreventUpdate
     new_is_open = not is_open
