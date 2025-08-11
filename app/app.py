@@ -19,39 +19,22 @@ app.layout = html.Div([
             [
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
-                html.Hr(),
 
+                html.H2("Upload Data", className="mt-2"),
+                html.Hr(),
                 html.Div([upload_tabs]),
 
                 html.H2("Graph Controls", className="mt-2"),
 
                 html.Hr(),
-                html.Div([
-                    html.Div([
-                        dbc.Button(
-                            [
-                                DashIconify(icon="mdi:crosshairs-gps", width=16,
-                                            style={"marginRight": "6px"}),
-                                "Recenter Graph"
-                            ],
-                            id="recenter-btn",
-                            n_clicks=0,
-                            color="primary",
-                            outline=True,
-                            style={"marginRight": "10px"}
-                        )
-                    ], style={"marginBottom": "15px"}),
-                    html.Hr(),
 
-                    html.Div([graph_option_tabs]),
-                ]),
+                html.Div([graph_option_tabs]),
 
+                html.H2("Export Graph", style={"marginBottom": "15px"}),
                 html.Hr(),
                 html.Div(
                     className='four columns',
                     children=[
-                        html.H2("Export Graph", style={"marginBottom": "15px"}),
-
                         html.Div(
                             style={"display": "flex", "alignItems": "center", "gap": "10px",
                                    "marginBottom": "15px"},
@@ -98,42 +81,7 @@ app.layout = html.Div([
                             ])
                     ]
                 ),
-
                 html.Hr(),
-                html.Div([
-                    html.Div([
-                        dcc.ConfirmDialog(
-                            id="confirm-reset",
-                            message="Do you really want to reset the graph to be empty?"
-                        ),
-                        dbc.Button(
-                            [
-                                DashIconify(icon="mdi:restart-alert", width=16,
-                                            style={"marginRight": "6px"}),
-                                "Reset Graph"
-                            ],
-                            id="reset-graph-btn",
-                            n_clicks=0,
-                            color="danger",
-                            outline=True,
-                            style={"marginRight": "10px"}
-                        )
-                    ]),
-                ], style={"display": "flex", "marginBottom": "10px"}),
-
-                html.Hr(),
-                # html.Div([
-                #     html.H5("Log Information:"),
-                #     html.Pre(id="log-output", style={
-                #         "maxHeight": "400px",
-                #         "overflowY": "auto",
-                #         "whiteSpace": "pre-wrap",
-                #         "backgroundColor": "#111",
-                #         "color": "#0f0",
-                #         "padding": "10px",
-                #         "borderRadius": "8px"
-                #     })
-                # ])
             ],
             width=2,  # out of 12 total columns
             style={

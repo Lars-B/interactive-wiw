@@ -36,6 +36,42 @@ graph_option_tabs = dbc.Tabs(
                         style={"marginBottom": "15px"}
                     )
                 ]),
+                html.Div([
+                    dbc.Button(
+                        [
+                            DashIconify(icon="mdi:crosshairs-gps", width=16,
+                                        style={"marginRight": "6px"}),
+                            "Recenter Graph"
+                        ],
+                        id=GraphOptions.Graph.RENCENTER_BTN,
+                        n_clicks=0,
+                        color="primary",
+                        outline=True,
+                        style={"marginRight": "10px"}
+                    )
+                ], style={"marginBottom": "15px"}),
+
+                # todo this should be within a collapse DANGER ZONE...
+                html.Div([
+                    html.Div([
+                        dcc.ConfirmDialog(
+                            id="confirm-reset",
+                            message="Do you really want to reset the graph to be empty?"
+                        ),
+                        dbc.Button(
+                            [
+                                DashIconify(icon="mdi:restart-alert", width=16,
+                                            style={"marginRight": "6px"}),
+                                "Reset Graph"
+                            ],
+                            id="reset-graph-btn",
+                            n_clicks=0,
+                            color="danger",
+                            outline=True,
+                            style={"marginRight": "10px"}
+                        )
+                    ]),
+                ], style={"display": "flex", "marginBottom": "10px"}),
             ]
         ),
         dbc.Tab(

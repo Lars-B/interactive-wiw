@@ -21,6 +21,7 @@ class GraphOptions:
     class Graph:
         TAB = "tab-graph-options"
         LAYOUT_SELECTOR = "layout-selector"  # todo find and replace
+        RENCENTER_BTN = "recenter-btn"  # todo rename, find and replace
 
     class Nodes:
         TAB = "tab-node-options"
