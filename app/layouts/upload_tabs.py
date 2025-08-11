@@ -32,22 +32,20 @@ upload_tabs = dbc.Tabs(
                                     "fontStyle": "italic"}),
 
                     html.Div([
-                        html.Label("Burn-in choose [0.0, 1.0):",
+                        html.Label("Burn-in:",
                                    htmlFor=UploadIDs.BURN_IN_SELECTION,
                                    style={"width": "200px",
-                                          "display": "inline-block"}),
-                        # todo change this to be a slider...
-                        dcc.Input(
+                                          }),
+                        dcc.Slider(
                             id=UploadIDs.BURN_IN_SELECTION,
-                            type="number",
                             min=0,
                             max=0.99,
                             step=0.01,
                             value=0.1,
-                            debounce=True,
-                            style={"width": "200px"},
+                            marks={i: str(i) for i in [i / 10 for i in range(0, 11, 1)]},
+                            tooltip={"placement": "bottom", "always_visible": True},
                         ),
-                    ], style={"margin-bottom": "10px"}),
+                    ], style={"margin-bottom": "1rem"}),
 
                     dbc.Input(id=UploadIDs.TREES_DATASET_LABEL,
                               placeholder="Enter dataset label...",
