@@ -14,7 +14,7 @@ from ..ids import UploadIDs
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-trees-data", "contents"),
     State("upload-trees-data", "filename"),
-    State("trees-dataset-label", "value"),
+    State(UploadIDs.TREES_DATASET_LABEL, "value"),
     State("burn-in-selection", "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
@@ -69,7 +69,7 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
 
 @myapp.callback(
     Output("selected-trees-filename", "children"),
-    Output("trees-dataset-label", "value"),
+    Output(UploadIDs.TREES_DATASET_LABEL, "value"),
     Input("upload-trees-data", "filename"),
 )
 def display_tree_file_name(filename):
@@ -80,12 +80,13 @@ def display_tree_file_name(filename):
 
 @myapp.callback(
     Output("selected-node-annotations-file", "children"),
+    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
     Input("upload-node-annotations", "filename"),
 )
 def display_node_annotation_file_name(filename):
     if filename:
-        return f"Selected file: {filename}"
-    return "No file selected yet."
+        return f"Selected file: {filename}", filename.split(".")[0]
+    return "No file selected yet.", ""
 
 
 @myapp.callback(
@@ -95,26 +96,22 @@ def display_node_annotation_file_name(filename):
     Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "filename"),
+    State(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
     State(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
     State("node-annotation-selector", "options"),
     prevent_initial_call=True
 )
-def update_node_annotations(n_clicks, contents, filename, current_node_annotations_data,
-                            node_label_dropdown):
+def update_node_annotations(n_clicks, contents, filename, annotation_label,
+                            current_node_annotations_data, node_label_dropdown):
     if not contents or not n_clicks:
         raise PreventUpdate
 
-    # todo could add label based on filename in the future for multiple annotations to switch?
-    cur_label = "uploaded-annotations"
-
     # todo this should be checked in the input of the label option...
     import re
-    new_label = re.sub(r'[^a-zA-Z0-9_]', '', cur_label)
-    if new_label != cur_label:
+    sanitized_label = re.sub(r'[^a-zA-Z0-9_]', '', annotation_label)
+    if sanitized_label != annotation_label:
         logger.info(f"There were symbols that are not allowed, removing them will change the "
-                    f"label to: {new_label}")
-
-    cur_label = new_label
+                    f"label to: {sanitized_label}")
 
     logger.info(f"Node annotations from file {filename} are being processed....")
 
@@ -125,7 +122,7 @@ def update_node_annotations(n_clicks, contents, filename, current_node_annotatio
 
     # logger.debug(f"Current node annotations: {node_label_dropdown}")
 
-    new_dropdown_option = {"label": cur_label, "value": f"{cur_label}"}
+    new_dropdown_option = {"label": sanitized_label, "value": f"{sanitized_label}"}
     if new_dropdown_option not in node_label_dropdown:
         node_label_dropdown.append(new_dropdown_option)
     else:
@@ -140,7 +137,7 @@ def update_node_annotations(n_clicks, contents, filename, current_node_annotatio
 
     logger.info(f"Got updated data: {updated_data}")
     return (
-        {"label": cur_label, "map": updated_data},
+        {"label": sanitized_label, "map": updated_data},
         node_label_dropdown,
         False
     )

@@ -36,6 +36,7 @@ upload_tabs = dbc.Tabs(
                                    htmlFor=UploadIDs.BURN_IN_SELECTION,
                                    style={"width": "200px",
                                           "display": "inline-block"}),
+                        # todo change this to be a slider...
                         dcc.Input(
                             id=UploadIDs.BURN_IN_SELECTION,
                             type="number",
@@ -86,6 +87,22 @@ upload_tabs = dbc.Tabs(
                         id=UploadIDs.SELECTED_NODE_ANNOTATIONS_FILENAME,
                         style={"marginBottom": "10px",
                                "fontStyle": "italic"}
+                    ),
+                    html.Div(
+                        [
+                            dbc.Input(
+                                id=UploadIDs.NODE_ANNOTATIONS_LABEL,
+                                placeholder="Enter node annotation label...",
+                                type="text",
+                                style={"marginBottom": "5px"},
+                            ),
+                            html.Small(
+                                "Only letters, digits, and underscores are allowed."
+                                " Other characters will be removed automatically!",
+                                style={"fontStyle": "italic"},
+                            ),
+                        ],
+                        style={"marginBottom": "15px"}
                     ),
                     dbc.Button(
                         "Confirm File",

@@ -10,3 +10,4 @@ class UploadIDs:
     SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
     CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
     UPLOADED_NODE_ANNOTATIONS_STORE = "uploaded-node-annotations-store"
+    NODE_ANNOTATIONS_LABEL = "node-annotations-label"
