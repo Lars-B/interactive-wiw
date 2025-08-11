@@ -6,52 +6,41 @@ from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 
 from ..app import app as myapp
-from ..utils import assign_default_colors
 from ..ids import UploadIDs
+from ..utils import assign_default_colors
 
 
 @myapp.callback(
-    Output("loading-modal", "is_open", allow_duplicate=True),
+    Output("loading-modal", "is_open"),
     [
         Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
-        Input("graph-store", "data"),
+        Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
+        # Input("graph-store", "data"),
     ],
     [
         State("loading-modal", "is_open"),
         State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
-    ],
-    prevent_initial_call=True,
-)
-def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
-    triggered_id = callback_context.triggered_id
-
-    if triggered_id == "confirm-dataset-btn" and contents:
-        return True  # show modal on button click
-    elif triggered_id == "graph-store":
-        return False  # hide modal when graph data is updated
-    return is_open
-
-
-@myapp.callback(
-    Output("loading-modal", "is_open", allow_duplicate=True),
-    [
-        Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
-        Input(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
-    ],
-    [
-        State("loading-modal", "is_open"),
         State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
     ],
     prevent_initial_call=True,
 )
-def toggle_loading_modal(n_clicks, graph_data, is_open, contents):
+def toggle_loading_modal(n_clicks_trees, n_clicks_nodeann, is_open, trees_contents,
+                         nodeann_contents):
     triggered_id = callback_context.triggered_id
 
-    if triggered_id == "confirm-dataset-btn" and contents:
-        return True  # show modal on button click
-    elif triggered_id == "graph-store":
-        return False  # hide modal when graph data is updated
-    return is_open
+    # from ..dash_logger import logger
+    # logger.debug(f"The triggered id is: {triggered_id}")
+    # logger.debug(f"The nodeann_contents is: {nodeann_contents}")
+
+    if triggered_id == UploadIDs.CONFIRM_TREES_DATASET_BTN and trees_contents:
+        return True
+    elif triggered_id == UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN and nodeann_contents:
+        return True
+    # todo i think this is pointless
+    # elif triggered_id in ["graph-store", UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE]:
+    #     return False  # close modal when graph data updated
+
+    return is_open  # default: no change
 
 
 @myapp.callback(

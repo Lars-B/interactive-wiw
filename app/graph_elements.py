@@ -11,10 +11,13 @@ from .dash_logger import logger
 from .utils import log_time
 
 
-def handle_uploaded_nexus_file(base64_content):
+def decode_base64_content(base64_content: str) -> bytes:
     content_type, content_string = base64_content.split(",", 1)
     decoded_content = base64.b64decode(content_string)
+    return decoded_content
 
+def handle_uploaded_nexus_file(base64_content):
+    decoded_content = decode_base64_content(base64_content)
     with tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=True) as tmp:
         tmp.write(decoded_content)
         tmp.flush()  # Ensure all data is written before using it
@@ -168,3 +171,22 @@ def get_edge_style(annotation_field, label_position, scale_edges,
         edge_style["target-arrow-color"] = "data(color)"
 
     return edge_style
+
+
+def process_node_annotations_file(file_content, current_node_annotations_data):
+    logger.info(f"Processing file content for node annotations...")
+    decoded_content = decode_base64_content(file_content)
+
+    # logger.debug(f"File for node annotations: {decoded_content}")
+    # logger.debug(f"Current node annotations data: {current_node_annotations_data}")
+
+    NODE_ANNOTATIONS_SEPARATOR = "\t"
+
+    node_annotations_map = {}
+
+    for line in decoded_content.decode("UTF-8").strip().split("\n"):
+        key, val = line.split(NODE_ANNOTATIONS_SEPARATOR)
+        val = val.strip('"').strip("'")
+        node_annotations_map[key] = val
+
+    return node_annotations_map

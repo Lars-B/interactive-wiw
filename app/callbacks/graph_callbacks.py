@@ -1,10 +1,11 @@
 from collections import Counter
 
-from dash import Input, Output, State, ALL
+from dash import Input, Output, State, ALL, no_update
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from ..app import app as myapp
+from ..ids import UploadIDs
 from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
 
 
@@ -13,6 +14,7 @@ from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
     Input("graph-store", "data"),
+    Input(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
     Input('label-filter', 'value'),
     Input('layout-selector', 'value'),
     Input('scale-width-toggle', 'value'),
@@ -26,9 +28,10 @@ from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input("node-annotation-selector", "value")
 )
-def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, annotation_field,
-                    label_position, threshold, edge_label_font_size, node_label_font_size,
-                    color_toggle, label_colors, is_light_theme, node_annotation):
+def update_elements(graph_data, uploaded_node_annotation_data, selected_labels, selected_layout,
+                    scale_toggle, annotation_field, label_position, threshold,
+                    edge_label_font_size, node_label_font_size, color_toggle, label_colors,
+                    is_light_theme, node_annotation_selection):
     scale_edges = "scale" in scale_toggle
 
     threshold = min(max(threshold or 0, 0), 1)
@@ -42,6 +45,14 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
     filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
                       and e["data"].get("posterior", 0) >= threshold]
 
+    # this adds the user uploaded node annotation map to the nodes of the graph:
+    if uploaded_node_annotation_data:
+        uploaded_map = uploaded_node_annotation_data["map"]
+        uploaded_label = uploaded_node_annotation_data["label"]
+        for n in nodes:
+            new_data = uploaded_map.get(n["data"]["taxon"], "")
+            n["data"][uploaded_label] = new_data
+
     # this updates to the correct colors
     for edge in filtered_edges:
         label = edge["data"]["label"]
@@ -52,7 +63,8 @@ def update_elements(graph_data, selected_labels, selected_layout, scale_toggle, 
 
     stylesheet = [
         {"selector": "node",
-         "style": get_node_style(node_annotation, node_label_font_size), },
+         "style": get_node_style(node_annotation_selection,
+                                 node_label_font_size)},
         {"selector": "edge",
          "style": get_edge_style(annotation_field,
                                  label_position,
