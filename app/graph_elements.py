@@ -173,12 +173,9 @@ def get_edge_style(annotation_field, label_position, scale_edges,
     return edge_style
 
 
-def process_node_annotations_file(file_content, current_node_annotations_data):
+def process_node_annotations_file(file_content):
     logger.info(f"Processing file content for node annotations...")
     decoded_content = decode_base64_content(file_content)
-
-    # logger.debug(f"File for node annotations: {decoded_content}")
-    # logger.debug(f"Current node annotations data: {current_node_annotations_data}")
 
     NODE_ANNOTATIONS_SEPARATOR = "\t"
 

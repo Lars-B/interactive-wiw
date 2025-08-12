@@ -1,16 +1,17 @@
-from dash import Input, Output, State
+import time
+
+from dash import Input, Output, State, no_update
 from dash.exceptions import PreventUpdate
 
 from ..app import app as myapp
 from ..dash_logger import logger
 from ..graph_elements import build_graph_from_file, process_node_annotations_file
-from ..ids import UploadIDs
+from ..ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output("loading-modal", "is_open", allow_duplicate=True),
-    # Output("log-output", "children"),
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-trees-data", "contents"),
     State("upload-trees-data", "filename"),
@@ -22,9 +23,6 @@ from ..ids import UploadIDs
 def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, current_graph_data):
     if not contents:
         raise PreventUpdate
-
-    # from .dash_logger import log_buffer
-    # log_buffer.clear()
 
     effective_label = label or filename
 
@@ -38,8 +36,7 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
     return (
         {"nodes": current_graph_data["nodes"] + new_nodes,
          "edges": current_graph_data["edges"] + new_edges},
-        False,  # Close modal
-        # "\n".join(log_buffer)
+        False,
     )
 
 
@@ -90,54 +87,60 @@ def display_node_annotation_file_name(filename):
 
 
 @myapp.callback(
-    Output(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data", allow_duplicate=True),
-    Output("node-annotation-selector", "options"),
+    Output("graph-store", "data", allow_duplicate=True),
+    Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
+    Output(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     Output("loading-modal", "is_open", allow_duplicate=True),
     Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
+    Input("graph-store", "data"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "filename"),
     State(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
-    State(UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE, "data"),
-    State("node-annotation-selector", "options"),
+    State(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
+    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     prevent_initial_call=True
 )
-def update_node_annotations(n_clicks, contents, filename, annotation_label,
-                            current_node_annotations_data, node_label_dropdown):
+def update_node_annotations(n_clicks, graph_data, contents, filename, annotation_label,
+                            node_label_annotation_selector,
+                            node_color_label_selector):
     if not contents or not n_clicks:
         raise PreventUpdate
 
-    # todo this should be checked in the input of the label option...
-    import re
-    sanitized_label = re.sub(r'[^a-zA-Z0-9_]', '', annotation_label)
-    if sanitized_label != annotation_label:
-        logger.info(f"There were symbols that are not allowed, removing them will change the "
-                    f"label to: {sanitized_label}")
+    if not graph_data:
+        logger.info("No graph data loaded, nothing happens.")
+        time.sleep(0.1)
+        return no_update, no_update, no_update, False
 
     logger.info(f"Node annotations from file {filename} are being processed....")
 
-    # todo currently we are simply overwriting existing node annotation maps!
-    updated_data = process_node_annotations_file(
-        contents, current_node_annotations_data
-    )
+    uploaded_map = process_node_annotations_file(contents)
 
-    # logger.debug(f"Current node annotations: {node_label_dropdown}")
+    # merge uploaded data into existing graph
+    nodes = graph_data.get("nodes", [])
+    for n in nodes:
+        n["data"][annotation_label] = uploaded_map.get(n["data"]["taxon"], "")
 
-    new_dropdown_option = {"label": sanitized_label, "value": f"{sanitized_label}"}
-    if new_dropdown_option not in node_label_dropdown:
-        node_label_dropdown.append(new_dropdown_option)
+    updated_graph_data = {
+        "nodes": nodes,
+        "edges": graph_data["edges"]
+    }
+
+    new_dropdown_option = {"label": annotation_label, "value": f"{annotation_label}"}
+    if (new_dropdown_option in node_label_annotation_selector or
+            new_dropdown_option in node_color_label_selector):
+        logger.info(f"This label ({annotation_label}) option already exists!"
+                    f"Not supported at the moment!")
     else:
-        # todo could have a popup for that and then return here without updating anything?
-        # todo if above we need to move this to the top of the thing to check that the label is
-        #  unique
-        logger.info("This label option already exists! not supported")
+        node_label_annotation_selector.append(new_dropdown_option)
+        node_color_label_selector.append(new_dropdown_option)
 
     # delay for loading modal to close... dash scheduling/ race condition problem.
-    import time
     time.sleep(0.1)
+    logger.info(f"Graph-store updated wit hnew annotation label: {annotation_label}")
 
-    logger.info(f"Got updated data: {updated_data}")
     return (
-        {"label": sanitized_label, "map": updated_data},
-        node_label_dropdown,
+        updated_graph_data,
+        node_label_annotation_selector,
+        node_color_label_selector,
         False
     )

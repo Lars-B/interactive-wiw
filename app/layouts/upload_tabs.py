@@ -94,10 +94,20 @@ upload_tabs = dbc.Tabs(
                                 type="text",
                                 style={"marginBottom": "5px"},
                             ),
-                            html.Small(
-                                "Only letters, digits, and underscores are allowed."
-                                " Other characters will be removed automatically!",
-                                style={"fontStyle": "italic"},
+                            html.Div(
+                                [
+                                    html.Small(
+                                        id="node-annotations-label-warning",
+                                        style={"color": "red", "display": "block",
+                                               "marginBottom": "2px"},
+                                    ),
+                                    html.Small(
+                                        "Only letters, digits, and underscores are allowed. "
+                                        "Other characters will be removed automatically!",
+                                        style={"fontStyle": "italic", "color": "#666"},
+                                    ),
+                                ],
+                                style={"marginLeft": "2px"}  # slight indent from input
                             ),
                         ],
                         style={"marginBottom": "15px"}
@@ -107,7 +117,6 @@ upload_tabs = dbc.Tabs(
                         id=UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN,
                         color="primary"
                     ),
-                    dcc.Store(id=UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE),
                 ],
                     style={"paddingTop": "1.5rem"}
                 )

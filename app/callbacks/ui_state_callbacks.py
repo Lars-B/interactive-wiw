@@ -1,3 +1,5 @@
+import re
+
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State
 from dash import callback_context
@@ -6,6 +8,7 @@ from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 
 from ..app import app as myapp
+from ..dash_logger import logger
 from ..ids import UploadIDs, GraphOptions
 from ..utils import assign_default_colors
 
@@ -167,24 +170,16 @@ def toggle_node_color_pickers(toggle_values):
 
 @myapp.callback(
     Output(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
-    Input("graph-store", "data")
+    Input("graph-store", "data"),
+    Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
 )
-def create_nodes_color_picker_panel(graph_data):
+def create_nodes_color_picker_panel(graph_data, color_label_selection):
     if not graph_data:
         return html.Div("No node data loaded.")
 
     nodes = graph_data.get("nodes", [])
 
-    # todo this should be a dropdown input at the top of the color pickers...
-    LABEL_SELCTION_COLORING = "taxon"
-
-    labels = sorted(set(node["data"][LABEL_SELCTION_COLORING] for node in nodes))
-
-    # from ..dash_logger import logger
-    #
-    # logger.debug(labels)
-    # logger.debug("--------")
-    # logger.debug(nodes[0]["data"])
+    labels = sorted(set(node["data"][color_label_selection] for node in nodes))
 
     # Get dynamic default colors
     # todo this redundant can just do the default colors here?...
@@ -242,3 +237,34 @@ def create_nodes_color_picker_panel(graph_data):
 )
 def update_label_color_store(values, ids):
     return {id["index"]: val for id, val in zip(ids, values)}
+
+
+@myapp.callback(
+    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "value", allow_duplicate=True),
+    Output("node-annotations-label-warning", "children"),
+    Output(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
+    Output(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "disabled"),
+    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "disabled"),
+    Input(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
+    Input("graph-store", "data"),
+    prevent_initial_call=True
+)
+def sanitize_node_annotations_label(label, graph_data):
+    if not graph_data or not graph_data.get("nodes"):
+        return "", "Please Upload a graph before using this feature!", True, True, True
+
+    DEFAULT_LABEL = "Cheese"
+    if not label:
+        # raise PreventUpdate
+        logger.info("No label provided, setting default value")
+        return DEFAULT_LABEL, f"No label provided - defaulting to '{DEFAULT_LABEL}'", False, False, False
+
+    sanitized_label = re.sub(r'[^a-zA-Z0-9_]', '', label)
+
+    if sanitized_label != label:
+        if sanitized_label == "":
+            sanitized_label = DEFAULT_LABEL
+        logger.info(f"Invalid characters removed from '{label}', new label: {sanitized_label}")
+        return sanitized_label, f"Invalid characters removed - {sanitized_label}", False, False, False
+
+    return label, "", False, False, False

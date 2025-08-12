@@ -11,7 +11,6 @@ class UploadIDs:
     UPLOAD_NODE_ANNOTATIONS = "upload-node-annotations"
     SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
     CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
-    UPLOADED_NODE_ANNOTATIONS_STORE = "uploaded-node-annotations-store"
     NODE_ANNOTATIONS_LABEL = "node-annotations-label"
 
 
@@ -28,9 +27,10 @@ class GraphOptions:
         ADVANCED_OPTIONS_ICON = "advanced-node-options-button-icon"  # todo find and replace
         ADVANCED_OPTIONS_COLLAPSE = "advanced-node-options-collapse"  # todo find and replace
         ADVANCED_OPTION_TOGGLE_BTN = "advanced-node-option-toggle-btn"
+        LABEL_ANNOTATION_SELECTOR = "node-annotation-selector"
         LABEL_FONT_SIZE = "node-label-font-size"  # todo find and replace
         COLOR_BY_LABEL = "node-color-by-label"
-        LABEL_RENAME_ERROR = "node-label-rename-error"
+        COLOR_LABEL_SELECTOR = "node-color-label-selector"
         COLOR_PICKER_CONTAINERS = "node-color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "node-color-pickers-collapse"
         COLOR_STORE = "node-label-color-store"

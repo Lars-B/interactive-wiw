@@ -226,10 +226,11 @@ graph_option_tabs = dbc.Tabs(
             tab_id=GraphOptions.Nodes.TAB,
             children=[
                 html.Div([
-                    html.Label("Node Annotation:", htmlFor="node-annotation-selector",
+                    html.Label("Node Annotation:",
+                               htmlFor=GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR,
                                style={"fontWeight": "bold", "marginBottom": "5px"}),
                     dcc.Dropdown(
-                        id="node-annotation-selector",
+                        id=GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR,
                         options=[
                             {"label": "None", "value": "none"},
                             {"label": "Label", "value": "label"},
@@ -292,8 +293,24 @@ graph_option_tabs = dbc.Tabs(
                             dbc.Collapse(
                                 html.Div(
                                     [
-                                        html.Div(id=GraphOptions.Nodes.LABEL_RENAME_ERROR,
-                                                 style={"color": "red", "marginBottom": "10px"}),
+                                        html.Div([
+                                            html.Label(
+                                                "Color Nodes:",
+                                                htmlFor=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
+                                                style={"fontWeight": "bold",
+                                                       "marginBottom": "5px"}
+                                            ),
+                                            dcc.Dropdown(
+                                                id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
+                                                options=[
+                                                    {"label": "Label", "value": "label"},
+                                                    {"label": "Taxon", "value": "taxon"}
+                                                ],
+                                                value="label",
+                                                clearable=False,
+                                                style={"marginBottom": "15px"}
+                                            )
+                                        ]),
                                         html.Div(id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
                                                  style={"marginTop": "10px"})
                                     ]
