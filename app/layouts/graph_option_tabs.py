@@ -206,16 +206,17 @@ graph_option_tabs = dbc.Tabs(
                         style={"marginBottom": "10px"}
                     )
                 ]),
-                dcc.Store(id="label-color-store"),
+                dcc.Store(id=GraphOptions.Edges.COLOR_STORE),
                 dbc.Collapse(
                     html.Div(
                         [
-                            html.Div(id="rename-error",
+                            html.Div(id=GraphOptions.Edges.LABEL_RENAME_ERROR,
                                      style={"color": "red", "marginBottom": "10px"}),
-                            html.Div(id="color-pickers-container", style={"marginTop": "10px"})
+                            html.Div(id=GraphOptions.Edges.COLOR_PICKER_CONTAINERS,
+                                     style={"marginTop": "10px"})
                         ]
                     ),
-                    id="color-pickers-collapse",
+                    id=GraphOptions.Edges.COLOR_PICKERS_COLLAPSE,
                     is_open=False
                 ),
             ]
@@ -278,7 +279,29 @@ graph_option_tabs = dbc.Tabs(
                             ]),
                             id=GraphOptions.Nodes.ADVANCED_OPTIONS_COLLAPSE,
                             is_open=False
-                        )
+                        ),
+                        html.Div([
+                            dcc.Checklist(
+                                id=GraphOptions.Nodes.COLOR_BY_LABEL,
+                                options=[{"label": "Color nodes by label", "value": "color"}],
+                                value=[],
+                                inline=True,
+                                style={"marginBottom": "10px"}
+                            ),
+                            dcc.Store(id=GraphOptions.Nodes.COLOR_STORE),
+                            dbc.Collapse(
+                                html.Div(
+                                    [
+                                        html.Div(id=GraphOptions.Nodes.LABEL_RENAME_ERROR,
+                                                 style={"color": "red", "marginBottom": "10px"}),
+                                        html.Div(id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
+                                                 style={"marginTop": "10px"})
+                                    ]
+                                ),
+                                id=GraphOptions.Nodes.COLOR_PICKERS_COLLAPSE,
+                                is_open=False
+                            ),
+                        ])
                     ]
                 ),
             ]

@@ -74,19 +74,19 @@ def toggle_advanced_node_options(n_clicks, is_open):
 
 
 @myapp.callback(
-    Output("color-pickers-collapse", "is_open"),
-    Input("color-by-label-toggle", "value"),
+    Output(GraphOptions.Edges.COLOR_PICKERS_COLLAPSE, "is_open"),
+    Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
 )
-def toggle_color_pickers(toggle_values):
+def toggle_edge_color_pickers(toggle_values):
     # Show if 'color' is in checklist values, else hide
     return "color" in toggle_values
 
 
 @myapp.callback(
-    Output("color-pickers-container", "children"),
-    Input("graph-store", "data")  # or trigger when scale/layout/etc. change
+    Output(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
+    Input("graph-store", "data")
 )
-def create_color_picker_panel(graph_data, label_colors=None):
+def create_edge_color_picker_panel(graph_data, label_colors=None):
     if not graph_data:
         return html.Div("No graph data loaded.")
 
@@ -97,7 +97,7 @@ def create_color_picker_panel(graph_data, label_colors=None):
     # todo this redundant can just do the default colors here?...
     default_colors = assign_default_colors(labels)
 
-    # Override with label_colors if given
+    # Override with edge_label_colors if given
     if label_colors:
         default_colors.update(label_colors)
 
@@ -148,7 +148,95 @@ def create_color_picker_panel(graph_data, label_colors=None):
 
 
 @myapp.callback(
-    Output("label-color-store", "data"),
+    Output(GraphOptions.Edges.COLOR_STORE, "data"),
+    Input({"type": "color-input", "index": ALL}, "value"),
+    State({"type": "color-input", "index": ALL}, "id")
+)
+def update_label_color_store(values, ids):
+    return {id["index"]: val for id, val in zip(ids, values)}
+
+
+@myapp.callback(
+    Output(GraphOptions.Nodes.COLOR_PICKERS_COLLAPSE, "is_open"),
+    Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
+)
+def toggle_node_color_pickers(toggle_values):
+    # Show if 'color' is in checklist values, else hide
+    return "color" in toggle_values
+
+
+@myapp.callback(
+    Output(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
+    Input("graph-store", "data")
+)
+def create_nodes_color_picker_panel(graph_data):
+    if not graph_data:
+        return html.Div("No node data loaded.")
+
+    nodes = graph_data.get("nodes", [])
+
+    # todo this should be a dropdown input at the top of the color pickers...
+    LABEL_SELCTION_COLORING = "taxon"
+
+    labels = sorted(set(node["data"][LABEL_SELCTION_COLORING] for node in nodes))
+
+    # from ..dash_logger import logger
+    #
+    # logger.debug(labels)
+    # logger.debug("--------")
+    # logger.debug(nodes[0]["data"])
+
+    # Get dynamic default colors
+    # todo this redundant can just do the default colors here?...
+    default_colors = assign_default_colors(labels)
+
+    def color_dropdown(label):
+        return dbc.Input(
+            id={"type": "color-input", "index": label},
+            type="color",
+            value=default_colors[label],
+            style={
+                "width": 60,
+                "height": 40,
+                "marginBottom": "2px",
+                "padding": 0,
+                "border": "none"
+            }
+        )
+
+    return html.Div(
+        style={
+            "maxHeight": "300px",
+            "overflowY": "auto",
+            "overflowX": "hidden",
+            "width": "100%",
+            "border": "1px solid #ddd",
+            "padding": "5px"
+        },
+        children=[
+            dbc.Row(
+                [
+                    dbc.Col(color_dropdown(label), width="auto"),
+                    dbc.Col(
+                        dbc.Label(
+                            label,
+                            style={"width": 120, "height": 40, "marginLeft": "10px",
+                                   "lineHeight": "40px"}
+                        ),
+                        width="auto"
+                    )
+                ],
+                align="center",
+                style={"marginBottom": "8px"},
+                key=label
+            )
+            for label in labels
+        ]
+    )
+
+
+@myapp.callback(
+    Output(GraphOptions.Nodes.COLOR_STORE, "data"),
     Input({"type": "color-input", "index": ALL}, "value"),
     State({"type": "color-input", "index": ALL}, "id")
 )

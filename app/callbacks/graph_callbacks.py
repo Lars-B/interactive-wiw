@@ -5,7 +5,7 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from ..app import app as myapp
-from ..ids import UploadIDs
+from ..ids import UploadIDs, GraphOptions
 from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
 
 
@@ -23,14 +23,17 @@ from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
     Input('weight-threshold', 'value'),
     Input('edge-label-font-size', 'value'),
     Input('node-label-font-size', 'value'),
-    Input("color-by-label-toggle", "value"),
-    Input("label-color-store", "data"),
+    Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
+    Input(GraphOptions.Edges.COLOR_STORE, "data"),
+    Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
+    Input(GraphOptions.Nodes.COLOR_STORE, "data"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input("node-annotation-selector", "value")
 )
 def update_elements(graph_data, uploaded_node_annotation_data, selected_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
-                    edge_label_font_size, node_label_font_size, color_toggle, label_colors,
+                    edge_label_font_size, node_label_font_size, edge_color_toggle,
+                    edge_label_colors, node_color_toggle, node_label_colors,
                     is_light_theme, node_annotation_selection):
     scale_edges = "scale" in scale_toggle
 
@@ -53,10 +56,15 @@ def update_elements(graph_data, uploaded_node_annotation_data, selected_labels, 
             new_data = uploaded_map.get(n["data"]["taxon"], "")
             n["data"][uploaded_label] = new_data
 
+    node_color_label = "taxon"
+    for node in nodes:
+        label = node["data"][node_color_label]
+        node["data"]["color"] = node_label_colors.get(label, "green")
+
     # this updates to the correct colors
     for edge in filtered_edges:
         label = edge["data"]["label"]
-        edge["data"]["color"] = label_colors.get(label, "purple")
+        edge["data"]["color"] = edge_label_colors.get(label, "purple")
 
     elements = nodes + filtered_edges
     layout = {"name": selected_layout}
@@ -64,12 +72,13 @@ def update_elements(graph_data, uploaded_node_annotation_data, selected_labels, 
     stylesheet = [
         {"selector": "node",
          "style": get_node_style(node_annotation_selection,
-                                 node_label_font_size)},
+                                 node_label_font_size,
+                                 node_color_toggle)},
         {"selector": "edge",
          "style": get_edge_style(annotation_field,
                                  label_position,
                                  scale_edges,
-                                 color_toggle,
+                                 edge_color_toggle,
                                  is_light_theme,
                                  edge_label_font_size)},
     ]
@@ -123,7 +132,7 @@ def update_label_filter_options(graph_data):
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
-    Output("rename-error", "children"),
+    Output(GraphOptions.Edges.LABEL_RENAME_ERROR, "children"),
     Input({"type": "label-rename-input", "index": ALL}, "value"),
     State({"type": "label-rename-input", "index": ALL}, "id"),
     State("graph-store", "data"),

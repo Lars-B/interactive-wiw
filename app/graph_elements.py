@@ -123,14 +123,14 @@ def get_cytoscape_style(is_light_theme: bool) -> dict:
     }
 
 
-def get_node_style(annotation_field, font_size) -> dict:
+def get_node_style(annotation_field, font_size, color_by_label) -> dict:
     return {
         "label": f"data({annotation_field})",
         "text-valign": "center",
         "text-halign": "center",
         "text-outline-width": 1,
         "text-outline-color": "#888",
-        "backgroundColor": "#555",
+        "backgroundColor": "data(color)" if color_by_label else "#555",
         "color": "#fff",
         "font-size": font_size,
     }
