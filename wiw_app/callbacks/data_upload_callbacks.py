@@ -3,10 +3,10 @@ import time
 from dash import Input, Output, State, no_update
 from dash.exceptions import PreventUpdate
 
-from ..app import app as myapp
-from ..dash_logger import logger
-from ..graph_elements import build_graph_from_file, process_node_annotations_file
-from ..ids import UploadIDs, GraphOptions
+from wiw_app.app import app as myapp
+from wiw_app.dash_logger import logger
+from wiw_app.graph_elements import build_graph_from_file, process_node_annotations_file
+from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(

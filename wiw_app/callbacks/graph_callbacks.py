@@ -4,9 +4,9 @@ from dash import Input, Output, State, ALL, no_update
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
-from ..app import app as myapp
-from ..graph_elements import get_node_style, get_edge_style, get_cytoscape_style
-from ..ids import UploadIDs, GraphOptions
+from wiw_app.app import app as myapp
+from wiw_app.graph_elements import get_node_style, get_edge_style, get_cytoscape_style
+from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(

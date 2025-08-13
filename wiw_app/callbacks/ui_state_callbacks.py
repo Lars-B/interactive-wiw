@@ -7,10 +7,10 @@ from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 
-from ..app import app as myapp
-from ..dash_logger import logger
-from ..ids import UploadIDs, GraphOptions
-from ..utils import assign_default_colors
+from wiw_app.app import app as myapp
+from wiw_app.dash_logger import logger
+from wiw_app.ids import UploadIDs, GraphOptions
+from wiw_app.utils import assign_default_colors
 
 
 @myapp.callback(

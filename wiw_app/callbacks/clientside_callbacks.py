@@ -1,6 +1,6 @@
 from dash import Input, Output
 
-from ..app import app as myapp
+from wiw_app.app import app as myapp
 
 myapp.clientside_callback(
     """

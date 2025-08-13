@@ -1,14 +1,31 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
-from dash import html, dcc
+
+cyto.load_extra_layouts()
+
+from dash import html, dcc, Dash
 from dash_bootstrap_templates import ThemeSwitchAIO
 from dash_iconify import DashIconify
 
-from . import app, url_theme1, url_theme2
-from .graph_elements import get_cytoscape_style
-from .layouts import *
+from wiw_app.graph_elements import get_cytoscape_style
+from wiw_app.layouts import *
 
 dcc.Store(id="graph-store")
+
+template_theme1 = "morph"
+template_theme2 = "slate"
+url_theme1 = dbc.themes.MORPH
+url_theme2 = dbc.themes.SLATE
+
+dbc_css = (
+    "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.1/dbc.min.css"
+)
+
+app = Dash(
+    __name__,
+    external_stylesheets=[url_theme1, dbc_css],
+    assets_folder="../assets",
+)
 
 app.layout = html.Div([
     dcc.Store(id="graph-store"),

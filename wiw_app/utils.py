@@ -1,7 +1,7 @@
 import time
 from contextlib import contextmanager
 
-from .dash_logger import logger
+from wiw_app.dash_logger import logger
 
 DEFAULT_COLOR_PALETTE = [
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",

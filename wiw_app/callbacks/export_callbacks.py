@@ -2,8 +2,8 @@ import networkx as nx
 from dash import Input, Output, State, dcc, ctx
 from networkx.drawing.nx_pydot import to_pydot
 
-from ..app import app as myapp
-from ..dash_logger import logger
+from wiw_app.app import app as myapp
+from wiw_app.dash_logger import logger
 
 
 @myapp.callback(

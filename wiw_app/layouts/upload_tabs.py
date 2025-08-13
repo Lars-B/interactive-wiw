@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from ..ids import UploadIDs
+from wiw_app.ids import UploadIDs
 
 upload_tabs = dbc.Tabs(
     children=

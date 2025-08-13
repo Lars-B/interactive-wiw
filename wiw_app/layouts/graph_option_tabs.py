@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 from dash_iconify import DashIconify
 
-from ..ids import GraphOptions
+from wiw_app.ids import GraphOptions
 
 graph_option_tabs = dbc.Tabs(
     children=

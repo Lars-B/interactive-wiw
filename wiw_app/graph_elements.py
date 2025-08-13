@@ -7,8 +7,8 @@ from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
 
 from pyccd.read_nexus import read_nexus_trees
 from pyccd.wiw_network import find_infector
-from .dash_logger import logger
-from .utils import log_time
+from wiw_app.dash_logger import logger
+from wiw_app.utils import log_time
 
 
 def decode_base64_content(base64_content: str) -> bytes:
