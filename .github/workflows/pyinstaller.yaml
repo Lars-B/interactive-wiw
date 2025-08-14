@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            pwsh -Command "Compress-Archive -Path dist\spread_viz -DestinationPath dist\SpreadViz-Windows-${{ runner.arch }}.zip"
+            pwsh -Command "Compress-Archive -Path dist\spread_viz.exe -DestinationPath dist\SpreadViz-Windows-${{ runner.arch }}.zip"
           else
             cd dist
             zip SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip spread_viz
