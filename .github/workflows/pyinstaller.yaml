@@ -37,9 +37,14 @@ jobs:
         run: pyinstaller --onefile spread_viz.py --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app
 
       - name: Zip the executable
-        run:  |
-          cd dist
-          zip SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip spread_viz
+        shell: bash
+        run: |
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            pwsh -Command "Compress-Archive -Path dist\spread_viz -DestinationPath dist\SpreadViz-Windows-${{ runner.arch }}.zip"
+          else
+            cd dist
+            zip SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip spread_viz
+          fi
           
       - name: Get latest release tag
         id: get_latest
