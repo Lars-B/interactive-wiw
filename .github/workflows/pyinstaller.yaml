@@ -48,6 +48,7 @@ jobs:
           
       - name: Get latest release tag
         id: get_latest
+        shell: bash
         run: |
           TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
