@@ -1,12 +1,12 @@
 import base64
+import networkx as nx
+import os
 import tempfile
 from collections import defaultdict
-
-import networkx as nx
 from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
-
 from pyccd.read_nexus import read_nexus_trees
 from pyccd.wiw_network import find_infector
+
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
 
@@ -18,15 +18,19 @@ def decode_base64_content(base64_content: str) -> bytes:
 
 def handle_uploaded_nexus_file(base64_content):
     decoded_content = decode_base64_content(base64_content)
-    with tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=True) as tmp:
+    tmp = tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=False)
+    try:
         tmp.write(decoded_content)
-        tmp.flush()  # Ensure all data is written before using it
+        tmp.flush()
+        tmp.close()
         trees, taxon_map = read_nexus_trees(
             tmp.name,
             breath_trees=True,
             label_transm_history=True,
             parse_taxon_map=True
         )
+    finally:
+        os.remove(tmp.name)
     return trees, taxon_map
 
 
