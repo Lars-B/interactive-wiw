@@ -1,4 +1,4 @@
-name: Build Dash Executable
+name: Build Executable all
 
 on:
   workflow_dispatch:
