@@ -7,7 +7,7 @@ upload_tabs = dbc.Tabs(
     children=
     [
         dbc.Tab(
-            label="Upload Dataset",
+            label="Trees",
             tab_id="tab-upload-dataset",
             children=[
                 html.Div([
@@ -61,7 +61,7 @@ upload_tabs = dbc.Tabs(
             ],
         ),
         dbc.Tab(
-            label="Upload Node Annotations",
+            label="Node Annotations",
             tab_id="tab-node-annotations",
             children=[
                 html.Div([

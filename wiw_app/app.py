@@ -100,7 +100,12 @@ app.layout = html.Div([
                 ),
                 html.Hr(),
             ],
-            width=2,  # out of 12 total columns
+            xs=6,
+            sm=6,
+            md=5,
+            lg=4,
+            xl=3,
+            xxl=2,
             style={
                 "padding": "15px",
                 "height": "100vh",
@@ -117,7 +122,12 @@ app.layout = html.Div([
                 zoom=1,
                 pan={'x': 0, 'y': 0}
             ),
-            width=10,
+            xs=6,
+            sm=6,
+            md=7,
+            lg=8,
+            xl=9,
+            xxl=10,
             style={"padding": "0"}  # Remove padding for full-width visualization
         )
     ], style={"margin": "0", "width": "100%", "height": "100vh", "overflow": "hidden"})

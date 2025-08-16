@@ -8,7 +8,7 @@ graph_option_tabs = dbc.Tabs(
     children=
     [
         dbc.Tab(
-            label="Graph options",
+            label="Graph",
             tab_id=GraphOptions.Graph.TAB,
             children=[
                 html.Div([
@@ -75,7 +75,7 @@ graph_option_tabs = dbc.Tabs(
             ]
         ),
         dbc.Tab(
-            label="Edge options",
+            label="Edges",
             tab_id=GraphOptions.Edges.TAB,
             children=[
                 html.Div([
@@ -222,7 +222,7 @@ graph_option_tabs = dbc.Tabs(
             ]
         ),
         dbc.Tab(
-            label="Node options",
+            label="Nodes",
             tab_id=GraphOptions.Nodes.TAB,
             children=[
                 html.Div([
