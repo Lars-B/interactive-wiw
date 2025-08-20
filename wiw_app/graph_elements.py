@@ -16,6 +16,7 @@ def decode_base64_content(base64_content: str) -> bytes:
     decoded_content = base64.b64decode(content_string)
     return decoded_content
 
+
 def handle_uploaded_nexus_file(base64_content):
     decoded_content = decode_base64_content(base64_content)
     tmp = tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=False)
@@ -34,6 +35,10 @@ def handle_uploaded_nexus_file(base64_content):
     return trees, taxon_map
 
 
+class NoTreesFoundError(Exception):
+    pass
+
+
 def build_graph_from_file(file_content, label, burn_in):
     EDGE_SCALE = 10
 
@@ -47,6 +52,10 @@ def build_graph_from_file(file_content, label, burn_in):
 
     trees = trees[int(burn_in * len(trees)):]
     num_trees = len(trees)
+
+    if num_trees == 0:
+        raise NoTreesFoundError("No trees were found after burn-in!")
+
     logger.info(f"After burn-in there are {num_trees} trees")
 
     logger.info("Processing trees...")
@@ -116,7 +125,7 @@ def build_graph_from_file(file_content, label, burn_in):
 
         edges.extend(mst_edges)
 
-    return nodes, edges
+    return nodes, edges, num_trees
 
 
 def get_cytoscape_style(is_light_theme: bool) -> dict:

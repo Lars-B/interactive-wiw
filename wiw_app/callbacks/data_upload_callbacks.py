@@ -5,13 +5,18 @@ from dash.exceptions import PreventUpdate
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import build_graph_from_file, process_node_annotations_file
+from wiw_app.graph_elements import build_graph_from_file, process_node_annotations_file, \
+    NoTreesFoundError
 from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output("loading-modal", "is_open", allow_duplicate=True),
+    Output(UploadIDs.INFO_TOAST, "children"),
+    Output(UploadIDs.INFO_TOAST, "is_open"),
+    Output(UploadIDs.INFO_TOAST, "duration"),
+    Output(UploadIDs.INFO_TOAST, "icon"),
     Input("confirm-dataset-btn", "n_clicks"),
     State("upload-trees-data", "contents"),
     State("upload-trees-data", "filename"),
@@ -25,11 +30,24 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
         raise PreventUpdate
 
     effective_label = label or filename
-
-    new_nodes, new_edges = build_graph_from_file(contents, effective_label, burnin)
-
     # Merge with current graph (if any)
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
+
+    try:
+        new_nodes, new_edges, num_trees = build_graph_from_file(contents, effective_label, burnin)
+    except NoTreesFoundError as e:
+        # delay for loading modal to close... dash scheduling/ race condition problem.
+        time.sleep(0.1)
+
+        return (
+            current_graph_data,
+            False,
+            # Info toast related stuff
+            str(e),
+            True,
+            5000,
+            "danger"
+        )
 
     logger.info("Finished updating the graph.")
 
@@ -37,6 +55,11 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
         {"nodes": current_graph_data["nodes"] + new_nodes,
          "edges": current_graph_data["edges"] + new_edges},
         False,
+        # Info toast related stuff
+        f"Successfully parsed {num_trees} trees.",
+        True,
+        3000,
+        "info"
     )
 
 

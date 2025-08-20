@@ -1,6 +1,8 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 
+from wiw_app.ids import UploadIDs
+
 cyto.load_extra_layouts()
 
 from dash import html, dcc, Dash
@@ -40,6 +42,21 @@ app.layout = html.Div([
                 html.H2("Upload Data", className="mt-2"),
                 html.Hr(),
                 html.Div([upload_tabs]),
+
+                dbc.Toast(
+                    id=UploadIDs.INFO_TOAST,
+                    header="Upload Info",
+                    is_open=False,
+                    dismissable=True,
+                    style={
+                        "position": "fixed",
+                        "top": 66,
+                        "right": "50%",
+                        "width": 350,
+                        "zIndex": 2000
+                    },
+                ),
+
 
                 html.H2("Graph Controls", className="mt-2"),
 

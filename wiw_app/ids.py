@@ -12,7 +12,7 @@ class UploadIDs:
     SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
     CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
     NODE_ANNOTATIONS_LABEL = "node-annotations-label"
-
+    INFO_TOAST = "info-toast"
 
 class GraphOptions:
     TABS = "graph-option-tabs"
