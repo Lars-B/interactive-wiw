@@ -10,6 +10,11 @@ PORT = 12712
 logger.setLevel(logging.INFO)
 logger.info("Starting packaged wiw_app")
 
+for log_name in ["werkzeug", "flask.app", "dash"]:
+    cur_logger = logging.getLogger(log_name)
+    cur_logger.setLevel(logging.WARNING)
+    cur_logger.propagate = False
+
 
 def open_browser():
     webbrowser.open_new(f"http://127.0.0.1:{PORT}")
