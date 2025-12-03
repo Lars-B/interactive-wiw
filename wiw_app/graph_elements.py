@@ -104,7 +104,7 @@ def build_graph_from_file(file_content, label, burn_in):
                                  posterior=posterior_support)
                     edge_count += 1
 
-    if num_trees > 1:
+    if num_trees > 1 and net.number_of_nodes() > 1:
         mst = maximum_spanning_arborescence(net, attr="posterior", preserve_attrs=True)
         mst_edges = []
         edge_count = 1
