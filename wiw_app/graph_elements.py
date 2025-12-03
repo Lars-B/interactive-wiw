@@ -4,6 +4,7 @@ import os
 import tempfile
 from collections import defaultdict
 from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
+from networkx.exception import NetworkXException
 from pyccd.read_nexus import read_nexus_trees
 from pyccd.wiw_network import find_infector
 
@@ -105,25 +106,31 @@ def build_graph_from_file(file_content, label, burn_in):
                     edge_count += 1
 
     if num_trees > 1 and net.number_of_nodes() > 1:
-        mst = maximum_spanning_arborescence(net, attr="posterior", preserve_attrs=True)
-        mst_edges = []
-        edge_count = 1
-        for u, v, data in mst.edges(data=True):
-            mst_edges.append({
-                "data": {
-                    "source": u,
-                    "target": v,
-                    "label": f"MST-{label}",
-                    "posterior": round(data["posterior"], 2),
-                    "weight": data["weight"],
-                    "penwidth": 1,
-                    "color": "black",
-                    "id": f'MST-{edge_count}'
-                }
-            })
-            edge_count += 1
+        mst = None
+        try:
+            mst = maximum_spanning_arborescence(net, attr="posterior", preserve_attrs=True)
+        except NetworkXException:
+            logger.info("Maximum spanning arborescence failed and will be ignored...")
 
-        edges.extend(mst_edges)
+        if mst:
+            mst_edges = []
+            edge_count = 1
+            for u, v, data in mst.edges(data=True):
+                mst_edges.append({
+                    "data": {
+                        "source": u,
+                        "target": v,
+                        "label": f"MST-{label}",
+                        "posterior": round(data["posterior"], 2),
+                        "weight": data["weight"],
+                        "penwidth": 1,
+                        "color": "black",
+                        "id": f'MST-{edge_count}'
+                    }
+                })
+                edge_count += 1
+
+            edges.extend(mst_edges)
 
     return nodes, edges, num_trees
 
