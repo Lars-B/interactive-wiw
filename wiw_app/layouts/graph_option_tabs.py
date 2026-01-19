@@ -276,7 +276,17 @@ graph_option_tabs = dbc.Tabs(
                                         marks={i: str(i) for i in range(0, 31, 5)},
                                         tooltip={"placement": "bottom", "always_visible": True},
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem"})
+                                ], style={"width": "100%", "marginBottom": "1rem"}),
+                                html.Div([
+                                    dcc.Checklist(
+                                        id=GraphOptions.Nodes.SUPRESS_SINGLETONS,
+                                        options=[
+                                            {"label": "Supress Singletons", "value": "on"}],
+                                        value=[],
+                                        inline=True,
+                                        style={"marginBottom": "10px"}
+                                    ),
+                                ])
                             ]),
                             id=GraphOptions.Nodes.ADVANCED_OPTIONS_COLLAPSE,
                             is_open=False

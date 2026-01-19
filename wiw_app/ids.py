@@ -34,6 +34,7 @@ class GraphOptions:
         COLOR_PICKER_CONTAINERS = "node-color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "node-color-pickers-collapse"
         COLOR_STORE = "node-label-color-store"
+        SUPRESS_SINGLETONS = "supress-singletons"
 
     class Edges:
         TAB = "tab-edge-options"

@@ -27,6 +27,7 @@ from wiw_app.ids import UploadIDs, GraphOptions
     Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Nodes.COLOR_STORE, "data"),
     Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
+    Input(GraphOptions.Nodes.SUPRESS_SINGLETONS, "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value")
 )
@@ -34,7 +35,7 @@ def update_elements(graph_data, selected_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
                     edge_label_font_size, node_label_font_size, edge_color_toggle,
                     edge_label_colors, node_color_toggle, node_label_colors,
-                    node_color_label_selection,
+                    node_color_label_selection, supress_singletons,
                     is_light_theme, node_annotation_selection):
     scale_edges = "scale" in scale_toggle
 
@@ -46,10 +47,23 @@ def update_elements(graph_data, selected_labels, selected_layout,
     nodes = graph_data.get("nodes", [])
     edges = graph_data.get("edges", [])
 
-    filtered_edges = [e for e in edges if e["data"]["label"] in selected_labels
-                      and e["data"].get("posterior", 0) >= threshold]
+    filtered_edges = []
+    seen_nodes = set()
+    for e in edges:
+        if e["data"]["label"] in selected_labels and e["data"].get("posterior", 0) >= threshold:
+            filtered_edges.append(e)
+            seen_nodes.add(e["data"]["source"])
+            seen_nodes.add(e["data"]["target"])
 
-    for node in nodes:
+    supress_singletons_bool = "on" in supress_singletons
+    filtered_nodes = nodes
+    if supress_singletons_bool:
+        filtered_nodes = []
+        for n in nodes:
+            if n["data"]["id"] in seen_nodes:
+                filtered_nodes.append(n)
+
+    for node in filtered_nodes:
         label = node["data"][node_color_label_selection]
         node["data"]["color"] = node_label_colors.get(label, "green")
 
@@ -58,7 +72,7 @@ def update_elements(graph_data, selected_labels, selected_layout,
         label = edge["data"]["label"]
         edge["data"]["color"] = edge_label_colors.get(label, "purple")
 
-    elements = nodes + filtered_edges
+    elements = filtered_nodes + filtered_edges
     layout = {"name": selected_layout}
 
     stylesheet = [
