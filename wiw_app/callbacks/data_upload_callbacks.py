@@ -159,7 +159,7 @@ def update_node_annotations(n_clicks, graph_data, contents, filename, annotation
 
     # delay for loading modal to close... dash scheduling/ race condition problem.
     time.sleep(0.1)
-    logger.info(f"Graph-store updated wit hnew annotation label: {annotation_label}")
+    logger.info(f"Graph-store updated with new annotation label: {annotation_label}")
 
     return (
         updated_graph_data,

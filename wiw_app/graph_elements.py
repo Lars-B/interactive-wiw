@@ -202,7 +202,7 @@ def process_node_annotations_file(file_content):
     node_annotations_map = {}
 
     for line in decoded_content.decode("UTF-8").strip().split("\n"):
-        key, val = line.split(NODE_ANNOTATIONS_SEPARATOR)
+        key, val = line.strip().split(NODE_ANNOTATIONS_SEPARATOR)
         val = val.strip('"').strip("'")
         node_annotations_map[key] = val
 
