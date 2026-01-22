@@ -113,7 +113,6 @@ def display_node_annotation_file_name(filename):
     Output("graph-store", "data", allow_duplicate=True),
     Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
     Output(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
-    Output("loading-modal", "is_open", allow_duplicate=True),
     Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
     Input("graph-store", "data"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
@@ -152,18 +151,15 @@ def update_node_annotations(n_clicks, graph_data, contents, filename, annotation
     if (new_dropdown_option in node_label_annotation_selector or
             new_dropdown_option in node_color_label_selector):
         logger.info(f"This label ({annotation_label}) option already exists!"
-                    f"Not supported at the moment!")
+                    f" Not supported at the moment!")
     else:
         node_label_annotation_selector.append(new_dropdown_option)
         node_color_label_selector.append(new_dropdown_option)
 
-    # delay for loading modal to close... dash scheduling/ race condition problem.
-    time.sleep(0.1)
     logger.info(f"Graph-store updated with new annotation label: {annotation_label}")
 
     return (
         updated_graph_data,
         node_label_annotation_selector,
         node_color_label_selector,
-        False
     )

@@ -16,32 +16,19 @@ from wiw_app.utils import assign_default_colors
 @myapp.callback(
     Output("loading-modal", "is_open"),
     [
-        Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
-        Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
-        # Input("graph-store", "data"),
+        Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks")
     ],
     [
         State("loading-modal", "is_open"),
-        State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
-        State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
+        State(UploadIDs.UPLOAD_TREES_DATA, "contents")
     ],
     prevent_initial_call=True,
 )
-def toggle_loading_modal(n_clicks_trees, n_clicks_nodeann, is_open, trees_contents,
-                         nodeann_contents):
+def toggle_loading_modal(n_clicks_trees, is_open, trees_contents):
     triggered_id = callback_context.triggered_id
-
-    # from ..dash_logger import logger
-    # logger.debug(f"The triggered id is: {triggered_id}")
-    # logger.debug(f"The nodeann_contents is: {nodeann_contents}")
 
     if triggered_id == UploadIDs.CONFIRM_TREES_DATASET_BTN and trees_contents:
         return True
-    elif triggered_id == UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN and nodeann_contents:
-        return True
-    # todo i think this is pointless
-    # elif triggered_id in ["graph-store", UploadIDs.UPLOADED_NODE_ANNOTATIONS_STORE]:
-    #     return False  # close modal when graph data updated
 
     return is_open  # default: no change
 
