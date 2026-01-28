@@ -48,15 +48,23 @@ def update_elements(graph_data, selected_labels, selected_layout,
     edges = graph_data.get("edges", [])
 
     filtered_edges = []
-    seen_nodes = set()
+    seen_nodes_source = set()
+    seen_nodes_target = set()
     for e in edges:
         if e["data"]["label"] in selected_labels and e["data"].get("posterior", 0) >= threshold:
             filtered_edges.append(e)
-            seen_nodes.add(e["data"]["source"])
-            seen_nodes.add(e["data"]["target"])
+            seen_nodes_source.add(e["data"]["source"])
+            seen_nodes_target.add(e["data"]["target"])
 
     supress_singletons_bool = "on" in supress_singletons
     filtered_nodes = nodes
+
+    seen_nodes = seen_nodes_target | seen_nodes_source
+    terminal_nodes = (
+            (seen_nodes_source - seen_nodes_target) |
+            (seen_nodes_target - seen_nodes_source)
+    )
+
     if supress_singletons_bool:
         filtered_nodes = []
         for n in nodes:
@@ -66,6 +74,12 @@ def update_elements(graph_data, selected_labels, selected_layout,
     for node in filtered_nodes:
         label = node["data"][node_color_label_selection]
         node["data"]["color"] = node_label_colors.get(label, "green")
+        if node["data"]["id"] in terminal_nodes:
+            node["data"]["shape"] = "rectangle"
+        elif node["data"]["id"] not in seen_nodes:
+            node["data"]["shape"] = "triangle"
+        else:
+            node["data"]["shape"] = "ellipse"
 
     # this updates to the correct colors
     for edge in filtered_edges:

@@ -162,6 +162,7 @@ def get_node_style(annotation_field, font_size, color_by_label) -> dict:
         "text-outline-width": 1,
         "text-outline-color": "#888",
         "backgroundColor": "data(color)" if color_by_label else "#555",
+        "shape": "data(shape)",
         "color": "#fff",
         "font-size": font_size,
     }
