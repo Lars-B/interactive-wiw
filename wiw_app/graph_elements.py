@@ -3,6 +3,7 @@ import networkx as nx
 import os
 import tempfile
 from collections import defaultdict
+
 from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
 from networkx.exception import NetworkXException
 from brokilon.ccd.domain.transmission import read_breath_nexus
@@ -19,12 +20,21 @@ def decode_base64_content(base64_content: str) -> bytes:
 
 
 def handle_uploaded_nexus_file(base64_content, burn_in):
-    decoded_content = decode_base64_content(base64_content)
+    # decoded_content = decode_base64_content(base64_content)
     tmp = tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=False)
     try:
-        tmp.write(decoded_content)
+        _, content = base64_content.split(",", 1)
+
+        chunk_size = 1024 * 1024
+        for i in range(0, len(content), chunk_size):
+            chunk = content[i:i + chunk_size]
+            tmp.write(base64.b64decode(chunk))
         tmp.flush()
         tmp.close()
+
+        # tmp.write(decoded_content)
+        # tmp.flush()
+        # tmp.close()
 
         trees, taxon_map = read_breath_nexus(
             tmp.name,
