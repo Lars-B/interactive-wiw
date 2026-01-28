@@ -49,10 +49,19 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
             "danger"
         )
 
+    # Extracting only new nodes, if there was additional node annotation data uploaded
+    # this will still raise an Error because new nodes will miss the color by this new label
+    existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
+    true_new_nodes = [
+        n for n in new_nodes
+        if n["data"]["id"] not in existing_ids
+    ]
+    merged_nodes = current_graph_data["nodes"] + true_new_nodes
+
     logger.info("Finished updating the graph.")
 
     return (
-        {"nodes": current_graph_data["nodes"] + new_nodes,
+        {"nodes": merged_nodes,
          "edges": current_graph_data["edges"] + new_edges},
         False,
         # Info toast related stuff
