@@ -4,5 +4,6 @@ dash_bootstrap_templates
 dash_cytoscape
 dash_iconify
 networkx
+pydot
 
 brokilon @ git+https://github.com/Lars-B/pyccd@refactor
