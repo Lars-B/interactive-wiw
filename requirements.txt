@@ -5,4 +5,4 @@ dash_cytoscape
 dash_iconify
 networkx
 
-pyccd @ https://github.com/Lars-B/interactive-wiw/releases/download/v1.0.0/pyccd-0.1.0-py3-none-any.whl
+brokilon @ git+https://github.com/Lars-B/pyccd@refactor
