@@ -1,15 +1,19 @@
+import io
+
 import networkx as nx
-from dash import Input, Output, State, dcc, ctx
+from dash import Input, Output, State, dcc, ctx, dash
 from networkx.drawing.nx_pydot import to_pydot
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
+from wiw_app.utils import make_image_with_legend_png, extract_color_map_from_pallete
+from wiw_app.ids import GraphOptions
 
 
 @myapp.callback(
     Output("download-dot", 'data'),
     Input("btn-get-dot", "n_clicks"),
-    Input("image-filename-input", "value"),
+    State("image-filename-input", "value"),
     State("cytoscape", "elements"),
     prevent_initial_call=True
 )
@@ -34,7 +38,7 @@ def export_to_dot(n_clicks, filename, elements):
         Input("btn-get-jpg", "n_clicks"),
         Input("btn-get-png", "n_clicks"),
         Input("btn-get-svg", "n_clicks"),
-        Input("image-filename-input", "value")
+        State("image-filename-input", "value")
     ]
 )
 def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
@@ -51,3 +55,66 @@ def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
         'action': action,
         "filename": filename
     }
+
+
+@myapp.callback(
+    Output("cytoscape", "generateImage", allow_duplicate=True),
+    Output("pngplus-requested", "data"),
+    Input("btn-get-pngplus", "n_clicks"),
+    prevent_initial_call=True
+)
+def trigger_pngplus(n):
+    return {
+        "type": "png",
+        "action": "store",
+    }, True
+
+
+@myapp.callback(
+    Output("download-pngplus", "data"),
+    Output("pngplus-requested", "data", allow_duplicate=True),
+    State("pngplus-requested", "data"),
+    Input("cytoscape", "imageData"),
+    State("image-filename-input", "value"),
+    # For legend drawing we need this:
+    # State("cytoscape", "elements"),
+    State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
+    State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
+    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
+    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
+    State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
+    prevent_initial_call=True
+)
+def export_pngplus(requested,
+                   image_data,
+                   filename,
+                   node_color_container, node_color_toggle, node_color_title, node_color_options,
+                   edge_color_container, edge_color_toggle
+                   ):
+    if not requested:
+        return dash.no_update, False
+
+    proper_title = next(
+        opt["label"] for opt in node_color_options if opt["value"] == node_color_title
+    )
+
+    node_colors = None
+    if node_color_toggle:
+        node_colors = extract_color_map_from_pallete(node_color_container)
+
+    edge_colors = None
+    if edge_color_toggle:
+        edge_colors = extract_color_map_from_pallete(edge_color_container)
+
+    full_img = make_image_with_legend_png(image_data, node_colors, proper_title, edge_colors)
+
+    buffer = io.BytesIO()
+    full_img.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    return (
+        dcc.send_bytes(buffer.read(), f"{filename}-legend.png"),
+        False
+    )
+

@@ -57,7 +57,6 @@ app.layout = html.Div([
                     },
                 ),
 
-
                 html.H2("Graph Controls", className="mt-2"),
 
                 html.Hr(),
@@ -85,33 +84,48 @@ app.layout = html.Div([
                             ]
                         ),
                         dcc.Download(id="download-dot"),
+                        dcc.Download(id="download-pngplus"),  # todo what is that for?
+                        dcc.Store(id="pngplus-requested", data=False),
                         html.Div(
                             children=[
-                                dbc.ButtonGroup([
-                                    dbc.Button([
-                                        DashIconify(icon="mdi:download", width=16),
-                                        " JPG"
-                                    ], id="btn-get-jpg", n_clicks=0,
-                                        color="secondary", outline=True),
+                                html.Div(
+                                    children=[
+                                        dbc.ButtonGroup([
+                                            dbc.Button([
+                                                DashIconify(icon="mdi:download", width=16),
+                                                " JPG"
+                                            ], id="btn-get-jpg", n_clicks=0,
+                                                color="secondary", outline=True),
 
-                                    dbc.Button([
-                                        DashIconify(icon="mdi:download", width=16),
-                                        " PNG"
-                                    ], id="btn-get-png", n_clicks=0,
-                                        color="secondary", outline=True),
+                                            dbc.Button([
+                                                DashIconify(icon="mdi:download", width=16),
+                                                " PNG"
+                                            ], id="btn-get-png", n_clicks=0,
+                                                color="secondary", outline=True),
 
-                                    dbc.Button([
-                                        DashIconify(icon="mdi:download", width=16),
-                                        " SVG"
-                                    ], id="btn-get-svg", n_clicks=0,
-                                        color="secondary", outline=True),
+                                            dbc.Button([
+                                                DashIconify(icon="mdi:download", width=16),
+                                                " SVG"
+                                            ], id="btn-get-svg", n_clicks=0,
+                                                color="secondary", outline=True),
 
-                                    dbc.Button([
-                                        DashIconify(icon="mdi:code-tags", width=16),
-                                        " DOT"
-                                    ], id="btn-get-dot", n_clicks=0,
-                                        color="secondary", outline=True),
-                                ])
+                                            dbc.Button([
+                                                DashIconify(icon="mdi:code-tags", width=16),
+                                                " DOT"
+                                            ], id="btn-get-dot", n_clicks=0,
+                                                color="secondary", outline=True),
+                                        ])
+                                    ]),
+                                html.Div(
+                                    children=[
+                                        dbc.Button([
+                                            DashIconify(icon="mdi:map-legend", width=16),
+                                            " PNG+"
+                                        ], id="btn-get-pngplus", n_clicks=0,
+                                            color="secondary", outline=True),
+                                    ]
+                                )
+
                             ])
                     ]
                 ),
