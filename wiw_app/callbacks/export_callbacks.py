@@ -95,19 +95,25 @@ def export_pngplus(requested,
     if not requested:
         return dash.no_update, False
 
-    proper_title = next(
-        opt["label"] for opt in node_color_options if opt["value"] == node_color_title
-    )
+    # proper_title = next(
+    #     opt["label"] for opt in node_color_options if opt["value"] == node_color_title
+    # )
+    #
+    # node_colors = None
+    # if node_color_toggle:
+    #     node_colors = extract_color_map_from_pallete(node_color_container)
+    #
+    # edge_colors = None
+    # if edge_color_toggle:
+    #     edge_colors = extract_color_map_from_pallete(edge_color_container)
 
-    node_colors = None
-    if node_color_toggle:
-        node_colors = extract_color_map_from_pallete(node_color_container)
-
-    edge_colors = None
-    if edge_color_toggle:
-        edge_colors = extract_color_map_from_pallete(edge_color_container)
-
-    full_img = make_image_with_legend_png(image_data, node_colors, proper_title, edge_colors)
+    full_img = make_image_with_legend_png(image_data,
+                                          node_color_options,
+                                          node_color_title,
+                                          node_color_toggle,
+                                          node_color_container,
+                                          edge_color_toggle,
+                                          edge_color_container)
 
     buffer = io.BytesIO()
     full_img.save(buffer, format="PNG")
@@ -135,24 +141,19 @@ def export_legend(
         node_color_container, node_color_toggle, node_color_title, node_color_options,
         edge_color_container, edge_color_toggle
 ):
-    logger.debug("Exporting legend...")
+    logger.info("Exporting legend...")
 
-    proper_title = next(
-        opt["label"] for opt in node_color_options if opt["value"] == node_color_title
+    legend = draw_legend(
+        node_color_options,
+        node_color_title,
+        node_color_toggle,
+        node_color_container,
+        edge_color_toggle,
+        edge_color_container,
+        svg=True
     )
 
-    node_colors = None
-    if node_color_toggle:
-        node_colors = extract_color_map_from_pallete(node_color_container)
-
-    edge_colors = None
-    if edge_color_toggle:
-        edge_colors = extract_color_map_from_pallete(edge_color_container)
-
-    legend = draw_legend(node_colors, proper_title, edge_colors, svg=True)
-
-    logger.debug("Generated legend...")
-    logger.debug(legend)
+    logger.info("Generated legend...")
 
     return {
         "content": legend,

@@ -129,6 +129,16 @@ app.layout = html.Div([
                                             " Legend (SVG)"
                                         ], id="btn-get-legend", n_clicks=0,
                                             color="secondary", outline=True),
+                                        dbc.Button([
+                                            DashIconify(icon="mdi:eye-plus", width=16),
+                                            " "
+                                        ], id="btn-add-legend-node", n_clicks=0,
+                                            color="secondary", outline=True),
+                                        dbc.Button([
+                                            DashIconify(icon="mdi:eye-minus", width=16),
+                                            " "
+                                        ], id="btn-remove-legend-node", n_clicks=0,
+                                            color="secondary", outline=True),
                                     ]
                                 )
 
