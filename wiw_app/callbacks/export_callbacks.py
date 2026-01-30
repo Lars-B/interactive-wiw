@@ -6,8 +6,10 @@ from networkx.drawing.nx_pydot import to_pydot
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.utils import make_image_with_legend_png, extract_color_map_from_pallete
 from wiw_app.ids import GraphOptions
+from wiw_app.plotting_utils import (make_image_with_legend_png,
+                                    extract_color_map_from_pallete,
+                                    draw_legend)
 
 
 @myapp.callback(
@@ -76,8 +78,6 @@ def trigger_pngplus(n):
     State("pngplus-requested", "data"),
     Input("cytoscape", "imageData"),
     State("image-filename-input", "value"),
-    # For legend drawing we need this:
-    # State("cytoscape", "elements"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
@@ -118,3 +118,44 @@ def export_pngplus(requested,
         False
     )
 
+
+@myapp.callback(
+    Output("download-legend", "data"),
+    Input("btn-get-legend", "n_clicks"),
+    State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
+    State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
+    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
+    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
+    State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
+    prevent_initial_call=True
+)
+def export_legend(
+        n_clicks,
+        node_color_container, node_color_toggle, node_color_title, node_color_options,
+        edge_color_container, edge_color_toggle
+):
+    logger.debug("Exporting legend...")
+
+    proper_title = next(
+        opt["label"] for opt in node_color_options if opt["value"] == node_color_title
+    )
+
+    node_colors = None
+    if node_color_toggle:
+        node_colors = extract_color_map_from_pallete(node_color_container)
+
+    edge_colors = None
+    if edge_color_toggle:
+        edge_colors = extract_color_map_from_pallete(edge_color_container)
+
+    legend = draw_legend(node_colors, proper_title, edge_colors, svg=True)
+
+    logger.debug("Generated legend...")
+    logger.debug(legend)
+
+    return {
+        "content": legend,
+        "filename": "legend.svg",  # todo might become input option in the future...
+        "type": "image/svg+xml",
+    }

@@ -86,6 +86,7 @@ app.layout = html.Div([
                         dcc.Download(id="download-dot"),
                         dcc.Download(id="download-pngplus"),  # todo what is that for?
                         dcc.Store(id="pngplus-requested", data=False),
+                        dcc.Download(id="download-legend"),
                         html.Div(
                             children=[
                                 html.Div(
@@ -122,6 +123,11 @@ app.layout = html.Div([
                                             DashIconify(icon="mdi:map-legend", width=16),
                                             " PNG+"
                                         ], id="btn-get-pngplus", n_clicks=0,
+                                            color="secondary", outline=True),
+                                        dbc.Button([
+                                            DashIconify(icon="mdi:map-marker", width=16),
+                                            " Legend (SVG)"
+                                        ], id="btn-get-legend", n_clicks=0,
                                             color="secondary", outline=True),
                                     ]
                                 )
