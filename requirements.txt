@@ -5,5 +5,6 @@ dash_cytoscape
 dash_iconify
 networkx
 pydot
+pillow
 
 brokilon @ git+https://github.com/Lars-B/pyccd@refactor
