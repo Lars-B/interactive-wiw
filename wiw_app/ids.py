@@ -11,7 +11,8 @@ class UploadIDs:
     UPLOAD_NODE_ANNOTATIONS = "upload-node-annotations"
     SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
     CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
-    NODE_ANNOTATIONS_LABEL = "node-annotations-label"
+    NODE_ANNOTATIONS_TAXON_COL = "node-annotations-label"
+    NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
     INFO_TOAST = "info-toast"
 
 class GraphOptions:

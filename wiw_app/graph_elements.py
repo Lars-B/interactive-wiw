@@ -1,13 +1,15 @@
 import base64
-import networkx as nx
+import csv
+import io
 import os
 import tempfile
 from collections import defaultdict
 
-from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
-from networkx.exception import NetworkXException
+import networkx as nx
 from brokilon.ccd.domain.transmission import read_breath_nexus
 from brokilon.ccd.domain.transmission.find_infectors import find_infector
+from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
+from networkx.exception import NetworkXException
 
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
@@ -205,17 +207,61 @@ def get_edge_style(annotation_field, label_position, scale_edges,
     return edge_style
 
 
-def process_node_annotations_file(file_content):
+def _normalize_column_name(name: str) -> str:
+    """Lowercase + strip whitespace + remove surrounding quotes."""
+    return name.strip().strip('"').strip("'").lower()
+
+
+def process_node_annotations_file(file_content, taxon_column):
     logger.info(f"Processing file content for node annotations...")
-    decoded_content = decode_base64_content(file_content)
+    decoded_content = decode_base64_content(file_content).decode("UTF8")
 
-    NODE_ANNOTATIONS_SEPARATOR = "\t"
+    logger.debug(f"Uploaded stuff with column name {taxon_column}...")
 
-    node_annotations_map = {}
+    # Automatic parsing for the delimiter char, seems to work
+    delimeter = None
+    if delimeter is None:
+        sniffer = csv.Sniffer()
+        sample = decoded_content[:4096]
+        dialect = sniffer.sniff(sample)
+        delimiter = dialect.delimiter
 
-    for line in decoded_content.decode("UTF-8").strip().split("\n"):
-        key, val = line.strip().split(NODE_ANNOTATIONS_SEPARATOR)
-        val = val.strip('"').strip("'")
-        node_annotations_map[key] = val
+    reader = csv.DictReader(io.StringIO(decoded_content), delimiter=delimiter)
 
-    return node_annotations_map
+    if not reader.fieldnames:
+        raise ValueError("No header found in annotation file.")
+
+        # Normalize header names
+    normalized_fieldnames = [
+        _normalize_column_name(col) for col in reader.fieldnames
+    ]
+    fieldname_map = dict(zip(normalized_fieldnames, reader.fieldnames))
+    taxon_column_normalized = _normalize_column_name(taxon_column)
+
+    if taxon_column_normalized not in fieldname_map:
+        raise ValueError(
+            f"Taxon column '{taxon_column}' not found.\n"
+            f"Available columns: {normalized_fieldnames}"
+        )
+
+    annotation_columns = [
+        col for col in normalized_fieldnames
+        if col != taxon_column_normalized
+    ]
+
+    if not annotation_columns:
+        raise ValueError("No annotation columns found in file.")
+
+    uploaded_map = {}
+
+    for row in reader:
+        taxon = row.get(fieldname_map.get(taxon_column))
+        if not taxon:
+            continue
+
+        uploaded_map[taxon] = {
+            col: (row[fieldname_map.get(col)] if row[fieldname_map.get(col)] is not None else "")
+            for col in annotation_columns
+        }
+
+    return uploaded_map

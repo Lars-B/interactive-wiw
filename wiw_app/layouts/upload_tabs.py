@@ -89,21 +89,20 @@ upload_tabs = dbc.Tabs(
                     html.Div(
                         [
                             dbc.Input(
-                                id=UploadIDs.NODE_ANNOTATIONS_LABEL,
-                                placeholder="Enter node annotation label...",
+                                id=UploadIDs.NODE_ANNOTATIONS_TAXON_COL,
+                                placeholder="Enter column name containing taxon names...",
                                 type="text",
                                 style={"marginBottom": "5px"},
                             ),
                             html.Div(
                                 [
                                     html.Small(
-                                        id="node-annotations-label-warning",
+                                        id=UploadIDs.NODE_ANNOTATIONS_LABEL_WARNING,
                                         style={"color": "red", "display": "block",
                                                "marginBottom": "2px"},
                                     ),
                                     html.Small(
-                                        "Only letters, digits, and underscores are allowed. "
-                                        "Other characters will be removed automatically!",
+                                        "Enter column name containing taxon names...",
                                         style={"fontStyle": "italic", "color": "#666"},
                                     ),
                                 ],

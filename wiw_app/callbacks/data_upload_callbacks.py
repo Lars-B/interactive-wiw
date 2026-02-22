@@ -109,13 +109,12 @@ def display_tree_file_name(filename):
 
 @myapp.callback(
     Output("selected-node-annotations-file", "children"),
-    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
     Input("upload-node-annotations", "filename"),
 )
 def display_node_annotation_file_name(filename):
     if filename:
-        return f"Selected file: {filename}", filename.split(".")[0]
-    return "No file selected yet.", ""
+        return f"Selected file: {filename}"
+    return "No file selected yet."
 
 
 @myapp.callback(
@@ -125,13 +124,13 @@ def display_node_annotation_file_name(filename):
     Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
     Input("graph-store", "data"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
-    State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "filename"),
-    State(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
+    State(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value"),
     State(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     prevent_initial_call=True
 )
-def update_node_annotations(n_clicks, graph_data, contents, filename, annotation_label,
+def update_node_annotations(n_clicks, graph_data,
+                            contents, taxon_column,
                             node_label_annotation_selector,
                             node_color_label_selector):
     if not contents or not n_clicks:
@@ -142,30 +141,33 @@ def update_node_annotations(n_clicks, graph_data, contents, filename, annotation
         time.sleep(0.1)
         return no_update, no_update, no_update, False
 
-    logger.info(f"Node annotations from file {filename} are being processed....")
-
-    uploaded_map = process_node_annotations_file(contents)
+    uploaded_map = process_node_annotations_file(contents, taxon_column)
 
     # merge uploaded data into existing graph
     nodes = graph_data.get("nodes", [])
+
     for n in nodes:
-        n["data"][annotation_label] = uploaded_map.get(n["data"]["taxon"], "")
+        for new_label, value in uploaded_map.get(n['data']['taxon'], {}).items():
+            if not new_label in n['data']:
+                # Adding the new annotaiton to the node
+                n['data'][new_label] = value
+
+                # adding the new label to the dropdown menu
+                new_dropdown_option = {"label": new_label,
+                                       "value": f"{new_label}"}
+                if not (new_dropdown_option in node_label_annotation_selector or
+                                new_dropdown_option in node_color_label_selector):
+                    node_label_annotation_selector.append(new_dropdown_option)
+                    node_color_label_selector.append(new_dropdown_option)
+
+            else:
+                raise ValueError(f"Label name {new_label} already exists,"
+                                 f" needs to be renamed in the uploaded file!")
 
     updated_graph_data = {
         "nodes": nodes,
         "edges": graph_data["edges"]
     }
-
-    new_dropdown_option = {"label": annotation_label, "value": f"{annotation_label}"}
-    if (new_dropdown_option in node_label_annotation_selector or
-            new_dropdown_option in node_color_label_selector):
-        logger.info(f"This label ({annotation_label}) option already exists!"
-                    f" Not supported at the moment!")
-    else:
-        node_label_annotation_selector.append(new_dropdown_option)
-        node_color_label_selector.append(new_dropdown_option)
-
-    logger.info(f"Graph-store updated with new annotation label: {annotation_label}")
 
     return (
         updated_graph_data,

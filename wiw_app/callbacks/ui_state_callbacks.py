@@ -227,12 +227,12 @@ def update_label_color_store(values, ids):
 
 
 @myapp.callback(
-    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "value", allow_duplicate=True),
-    Output("node-annotations-label-warning", "children"),
+    Output(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value", allow_duplicate=True),
+    Output(UploadIDs.NODE_ANNOTATIONS_LABEL_WARNING, "children"),
     Output(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
     Output(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "disabled"),
-    Output(UploadIDs.NODE_ANNOTATIONS_LABEL, "disabled"),
-    Input(UploadIDs.NODE_ANNOTATIONS_LABEL, "value"),
+    Output(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "disabled"),
+    Input(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value"),
     Input("graph-store", "data"),
     prevent_initial_call=True
 )
@@ -240,18 +240,10 @@ def sanitize_node_annotations_label(label, graph_data):
     if not graph_data or not graph_data.get("nodes"):
         return "", "Please Upload a graph before using this feature!", True, True, True
 
-    DEFAULT_LABEL = "Cheese"
+    DEFAULT_LABEL = "taxon"
     if not label:
         # raise PreventUpdate
         logger.info("No label provided, setting default value")
         return DEFAULT_LABEL, f"No label provided - defaulting to '{DEFAULT_LABEL}'", False, False, False
-
-    sanitized_label = re.sub(r'[^a-zA-Z0-9_]', '', label)
-
-    if sanitized_label != label:
-        if sanitized_label == "":
-            sanitized_label = DEFAULT_LABEL
-        logger.info(f"Invalid characters removed from '{label}', new label: {sanitized_label}")
-        return sanitized_label, f"Invalid characters removed - {sanitized_label}", False, False, False
 
     return label, "", False, False, False
