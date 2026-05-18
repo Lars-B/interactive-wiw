@@ -7,4 +7,4 @@ networkx
 pydot
 pillow
 
-brokilon @ git+https://github.com/Lars-B/pyccd@refactor
+brokilon @ git+https://github.com/Lars-B/pyccd@main
