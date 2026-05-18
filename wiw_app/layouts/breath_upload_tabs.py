@@ -3,7 +3,7 @@ from dash import dcc, html
 
 from wiw_app.ids import UploadIDs
 
-upload_tabs = dbc.Tabs(
+breath_upload_tabs = dbc.Tabs(
     children=
     [
         dbc.Tab(

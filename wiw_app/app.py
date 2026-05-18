@@ -27,6 +27,7 @@ app = Dash(
     __name__,
     external_stylesheets=[url_theme1, dbc_css],
     assets_folder="../assets",
+    suppress_callback_exceptions=True
 )
 
 app.layout = html.Div([
@@ -38,10 +39,14 @@ app.layout = html.Div([
             [
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
-
-                html.H2("Upload Data", className="mt-2"),
-                html.Hr(),
-                html.Div([upload_tabs]),
+                html.Div([
+                    dbc.InputGroup([
+                        dbc.InputGroupText("Upload type"),
+                        upload_mode_selector
+                    ]),
+                    html.Hr(),
+                    html.Div(id="upload-ui-container")
+                ]),
 
                 dbc.Toast(
                     id=UploadIDs.INFO_TOAST,
@@ -57,8 +62,8 @@ app.layout = html.Div([
                     },
                 ),
 
+                html.Hr(),
                 html.H2("Graph Controls", className="mt-2"),
-
                 html.Hr(),
 
                 html.Div([graph_option_tabs]),
@@ -69,11 +74,13 @@ app.layout = html.Div([
                     className='four columns',
                     children=[
                         html.Div(
-                            style={"display": "flex", "alignItems": "center", "gap": "10px",
+                            style={"display": "flex", "alignItems": "center",
+                                   "gap": "10px",
                                    "marginBottom": "15px"},
                             children=[
                                 html.Div("Filename:",
-                                         style={"whiteSpace": "nowrap", "fontWeight": "500"}),
+                                         style={"whiteSpace": "nowrap",
+                                                "fontWeight": "500"}),
                                 dcc.Input(
                                     id="image-filename-input",
                                     type="text",
@@ -84,7 +91,8 @@ app.layout = html.Div([
                             ]
                         ),
                         dcc.Download(id="download-dot"),
-                        dcc.Download(id="download-pngplus"),  # todo what is that for?
+                        dcc.Download(id="download-pngplus"),
+                        # todo what is that for?
                         dcc.Store(id="pngplus-requested", data=False),
                         dcc.Download(id="download-legend"),
                         html.Div(
@@ -93,51 +101,65 @@ app.layout = html.Div([
                                     children=[
                                         dbc.ButtonGroup([
                                             dbc.Button([
-                                                DashIconify(icon="mdi:download", width=16),
+                                                DashIconify(icon="mdi:download",
+                                                            width=16),
                                                 " JPG"
                                             ], id="btn-get-jpg", n_clicks=0,
-                                                color="secondary", outline=True),
+                                                color="secondary",
+                                                outline=True),
 
                                             dbc.Button([
-                                                DashIconify(icon="mdi:download", width=16),
+                                                DashIconify(icon="mdi:download",
+                                                            width=16),
                                                 " PNG"
                                             ], id="btn-get-png", n_clicks=0,
-                                                color="secondary", outline=True),
+                                                color="secondary",
+                                                outline=True),
 
                                             dbc.Button([
-                                                DashIconify(icon="mdi:download", width=16),
+                                                DashIconify(icon="mdi:download",
+                                                            width=16),
                                                 " SVG"
                                             ], id="btn-get-svg", n_clicks=0,
-                                                color="secondary", outline=True),
+                                                color="secondary",
+                                                outline=True),
 
                                             dbc.Button([
-                                                DashIconify(icon="mdi:code-tags", width=16),
+                                                DashIconify(
+                                                    icon="mdi:code-tags",
+                                                    width=16),
                                                 " DOT"
                                             ], id="btn-get-dot", n_clicks=0,
-                                                color="secondary", outline=True),
+                                                color="secondary",
+                                                outline=True),
                                         ])
                                     ]),
                                 html.Div(
                                     children=[
                                         dbc.Button([
-                                            DashIconify(icon="mdi:map-legend", width=16),
+                                            DashIconify(icon="mdi:map-legend",
+                                                        width=16),
                                             " PNG+"
                                         ], id="btn-get-pngplus", n_clicks=0,
                                             color="secondary", outline=True),
                                         dbc.Button([
-                                            DashIconify(icon="mdi:map-marker", width=16),
+                                            DashIconify(icon="mdi:map-marker",
+                                                        width=16),
                                             " Legend (SVG)"
                                         ], id="btn-get-legend", n_clicks=0,
                                             color="secondary", outline=True),
                                         dbc.Button([
-                                            DashIconify(icon="mdi:eye-plus", width=16),
+                                            DashIconify(icon="mdi:eye-plus",
+                                                        width=16),
                                             " "
                                         ], id="btn-add-legend-node", n_clicks=0,
                                             color="secondary", outline=True),
                                         dbc.Button([
-                                            DashIconify(icon="mdi:eye-minus", width=16),
+                                            DashIconify(icon="mdi:eye-minus",
+                                                        width=16),
                                             " "
-                                        ], id="btn-remove-legend-node", n_clicks=0,
+                                        ], id="btn-remove-legend-node",
+                                            n_clicks=0,
                                             color="secondary", outline=True),
                                     ]
                                 )
@@ -175,7 +197,9 @@ app.layout = html.Div([
             lg=8,
             xl=9,
             xxl=10,
-            style={"padding": "0"}  # Remove padding for full-width visualization
+            style={"padding": "0"}
+            # Remove padding for full-width visualization
         )
-    ], style={"margin": "0", "width": "100%", "height": "100vh", "overflow": "hidden"})
+    ], style={"margin": "0", "width": "100%", "height": "100vh",
+              "overflow": "hidden"})
 ])
