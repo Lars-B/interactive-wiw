@@ -1,6 +1,5 @@
-# todo refactor these to be more meaningful with more subclasses and then it can be used like
-#  UploadIDs.Trees.Upload etc...
 class UploadIDs:
+    # todo group these into breath subgroup
     UPLOAD_TREES_DATA = "upload-trees-data"
     SELECTED_TREES_FILENAME = "selected-trees-filename"
     BURN_IN_SELECTION = "burn-in-selection"
@@ -8,12 +7,20 @@ class UploadIDs:
     CONFIRM_TREES_DATASET_BTN = "confirm-dataset-btn"
     UPLOADED_TREES_DATA_STORE = "uploaded-datasets-store"
 
+    # todo group these into metadata subgroup
     UPLOAD_NODE_ANNOTATIONS = "upload-node-annotations"
     SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
     CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
     NODE_ANNOTATIONS_TAXON_COL = "node-annotations-label"
     NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
     INFO_TOAST = "info-toast"
+
+    class Outbreaker:
+        UPLOAD_GRAPH_DATA = "outbreaker-graph-data"
+        SELECTED_GRAPH_FILENAME = "outbreaker-graph-filename"
+        DATASET_LABEL = "outbreaker-dataset-label"
+        CONFIRM_BUTTON = "outbreaker-dataset-button"
+        UPLOADED_GRAPH_STORE = "outbreaker-graph-store"
 
 
 class GraphOptions:

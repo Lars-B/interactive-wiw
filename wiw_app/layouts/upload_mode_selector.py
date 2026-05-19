@@ -5,6 +5,7 @@ upload_mode_selector = dbc.Select(
     options=[
         {"label": "BREATH", "value": "breath"},
         {"label": "Transphylo", "value": "transphylo"},
+        {"label": "Outbreaker2", "value": "outbreaker"},
         {"label": "WIP", "value": "empty"},
     ],
     value="breath",

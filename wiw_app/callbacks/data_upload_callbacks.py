@@ -18,8 +18,8 @@ from wiw_app.ids import UploadIDs, GraphOptions
     Output(UploadIDs.INFO_TOAST, "duration"),
     Output(UploadIDs.INFO_TOAST, "icon"),
     Input("confirm-dataset-btn", "n_clicks"),
-    State("upload-trees-data", "contents"),
-    State("upload-trees-data", "filename"),
+    State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
+    State(UploadIDs.UPLOAD_TREES_DATA, "filename"),
     State(UploadIDs.TREES_DATASET_LABEL, "value"),
     State("burn-in-selection", "value"),
     State("graph-store", "data"),
@@ -75,8 +75,8 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
 @myapp.callback(
     Output("uploaded-datasets-store", "data", allow_duplicate=True),
     Input("confirm-dataset-btn", "n_clicks"),
-    State("upload-trees-data", "contents"),
-    State("upload-trees-data", "filename"),
+    State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
+    State(UploadIDs.UPLOAD_TREES_DATA, "filename"),
     State("trees-dataset-label", "value"),
     State("uploaded-datasets-store", "data"),
     prevent_initial_call=True
@@ -97,9 +97,9 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
 
 
 @myapp.callback(
-    Output("selected-trees-filename", "children"),
+    Output(UploadIDs.SELECTED_TREES_FILENAME, "children"),
     Output(UploadIDs.TREES_DATASET_LABEL, "value"),
-    Input("upload-trees-data", "filename"),
+    Input(UploadIDs.UPLOAD_TREES_DATA, "filename"),
 )
 def display_tree_file_name(filename):
     if filename:
@@ -174,3 +174,14 @@ def update_node_annotations(n_clicks, graph_data,
         node_label_annotation_selector,
         node_color_label_selector,
     )
+
+
+@myapp.callback(
+    Output(UploadIDs.Outbreaker.SELECTED_GRAPH_FILENAME, "children"),
+    Output(UploadIDs.Outbreaker.DATASET_LABEL, "value"),
+    Input(UploadIDs.Outbreaker.UPLOAD_GRAPH_DATA, "filename")
+)
+def display_outbreaker_file_name(filename):
+    if filename:
+        return f"Selected file: {filename}", filename
+    return "No file selected yet.", ""
