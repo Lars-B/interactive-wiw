@@ -49,5 +49,7 @@ class GraphOptions:
         COLOR_BY_LABEL = "color-by-label-toggle"
         COLOR_STORE = "edge-label-color-store"
         LABEL_RENAME_ERROR = "rename-error"
+        LABEL_FONT_SIZE = 'edge-label-font-size'
         COLOR_PICKER_CONTAINERS = "color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "color-pickers-collapse"
+        DISPLAY_EDGE_THRESHOLD = 'weight-threshold'

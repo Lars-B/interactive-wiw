@@ -140,7 +140,7 @@ graph_option_tabs = dbc.Tabs(
                                 html.Div([
                                     html.Label(
                                         "Edge weight threshold:",
-                                        htmlFor="weight-threshold",
+                                        htmlFor=GraphOptions.Edges.DISPLAY_EDGE_THRESHOLD,
                                         style={
                                             "display": "block",
                                             "marginBottom": "0.5rem",
@@ -149,7 +149,7 @@ graph_option_tabs = dbc.Tabs(
                                         }
                                     ),
                                     dcc.Slider(
-                                        id="weight-threshold",
+                                        id=GraphOptions.Edges.DISPLAY_EDGE_THRESHOLD,
                                         min=0.0,
                                         max=0.99,
                                         step=0.01,
@@ -164,7 +164,7 @@ graph_option_tabs = dbc.Tabs(
                                 html.Div([
                                     html.Label(
                                         "Edge label font size:",
-                                        htmlFor="edge-label-font-size",
+                                        htmlFor=GraphOptions.Edges.LABEL_FONT_SIZE,
                                         style={
                                             "display": "block",
                                             "marginBottom": "0.5rem",
@@ -173,7 +173,7 @@ graph_option_tabs = dbc.Tabs(
                                         }
                                     ),
                                     dcc.Slider(
-                                        id="edge-label-font-size",
+                                        id=GraphOptions.Edges.LABEL_FONT_SIZE,
                                         min=1,
                                         max=30,
                                         step=1,
