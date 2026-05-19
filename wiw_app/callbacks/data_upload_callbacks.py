@@ -5,8 +5,8 @@ from dash.exceptions import PreventUpdate
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import build_graph_from_file, process_node_annotations_file, \
-    NoTreesFoundError
+from wiw_app.graph_elements import build_graph_from_breath_tree_file, process_node_annotations_file, \
+    NoTreesFoundError, build_graph_from_outbreaker_csv_file
 from wiw_app.ids import UploadIDs, GraphOptions
 
 
@@ -17,11 +17,11 @@ from wiw_app.ids import UploadIDs, GraphOptions
     Output(UploadIDs.INFO_TOAST, "is_open"),
     Output(UploadIDs.INFO_TOAST, "duration"),
     Output(UploadIDs.INFO_TOAST, "icon"),
-    Input("confirm-dataset-btn", "n_clicks"),
+    Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
     State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
     State(UploadIDs.UPLOAD_TREES_DATA, "filename"),
     State(UploadIDs.TREES_DATASET_LABEL, "value"),
-    State("burn-in-selection", "value"),
+    State(UploadIDs.BURN_IN_SELECTION, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
@@ -34,7 +34,8 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
 
     try:
-        new_nodes, new_edges, num_trees = build_graph_from_file(contents, effective_label, burnin)
+        new_nodes, new_edges, num_trees = build_graph_from_breath_tree_file(contents,
+                                                                            effective_label, burnin)
     except NoTreesFoundError as e:
         # delay for loading modal to close... dash scheduling/ race condition problem.
         time.sleep(0.1)
@@ -73,12 +74,12 @@ def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, curre
 
 
 @myapp.callback(
-    Output("uploaded-datasets-store", "data", allow_duplicate=True),
-    Input("confirm-dataset-btn", "n_clicks"),
+    Output(UploadIDs.UPLOADED_TREES_DATA_STORE, "data", allow_duplicate=True),
+    Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
     State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
     State(UploadIDs.UPLOAD_TREES_DATA, "filename"),
-    State("trees-dataset-label", "value"),
-    State("uploaded-datasets-store", "data"),
+    State(UploadIDs.TREES_DATASET_LABEL, "value"),
+    State(UploadIDs.UPLOADED_TREES_DATA_STORE, "data"),
     prevent_initial_call=True
 )
 def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
@@ -122,7 +123,7 @@ def display_node_annotation_file_name(filename):
     Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
     Output(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     Input(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "n_clicks"),
-    Input("graph-store", "data"),
+    State("graph-store", "data"),
     State(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "contents"),
     State(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value"),
     State(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
@@ -156,7 +157,7 @@ def update_node_annotations(n_clicks, graph_data,
                 new_dropdown_option = {"label": new_label,
                                        "value": f"{new_label}"}
                 if not (new_dropdown_option in node_label_annotation_selector or
-                                new_dropdown_option in node_color_label_selector):
+                        new_dropdown_option in node_color_label_selector):
                     node_label_annotation_selector.append(new_dropdown_option)
                     node_color_label_selector.append(new_dropdown_option)
 
@@ -176,6 +177,9 @@ def update_node_annotations(n_clicks, graph_data,
     )
 
 
+# Outbreaker part below
+
+
 @myapp.callback(
     Output(UploadIDs.Outbreaker.SELECTED_GRAPH_FILENAME, "children"),
     Output(UploadIDs.Outbreaker.DATASET_LABEL, "value"),
@@ -185,3 +189,41 @@ def display_outbreaker_file_name(filename):
     if filename:
         return f"Selected file: {filename}", filename
     return "No file selected yet.", ""
+
+
+@myapp.callback(
+    Output("graph-store", "data", allow_duplicate=True),
+    Input(UploadIDs.Outbreaker.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.Outbreaker.UPLOAD_GRAPH_DATA, "contents"),
+    State(UploadIDs.Outbreaker.UPLOAD_GRAPH_DATA, "filename"),
+    State(UploadIDs.Outbreaker.DATASET_LABEL, "value"),
+    State("graph-store", "data"),
+    prevent_initial_call=True
+)
+def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph_data):
+    if not contents:
+        raise PreventUpdate
+
+    logger.debug("We are in the outbreaker upload trigger")
+
+    current_graph_data = current_graph_data or {"nodes": [], "edges": []}
+
+    effective_label = label or filename
+    new_nodes, new_edges = build_graph_from_outbreaker_csv_file(contents, effective_label)
+
+    # todo this is simply copied from the other upload, should probably be refactored/refined
+    existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
+    true_new_nodes = [
+        n for n in new_nodes
+        if n["data"]["id"] not in existing_ids
+    ]
+    merged_nodes = current_graph_data["nodes"] + true_new_nodes
+
+    logger.info("Finished updating the graph.")
+
+    return (
+        {
+            "nodes": merged_nodes,
+            "edges": current_graph_data["edges"] + new_edges
+        }
+    )

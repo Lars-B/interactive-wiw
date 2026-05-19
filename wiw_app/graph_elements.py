@@ -4,8 +4,10 @@ import io
 import os
 import tempfile
 from collections import defaultdict
+from io import StringIO
 
 import networkx as nx
+import pandas as pd
 from brokilon.ccd.domain.transmission import read_breath_nexus
 from brokilon.ccd.domain.transmission.find_infectors import find_infector
 from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
@@ -13,6 +15,8 @@ from networkx.exception import NetworkXException
 
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
+
+EDGE_SCALE = 10
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -49,13 +53,69 @@ def handle_uploaded_nexus_file(base64_content, burn_in):
     return trees, taxon_map
 
 
+def build_graph_from_outbreaker_csv_file(file_content, label):
+    logger.debug("Outbreaker file parsing and graph construction...")
+    new_nodes, new_edges = handle_uploaded_outbreaker_file(file_content, label)
+    return new_nodes, new_edges
+
+
+def handle_uploaded_outbreaker_file(base64_content, label):
+    _, content = base64_content.split(",", 1)
+
+    decoded = base64.b64decode(content).decode("utf-8")
+
+    df = pd.read_csv(
+        StringIO(decoded),
+        dtype={
+            "id": str,
+            "from": str,
+            "to": str,
+            "type": str
+        }
+    )
+
+    nodes, edges = parse_outbreaker_dataframe(df, label)
+
+    return nodes, edges
+
+
+def parse_outbreaker_dataframe(df, label):
+    node_df = df[df["type"] == "node"]
+    edge_df = df[df["type"] == "edge"]
+
+    nodes = []
+    for _, row in node_df.iterrows():
+        nodes.append({
+            "data": {
+                "id": str(row["id"]),
+                "label": str(row["id"]),
+                "strength": row["strength"]
+            }
+        })
+
+    edges = []
+    for _, row in edge_df.iterrows():
+        edges.append({
+            "data": {
+                "source": str(row["from"]),
+                "target": str(row["to"]),
+                "label": label,
+                "posterior": row["weight"],
+                "weight": round(row["weight"] * EDGE_SCALE, 2),
+                "penwidth": 1,
+                "color": "black"
+            }
+        })
+    # todo could add mst here too, not supported for now...
+
+    return nodes, edges
+
+
 class NoTreesFoundError(Exception):
     pass
 
 
-def build_graph_from_file(file_content, label, burn_in):
-    EDGE_SCALE = 10
-
+def build_graph_from_breath_tree_file(file_content, label, burn_in):
     logger.info("Processing file content and building WIW network...")
 
     with log_time("Handling and reading uploaded nexus file"):
@@ -110,8 +170,8 @@ def build_graph_from_file(file_content, label, burn_in):
                             "posterior": posterior_support,
                             "weight": round(posterior_support * EDGE_SCALE, 2),
                             "penwidth": 1,
-                            'color': "black",
-                            'id': f'{label}-{edge_count}'}}
+                            "color": "black",
+                            "id": f"{label}-{edge_count}"}}
                     )
                     net.add_edge(transm_ancestor, leaf,
                                  weight=round(posterior_support * EDGE_SCALE, 2),
