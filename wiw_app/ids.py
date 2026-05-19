@@ -15,8 +15,15 @@ class UploadIDs:
     NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
     INFO_TOAST = "info-toast"
 
+
 class GraphOptions:
     TABS = "graph-option-tabs"
+
+    class Legend:
+        DOWNLOAD = "download-legend"
+        GET_SVG_BUTTON = "btn-get-legend-svg"
+        ADD_LEG_NODE = "btn-add-legend-node"
+        REMOVE_LEG_NODE = "btn-remove-legend-node"
 
     class Graph:
         TAB = "tab-graph-options"

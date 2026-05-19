@@ -24,7 +24,8 @@ def build_legend_items(legend_spec):
     # Node colors
     node_colors = legend_spec.get("node_colors")
     if node_colors:
-        items.append(LegendItem("title", f"Node Colors by {legend_spec['node_color_title']}"))
+        items.append(LegendItem("title",
+                                f"Node Colors by {legend_spec['node_color_title']}"))
         for label, color in node_colors.items():
             items.append(LegendItem("rect", label, color))
 
@@ -118,8 +119,13 @@ def render_legend_svg(items, width=200):
 
     height = y + 10
 
+    # todo doesn't fit mode yet...
+    #  this changes the background of the svg download too
+    bg_color = 'gray'
+
     return f"""
     <svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">
+    <rect width="100%" height="100%" fill = "{bg_color}"/>
         {''.join(elements)}
     </svg>
     """

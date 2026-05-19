@@ -207,8 +207,8 @@ def rename_labels(new_labels, ids, graph_data):
 
 @callback(
     Output("cytoscape", "elements", allow_duplicate=True),
-    Input("btn-add-legend-node", "n_clicks"),
-    Input("btn-remove-legend-node", "n_clicks"),
+    Input(GraphOptions.Legend.ADD_LEG_NODE, "n_clicks"),
+    Input(GraphOptions.Legend.REMOVE_LEG_NODE, "n_clicks"),
     State("cytoscape", "elements"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
@@ -234,11 +234,11 @@ def toggle_legend(
     trigger = ctx.triggered[0]["prop_id"].split(".")[0]
 
     # Remove legend
-    if trigger == "btn-remove-legend-node":
+    if trigger == GraphOptions.Legend.REMOVE_LEG_NODE:
         return [el for el in elements if el["data"]["id"] != LEGEND_NODE_ID]
 
     # Add legend
-    if trigger == "btn-add-legend-node":
+    if trigger == GraphOptions.Legend.ADD_LEG_NODE:
         if any(el["data"]["id"] == LEGEND_NODE_ID for el in elements):
             return elements  # already exists
 
@@ -257,14 +257,20 @@ def toggle_legend(
         # todo needs some more features, like resizing option
         #  and shouldn't be removed with update graph
 
+        from wiw_app.dash_logger import logger
+
+        logger.debug(f'This is one element: {elements[0]}')
+
         encoded_svg = urllib.parse.quote(legend_svg)
         legend_node = {
             "data": {
                 "id": LEGEND_NODE_ID,
-                "legend": f"data:image/svg+xml;utf8,{encoded_svg}"
+                "legend": f"data:image/svg+xml;utf8,{encoded_svg}",
+                'color': 'orange',
             },
             "position": {"x": 1000, "y": 100},
             "grabbable": True,
+            "background-fit": "contain",
         }
 
         return elements + [legend_node]

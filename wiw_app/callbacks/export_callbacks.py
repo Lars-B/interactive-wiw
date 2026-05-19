@@ -126,8 +126,8 @@ def export_pngplus(requested,
 
 
 @myapp.callback(
-    Output("download-legend", "data"),
-    Input("btn-get-legend", "n_clicks"),
+    Output(GraphOptions.Legend.DOWNLOAD, "data"),
+    Input(GraphOptions.Legend.GET_SVG_BUTTON, "n_clicks"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
