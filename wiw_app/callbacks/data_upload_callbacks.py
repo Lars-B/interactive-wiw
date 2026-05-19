@@ -147,10 +147,14 @@ def update_node_annotations(n_clicks, graph_data,
     # merge uploaded data into existing graph
     nodes = graph_data.get("nodes", [])
 
+    # Todo make "taxon" an input and then raise warning if two input columns don't match
+    #  This will allow more general inputs
+    #  can we somehow use index to simply upload a list of things without a column? check...
+
     for n in nodes:
         for new_label, value in uploaded_map.get(n['data']['taxon'], {}).items():
             if not new_label in n['data']:
-                # Adding the new annotaiton to the node
+                # Adding the new annotation to the node
                 n['data'][new_label] = value
 
                 # adding the new label to the dropdown menu
