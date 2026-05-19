@@ -1,5 +1,6 @@
 from dash import Input, Output
 
+from wiw_app import ids
 from wiw_app.app import app as myapp
 
 myapp.clientside_callback(
@@ -16,6 +17,6 @@ myapp.clientside_callback(
     }
     """,
     Output('cytoscape', 'elements', allow_duplicate=True),
-    Input('recenter-btn', 'n_clicks'),
+    Input(ids.GraphOptions.Graph.RENCENTER_BTN, 'n_clicks'),
     prevent_initial_call=True
 )

@@ -34,14 +34,14 @@ legend_styles = [
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
     Input("graph-store", "data"),
-    Input('label-filter', 'value'),
-    Input('layout-selector', 'value'),
-    Input('scale-width-toggle', 'value'),
-    Input('edge-annotation-selector', 'value'),
-    Input("edge-label-position", "value"),
+    Input(GraphOptions.Edges.DISPLAY_FILTER, 'value'),
+    Input(GraphOptions.Graph.LAYOUT_SELECTOR, 'value'),
+    Input(GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT, 'value'),
+    Input(GraphOptions.Edges.ANNOTATION_SELECTOR, 'value'),
+    Input(GraphOptions.Edges.LABEL_POSITION, "value"),
     Input('weight-threshold', 'value'),
     Input('edge-label-font-size', 'value'),
-    Input('node-label-font-size', 'value'),
+    Input(GraphOptions.Nodes.LABEL_FONT_SIZE, 'value'),
     Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Edges.COLOR_STORE, "data"),
     Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
@@ -154,8 +154,8 @@ def reset_graph(_):
 
 
 @myapp.callback(
-    Output("label-filter", "options"),
-    Output("label-filter", "value"),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "options"),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     Input("graph-store", "data"),
     prevent_initial_call=True
 )

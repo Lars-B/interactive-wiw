@@ -20,16 +20,16 @@ class GraphOptions:
 
     class Graph:
         TAB = "tab-graph-options"
-        LAYOUT_SELECTOR = "layout-selector"  # todo find and replace
-        RENCENTER_BTN = "recenter-btn"  # todo rename, find and replace
+        LAYOUT_SELECTOR = "layout-selector"
+        RENCENTER_BTN = "recenter-btn"
 
     class Nodes:
         TAB = "tab-node-options"
-        ADVANCED_OPTIONS_ICON = "advanced-node-options-button-icon"  # todo find and replace
-        ADVANCED_OPTIONS_COLLAPSE = "advanced-node-options-collapse"  # todo find and replace
+        ADVANCED_OPTIONS_ICON = "advanced-node-options-button-icon"
+        ADVANCED_OPTIONS_COLLAPSE = "advanced-node-options-collapse"
         ADVANCED_OPTION_TOGGLE_BTN = "advanced-node-option-toggle-btn"
         LABEL_ANNOTATION_SELECTOR = "node-annotation-selector"
-        LABEL_FONT_SIZE = "node-label-font-size"  # todo find and replace
+        LABEL_FONT_SIZE = "node-label-font-size"
         COLOR_BY_LABEL = "node-color-by-label"
         COLOR_LABEL_SELECTOR = "node-color-label-selector"
         COLOR_PICKER_CONTAINERS = "node-color-pickers-container"
@@ -39,15 +39,15 @@ class GraphOptions:
 
     class Edges:
         TAB = "tab-edge-options"
-        DISPLAY_FILTER = "label-filter"  # todo find usages and replace this
-        ANNOTATION_SELECTOR = "edge-annotation-selector"  # todo find and replace
-        LABEL_POSITION = "edge-label-position"  # todo find and replace
-        SCALE_WIDTH_BY_WEIGHT = "scale-width-toggle"  # todo find and replace
-        ADVANCED_OPTIONS_ICON = "advanced-edge-options-button-icon"  # todo find and replace
-        ADVANCED_OPTIONS_COLLAPSE = "advanced-edge-options-collapse"  # todo find and replace
+        DISPLAY_FILTER = "label-filter"
+        ANNOTATION_SELECTOR = "edge-annotation-selector"
+        LABEL_POSITION = "edge-label-position"
+        SCALE_WIDTH_BY_WEIGHT = "scale-width-toggle"
+        ADVANCED_OPTIONS_ICON = "advanced-edge-options-button-icon"
+        ADVANCED_OPTIONS_COLLAPSE = "advanced-edge-options-collapse"
         ADVANCED_OPTION_TOGGLE_BTN = "advanced-edge-option-toggle-btn"
-        COLOR_BY_LABEL = "color-by-label-toggle"  # todo find and replace
-        COLOR_STORE = "label-color-store"  # todo rename and replace
+        COLOR_BY_LABEL = "color-by-label-toggle"
+        COLOR_STORE = "edge-label-color-store"
         LABEL_RENAME_ERROR = "rename-error"
         COLOR_PICKER_CONTAINERS = "color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "color-pickers-collapse"
