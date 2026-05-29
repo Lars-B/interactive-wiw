@@ -398,3 +398,106 @@ def process_node_annotations_file(file_content, taxon_column):
         }
 
     return uploaded_map
+
+
+def build_graph_from_rds(file_content, label):
+    logger.debug("Outbreaker file parsing and graph construction...")
+    new_nodes, new_edges = handle_uploaded_rds_file(file_content, label)
+    return new_nodes, new_edges
+
+
+def handle_uploaded_rds_file(base64_content, label):
+    logger.debug("Parsing uploaded RDS file...")
+
+    # todo should be at top and new requirement
+    import pyreadr
+
+    # remove header if present
+    if "," in base64_content:
+        base64_content = base64_content.split(",")[1]
+
+    file_bytes = base64.b64decode(base64_content)
+
+    with tempfile.NamedTemporaryFile(suffix=".rds", delete=False) as tmp:
+        tmp.write(file_bytes)
+        tmp_path = tmp.name
+
+    try:
+        result = pyreadr.read_r(tmp_path)
+
+        obj = next(iter(result.values()))
+
+        logger.debug(f"Loaded R object type: {type(obj)}")
+
+        logger.debug(
+            f"this object was loaded: {obj}"
+        )
+        return build_graph_from_datframe(obj, label)
+
+    finally:
+        os.remove(tmp_path)
+
+
+def build_graph_from_datframe(res, label):
+    alpha_prefix = "alpha"  # outbreaker specific...
+
+    alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
+
+    alpha_mat = res[alpha_cols]
+
+    n_states = len(alpha_cols)
+    n_samples = len(alpha_mat)
+
+    # todo should be at top and new requirement
+    from collections import Counter
+
+    # -------------------------
+    # edges
+    # -------------------------
+    edge_counter = Counter()
+
+    for state_idx, col in enumerate(alpha_cols, start=1):
+        for source in alpha_mat[col]:
+            if pd.isna(source):
+                continue
+
+            source = int(source)
+            target = state_idx
+
+            edge_counter[(source, target)] += 1
+
+    edges = []
+    node_strength = Counter()
+
+    for edge_id, ((source, target), count) in enumerate(edge_counter.items()):
+        weight = count / n_samples
+
+        edges.append({
+            "data": {
+                "source": str(source),
+                "target": str(target),
+                "label": label,
+                "posterior": round(weight, 2),  # todo think about making this an input value?
+                "weight": round(weight, 2),
+                "color": "black",
+                "id": f"{label}-{edge_id}",
+            }
+        })
+
+        node_strength[source] += weight
+
+    # -------------------------
+    # nodes
+    # -------------------------
+    nodes = []
+
+    for node_id in range(1, n_states + 1):
+        nodes.append({
+            "data": {
+                "id": str(node_id),
+                "label": str(node_id),
+                "strength": round(node_strength[node_id], 4),
+            }
+        })
+
+    return nodes, edges

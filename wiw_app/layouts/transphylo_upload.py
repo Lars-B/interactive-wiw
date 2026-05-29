@@ -3,14 +3,13 @@ from dash import dcc, html
 
 from wiw_app.ids import UploadIDs
 
-TODO = "ID.TODO"
 
 transphylo_upload = html.Div(
     children=[
         html.Div(
             [
                 dcc.Upload(
-                    id=TODO,
+                    id=UploadIDs.rdata.UPLOAD_GRAPH_DATA,
                     children=html.Div(
                         ["Click to upload or drag a file here"]
                     ),
@@ -28,7 +27,7 @@ transphylo_upload = html.Div(
                 ),
 
                 html.Div(
-                    id=TODO,
+                    id=UploadIDs.rdata.SELECTED_GRAPH_FILENAME,
                     style={
                         "marginBottom": "10px",
                         "fontStyle": "italic",
@@ -36,7 +35,7 @@ transphylo_upload = html.Div(
                 ),
 
                 dbc.Input(
-                    id=TODO,
+                    id=UploadIDs.rdata.DATASET_LABEL,
                     placeholder="Enter dataset label...",
                     type="text",
                     style={"marginBottom": "10px"},
@@ -44,12 +43,12 @@ transphylo_upload = html.Div(
 
                 dbc.Button(
                     "Confirm Dataset",
-                    id=TODO,
+                    id=UploadIDs.rdata.CONFIRM_BUTTON,
                     color="primary",
                 ),
 
                 dcc.Store(
-                    id=TODO
+                    id=UploadIDs.rdata.UPLOADED_GRAPH_STORE,
                 ),
             ],
             style={"paddingTop": "1.5rem"},
