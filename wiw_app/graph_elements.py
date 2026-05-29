@@ -124,7 +124,6 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
     logger.info(f"Found {len(trees)} trees")
     logger.info(f"Extracted taxon map of size: {len(taxon_map)}")
 
-    # trees = trees[int(burn_in * len(trees)):]
     num_trees = len(trees)
 
     if num_trees == 0:
@@ -133,12 +132,23 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
     logger.info(f"After burn-in there are {num_trees} trees")
 
     logger.info("Processing trees...")
+
+    posterior_wiw_edges = defaultdict(lambda: defaultdict(int))
+    posterior_wiw_edges_indirect = defaultdict(lambda: defaultdict(int))
+
     with log_time("Processing trees"):
-        posterior_wiw_edges = defaultdict(lambda: defaultdict(int))
-        for t in trees:
-            for leaf in t.get_leaves():
-                cur_infector = find_infector(leaf)
-                posterior_wiw_edges[leaf.name][cur_infector] += 1
+        for tree in trees:
+            for leaf in tree.get_leaves():
+                leaf_name = leaf.name
+
+                infector = find_infector(leaf)
+                posterior_wiw_edges[leaf_name][infector] += 1
+
+                if not infector.startswith("Unknown"):
+                    continue
+
+                indirect_infector = find_infector(leaf, indirect=True)
+                posterior_wiw_edges_indirect[leaf_name][indirect_infector] += 1
 
     logger.info("Trees processed, now building the WIW network to add...")
 
@@ -155,28 +165,26 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
 
     net = nx.DiGraph()
 
-    for leaf in posterior_wiw_edges:
-        for transm_ancestor in posterior_wiw_edges[leaf]:
-            if not transm_ancestor.startswith("Unknown"):
-                if not transm_ancestor == leaf:
-                    posterior_support = round(posterior_wiw_edges[leaf][transm_ancestor] /
-                                              num_trees, 2)
+    edge_count = add_posterior_edges(
+        posterior_wiw_edges,
+        edges,
+        label=label,
+        num_trees=num_trees,
+        edge_count=edge_count,
+        edge_scale=EDGE_SCALE,
+        net=net,
+    )
 
-                    edges.append(
-                        {"data": {
-                            "source": transm_ancestor,
-                            "target": leaf,
-                            "label": label,
-                            "posterior": posterior_support,
-                            "weight": round(posterior_support * EDGE_SCALE, 2),
-                            "penwidth": 1,
-                            "color": "black",
-                            "id": f"{label}-{edge_count}"}}
-                    )
-                    net.add_edge(transm_ancestor, leaf,
-                                 weight=round(posterior_support * EDGE_SCALE, 2),
-                                 posterior=posterior_support)
-                    edge_count += 1
+    edge_count = add_posterior_edges(
+        posterior_wiw_edges_indirect,
+        edges,
+        label=f"Indirect-{label}",
+        num_trees=num_trees,
+        edge_count=edge_count,
+        edge_scale=EDGE_SCALE,
+    )
+
+    logger.info(f"Added {edge_count} edges to network...")
 
     if num_trees > 1 and net.number_of_nodes() > 1:
         mst = None
@@ -206,6 +214,59 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
             edges.extend(mst_edges)
 
     return nodes, edges, num_trees
+
+
+def add_posterior_edges(
+        edges_dict,
+        edges,
+        label,
+        num_trees,
+        edge_count,
+        edge_scale,
+        *,
+        net=None,
+):
+    for target in edges_dict:
+        for source in edges_dict[target]:
+
+            if source.startswith("Unknown"):
+                continue
+
+            if source == target:
+                continue
+
+            posterior_support = round(
+                edges_dict[target][source] / num_trees,
+                2
+            )
+
+            if posterior_support == 0.00:
+                continue
+
+            weight = round(posterior_support * edge_scale, 2)
+
+            edge_data = {
+                "source": source,
+                "target": target,
+                "label": label,
+                "posterior": posterior_support,
+                "weight": weight,
+                "penwidth": 1,
+                "color": "black",
+                "id": f"{label}-{edge_count}"
+            }
+
+            edges.append({"data": edge_data})
+
+            if net is not None:
+                net.add_edge(
+                    source,
+                    target,
+                    weight=weight,
+                    posterior=posterior_support
+                )
+            edge_count += 1
+    return edge_count
 
 
 def get_cytoscape_style(is_light_theme: bool) -> dict:
