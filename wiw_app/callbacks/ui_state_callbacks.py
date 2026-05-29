@@ -247,3 +247,11 @@ def sanitize_node_annotations_label(label, graph_data):
         return DEFAULT_LABEL, f"No label provided - defaulting to '{DEFAULT_LABEL}'", False, False, False
 
     return label, "", False, False, False
+
+
+@myapp.callback(
+    Output(GraphOptions.Edges.SCALE_VALUE_INPUT, "disabled"),
+    Input(GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT, "value"),
+)
+def toggle_edge_scale_input(value):
+    return "scale" not in (value or [])

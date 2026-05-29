@@ -201,21 +201,34 @@ graph_option_tabs = dbc.Tabs(
                 ),
 
                 html.Div([
-                    dcc.Checklist(
-                        id=GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT,
-                        options=[{"label": "Scale edge width by weight", "value": "scale"}],
-                        value=["scale"],
-                        inline=True,
-                        style={"marginBottom": "10px"}
-                    ),
+                    html.Div([
+                        dcc.Checklist(
+                            id=GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT,
+                            options=[{"label": "Scale edge width by weight", "value": "scale"}],
+                            value=["scale"],
+                            inline=True,
+                            style={"marginBottom": "10px"},
+                        ),
+
+                        dcc.Input(
+                            id=GraphOptions.Edges.SCALE_VALUE_INPUT,
+                            type="number",
+                            value=10,
+                            min=1,
+                            step=1,
+                            style={"width": "80px", "marginLeft": "10px"},
+                        ),
+                    ], style={"display": "flex", "alignItems": "center"}),
+
                     dcc.Checklist(
                         id=GraphOptions.Edges.COLOR_BY_LABEL,
                         options=[{"label": "Color edges by label", "value": "color"}],
                         value=[],
                         inline=True,
-                        style={"marginBottom": "10px"}
-                    )
+                        style={"marginBottom": "10px"},
+                    ),
                 ]),
+
                 dcc.Store(id=GraphOptions.Edges.COLOR_STORE),
                 dbc.Collapse(
                     html.Div(

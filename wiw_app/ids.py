@@ -68,3 +68,4 @@ class GraphOptions:
         COLOR_PICKERS_COLLAPSE = "color-pickers-collapse"
         DISPLAY_EDGE_THRESHOLD = 'weight-threshold'
         TOGGLE_ARROWS = "edge-arrows"
+        SCALE_VALUE_INPUT = "edge-scale-input"

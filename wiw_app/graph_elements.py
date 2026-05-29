@@ -16,8 +16,6 @@ from networkx.exception import NetworkXException
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
 
-EDGE_SCALE = 10
-
 
 def decode_base64_content(base64_content: str) -> bytes:
     content_type, content_string = base64_content.split(",", 1)
@@ -26,7 +24,6 @@ def decode_base64_content(base64_content: str) -> bytes:
 
 
 def handle_uploaded_nexus_file(base64_content, burn_in):
-    # decoded_content = decode_base64_content(base64_content)
     tmp = tempfile.NamedTemporaryFile(mode='wb', suffix=".nex", delete=False)
     try:
         _, content = base64_content.split(",", 1)
@@ -37,10 +34,6 @@ def handle_uploaded_nexus_file(base64_content, burn_in):
             tmp.write(base64.b64decode(chunk))
         tmp.flush()
         tmp.close()
-
-        # tmp.write(decoded_content)
-        # tmp.flush()
-        # tmp.close()
 
         trees, taxon_map = read_breath_nexus(
             tmp.name,
@@ -101,7 +94,7 @@ def parse_outbreaker_dataframe(df, label):
                 "target": str(row["to"]),
                 "label": label,
                 "posterior": row["weight"],
-                "weight": round(row["weight"] * EDGE_SCALE, 2),
+                "weight": round(row["weight"], 2),
                 "penwidth": 1,
                 "color": "black"
             }
@@ -171,7 +164,6 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
         label=label,
         num_trees=num_trees,
         edge_count=edge_count,
-        edge_scale=EDGE_SCALE,
         net=net,
     )
 
@@ -181,7 +173,6 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
         label=f"Indirect-{label}",
         num_trees=num_trees,
         edge_count=edge_count,
-        edge_scale=EDGE_SCALE,
     )
 
     logger.info(f"Added {edge_count} edges to network...")
@@ -222,7 +213,6 @@ def add_posterior_edges(
         label,
         num_trees,
         edge_count,
-        edge_scale,
         *,
         net=None,
 ):
@@ -243,7 +233,7 @@ def add_posterior_edges(
             if posterior_support == 0.00:
                 continue
 
-            weight = round(posterior_support * edge_scale, 2)
+            weight = round(posterior_support, 2)
 
             edge_data = {
                 "source": source,
