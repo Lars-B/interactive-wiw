@@ -183,6 +183,16 @@ graph_option_tabs = dbc.Tabs(
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem",
                                           "marginTop": "1rem"}),
+
+                                html.Div([
+                                    dcc.Checklist(
+                                        id=GraphOptions.Edges.TOGGLE_ARROWS,
+                                        options=[{"label": "Hide edge arrows", "value": "toggle"}],
+                                        value=[],
+                                        inline=True,
+                                        style={"marginBottom": "10px"}
+                                    )
+                                ], style={"width": "100%", "marginBottom": "1rem"})
                             ]),
                             id=GraphOptions.Edges.ADVANCED_OPTIONS_COLLAPSE,
                             is_open=False

@@ -231,38 +231,60 @@ def get_node_style(annotation_field, font_size, color_by_label) -> dict:
 
 
 def get_edge_style(annotation_field, label_position, scale_edges,
-                   color_by_label, is_light_theme, font_size) -> dict:
-    edge_style = {"curve-style": "bezier",
-                  "control-point-step-size": 20,
-                  "target-arrow-shape": "triangle-backcurve",
-                  "color": "#000" if is_light_theme else "#fff",
-                  "text-outline-width": 0.2,
-                  "text-outline-color": "#000" if is_light_theme else "#ccc",
-                  "label": f"data({annotation_field})",
-                  "font-size": font_size
-                  }
+                   color_by_label, is_light_theme, font_size, toggle_arrows) -> dict:
+    edge_style = {
+        "curve-style": "bezier",
+        "control-point-step-size": 20,
+        "color": "#000" if is_light_theme else "#fff",
+        "text-outline-width": 0.2,
+        "text-outline-color": "#000" if is_light_theme else "#ccc",
+        "label": f"data({annotation_field})",
+        "font-size": font_size,
+    }
 
+    arrows_enabled = not toggle_arrows
+
+    # Arrow styling
+    if arrows_enabled:
+        edge_style["target-arrow-shape"] = "triangle-backcurve"
+
+    # Edge width / arrow scaling
     if scale_edges:
         edge_style["width"] = "data(weight)"
-        edge_style["arrow-scale"] = "mapData(data(weight), 0, 1, 0.5, 2)"
+
+        if arrows_enabled:
+            edge_style["arrow-scale"] = (
+                "mapData(data(weight), 0, 1, 0.5, 2)"
+            )
     else:
         edge_style["width"] = 2
-        edge_style["arrow-scale"] = 1
 
-    if label_position == "above":
-        edge_style["text-margin-y"] = -10
-    elif label_position == "below":
-        edge_style["text-margin-y"] = 10
-    elif label_position == "autorotate":
-        edge_style["edge-text-rotation"] = "autorotate"
-    else:
-        edge_style["text-margin-y"] = 0
-        edge_style["edge-text-rotation"] = "none"
+        if arrows_enabled:
+            edge_style["arrow-scale"] = 1
 
+    # Label positioning
+    position_styles = {
+        "above": {"text-margin-y": -10},
+        "below": {"text-margin-y": 10},
+        "autorotate": {"edge-text-rotation": "autorotate"},
+    }
+
+    edge_style.update(
+        position_styles.get(
+            label_position,
+            {
+                "text-margin-y": 0,
+                "edge-text-rotation": "none",
+            },
+        )
+    )
+
+    # Edge coloring
     if color_by_label:
-        # edge_style["color"] = "data(color)"  # this is the label text color
-        edge_style["line-color"] = "data(color)"  # this is the edge color
-        edge_style["target-arrow-color"] = "data(color)"
+        edge_style["line-color"] = "data(color)"
+
+        if arrows_enabled:
+            edge_style["target-arrow-color"] = "data(color)"
 
     return edge_style
 

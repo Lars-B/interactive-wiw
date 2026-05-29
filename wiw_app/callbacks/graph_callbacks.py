@@ -44,6 +44,7 @@ legend_styles = [
     Input(GraphOptions.Nodes.LABEL_FONT_SIZE, 'value'),
     Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Edges.COLOR_STORE, "data"),
+    Input(GraphOptions.Edges.TOGGLE_ARROWS, "value"),
     Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Nodes.COLOR_STORE, "data"),
     Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
@@ -54,7 +55,7 @@ legend_styles = [
 def update_elements(graph_data, selected_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
                     edge_label_font_size, node_label_font_size, edge_color_toggle,
-                    edge_label_colors, node_color_toggle, node_label_colors,
+                    edge_label_colors, edge_arrow_toggle, node_color_toggle, node_label_colors,
                     node_color_label_selection, supress_singletons,
                     is_light_theme, node_annotation_selection):
     scale_edges = "scale" in scale_toggle
@@ -120,7 +121,8 @@ def update_elements(graph_data, selected_labels, selected_layout,
                                  scale_edges,
                                  edge_color_toggle,
                                  is_light_theme,
-                                 edge_label_font_size)},
+                                 edge_label_font_size,
+                                 edge_arrow_toggle)},
     ] + legend_styles
 
     return elements, layout, stylesheet

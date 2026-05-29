@@ -67,3 +67,4 @@ class GraphOptions:
         COLOR_PICKER_CONTAINERS = "color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "color-pickers-collapse"
         DISPLAY_EDGE_THRESHOLD = 'weight-threshold'
+        TOGGLE_ARROWS = "edge-arrows"
