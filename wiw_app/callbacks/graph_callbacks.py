@@ -17,8 +17,8 @@ legend_styles = [
         "selector": f"#{LEGEND_NODE_ID}",
         "style": {
             "shape": "rectangle",
-            "width": "200px",
-            "height": "300px",
+            "width": "150px",
+            "height": "150px",
             "background-image": "data(legend)",  # Cytoscape picks up legend SVG from node data
             "background-fit": "contain",
             "background-repeat": "no-repeat",
@@ -258,23 +258,14 @@ def toggle_legend(
 
         import urllib.parse
 
-        # todo needs some more features, like resizing option
-        #  and shouldn't be removed with update graph
-
-        from wiw_app.dash_logger import logger
-
-        logger.debug(f'This is one element: {elements[0]}')
-
         encoded_svg = urllib.parse.quote(legend_svg)
         legend_node = {
             "data": {
                 "id": LEGEND_NODE_ID,
                 "legend": f"data:image/svg+xml;utf8,{encoded_svg}",
-                'color': 'orange',
             },
             "position": {"x": 1000, "y": 100},
             "grabbable": True,
-            "background-fit": "contain",
         }
 
         return elements + [legend_node]
