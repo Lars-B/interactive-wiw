@@ -46,13 +46,13 @@ def handle_uploaded_nexus_file(base64_content, burn_in):
     return trees, taxon_map
 
 
-def build_graph_from_outbreaker_csv_file(file_content, label):
+def build_graph_from_custom_csv_file(file_content, label):
     logger.debug("custom_csv file parsing and graph construction...")
-    new_nodes, new_edges = handle_uploaded_outbreaker_file(file_content, label)
+    new_nodes, new_edges = handle_uploaded_custom_csv_file(file_content, label)
     return new_nodes, new_edges
 
 
-def handle_uploaded_outbreaker_file(base64_content, label):
+def handle_uploaded_custom_csv_file(base64_content, label):
     _, content = base64_content.split(",", 1)
 
     decoded = base64.b64decode(content).decode("utf-8")
@@ -67,12 +67,12 @@ def handle_uploaded_outbreaker_file(base64_content, label):
         }
     )
 
-    nodes, edges = parse_outbreaker_dataframe(df, label)
+    nodes, edges = parse_custom_csv_dataframe(df, label)
 
     return nodes, edges
 
 
-def parse_outbreaker_dataframe(df, label):
+def parse_custom_csv_dataframe(df, label):
     node_df = df[df["type"] == "node"]
     edge_df = df[df["type"] == "edge"]
 

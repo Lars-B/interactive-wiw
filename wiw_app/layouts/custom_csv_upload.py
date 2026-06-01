@@ -23,6 +23,7 @@ custom_csv_upload = html.Div(
                         "marginBottom": "10px",
                     },
                     multiple=False,
+                    accept=".csv",
                 ),
 
                 html.Div(

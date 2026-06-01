@@ -1,18 +1,10 @@
-import time
-
-from dash import Input, Output, State, no_update
+from dash import Input, Output, State
 from dash.exceptions import PreventUpdate
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import build_graph_from_breath_tree_file, process_node_annotations_file, \
-    NoTreesFoundError, build_graph_from_outbreaker_csv_file, build_graph_from_rds
-from wiw_app.ids import UploadIDs, GraphOptions
-
-
-# todo this is bound to be removed as we don't want this kind of input?
-# maybe rename the option and add it...
-# custom_csv part below
+from wiw_app.graph_elements import build_graph_from_custom_csv_file
+from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
@@ -20,7 +12,7 @@ from wiw_app.ids import UploadIDs, GraphOptions
     Output(UploadIDs.custom_csv.DATASET_LABEL, "value"),
     Input(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename")
 )
-def display_outbreaker_file_name(filename):
+def display_custom_csv_file_name(filename):
     if filename:
         return f"Selected file: {filename}", filename
     return "No file selected yet.", ""
@@ -44,7 +36,7 @@ def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_gr
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
 
     effective_label = label or filename
-    new_nodes, new_edges = build_graph_from_outbreaker_csv_file(contents, effective_label)
+    new_nodes, new_edges = build_graph_from_custom_csv_file(contents, effective_label)
 
     # todo this is simply copied from the other upload, should probably be refactored/refined
     existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
