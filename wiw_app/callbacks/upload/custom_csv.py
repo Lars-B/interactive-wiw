@@ -8,7 +8,7 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.custom_csv.SELECTED_GRAPH_FILENAME, "children"),
+    Output(UploadIDs.custom_csv.SELECTED_FILENAME, "children"),
     Output(UploadIDs.custom_csv.DATASET_LABEL, "value"),
     Input(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename")
 )

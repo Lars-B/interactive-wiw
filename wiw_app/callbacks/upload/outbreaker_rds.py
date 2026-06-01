@@ -8,7 +8,7 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.outbreaker_rds.SELECTED_GRAPH_FILENAME, "children"),
+    Output(UploadIDs.outbreaker_rds.SELECTED_FILENAME, "children"),
     Output(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
     Input(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "filename")
 )
