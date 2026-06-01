@@ -47,7 +47,7 @@ def handle_uploaded_nexus_file(base64_content, burn_in):
 
 
 def build_graph_from_outbreaker_csv_file(file_content, label):
-    logger.debug("Outbreaker file parsing and graph construction...")
+    logger.debug("custom_csv file parsing and graph construction...")
     new_nodes, new_edges = handle_uploaded_outbreaker_file(file_content, label)
     return new_nodes, new_edges
 
@@ -421,7 +421,7 @@ def process_node_annotations_file(file_content, taxon_column):
 
 
 def build_graph_from_rds(file_content, label):
-    logger.debug("Outbreaker file parsing and graph construction...")
+    logger.debug("custom_csv file parsing and graph construction...")
     new_nodes, new_edges = handle_uploaded_rds_file(file_content, label)
     return new_nodes, new_edges
 
@@ -449,9 +449,6 @@ def handle_uploaded_rds_file(base64_content, label):
 
         logger.debug(f"Loaded R object type: {type(obj)}")
 
-        logger.debug(
-            f"this object was loaded: {obj}"
-        )
         return build_graph_from_datframe(obj, label)
 
     finally:

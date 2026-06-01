@@ -2,7 +2,7 @@ from dash import Input, Output, html
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.layouts import breath_upload, transphylo_upload, outbreaker_upload, metadata_upload
+from wiw_app.layouts import breath_upload, oubreaker_rds_upload, custom_csv_upload, metadata_upload
 
 
 @myapp.callback(
@@ -19,10 +19,12 @@ def render_upload_ui(mode):
         case "breath":
             return breath_upload
         case "transphylo":
-            return transphylo_upload
+            return wip
         case "outbreaker":
-            return outbreaker_upload
+            return oubreaker_rds_upload
         case "metadata":
             return metadata_upload
+        case "custom-csv":
+            return custom_csv_upload
         case _:
             return wip

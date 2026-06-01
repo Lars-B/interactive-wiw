@@ -10,17 +10,12 @@ from wiw_app.graph_elements import build_graph_from_breath_tree_file, process_no
 from wiw_app.ids import UploadIDs, GraphOptions
 
 
-# todo this is bound to be removed as we don't want this kind of input?
-# maybe rename the option and add it...
-# custom_csv part below
-
-
 @myapp.callback(
-    Output(UploadIDs.custom_csv.SELECTED_GRAPH_FILENAME, "children"),
-    Output(UploadIDs.custom_csv.DATASET_LABEL, "value"),
-    Input(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename")
+    Output(UploadIDs.rdata.SELECTED_GRAPH_FILENAME, "children"),
+    Output(UploadIDs.rdata.DATASET_LABEL, "value"),
+    Input(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "filename")
 )
-def display_outbreaker_file_name(filename):
+def display_rdata_file_name(filename):
     if filename:
         return f"Selected file: {filename}", filename
     return "No file selected yet.", ""
@@ -28,25 +23,26 @@ def display_outbreaker_file_name(filename):
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
-    Input(UploadIDs.custom_csv.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "contents"),
-    State(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename"),
-    State(UploadIDs.custom_csv.DATASET_LABEL, "value"),
+    Input(UploadIDs.rdata.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "contents"),
+    State(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "filename"),
+    State(UploadIDs.rdata.DATASET_LABEL, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_graph_data):
+def update_graph_with_rds_data(n_clicks, contents, filename, label, current_graph_data):
     if not contents:
         raise PreventUpdate
 
-    logger.debug("We are in the custom csv graph format callback....")
+    logger.debug("We are in the new rdata upload trigger")
+
+    logger.debug("This is where we will need to handle the rds data stuf...")
 
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
 
     effective_label = label or filename
-    new_nodes, new_edges = build_graph_from_outbreaker_csv_file(contents, effective_label)
+    new_nodes, new_edges = build_graph_from_rds(contents, effective_label)
 
-    # todo this is simply copied from the other upload, should probably be refactored/refined
     existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
     true_new_nodes = [
         n for n in new_nodes
@@ -54,7 +50,7 @@ def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_gr
     ]
     merged_nodes = current_graph_data["nodes"] + true_new_nodes
 
-    logger.info("Finished updating the graph.")
+    logger.info("Finished updating the graph with the .rds data.")
 
     return (
         {

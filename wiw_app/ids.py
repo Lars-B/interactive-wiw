@@ -15,14 +15,13 @@ class UploadIDs:
     NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
     INFO_TOAST = "info-toast"
 
-    class Outbreaker:
+    class custom_csv:
         UPLOAD_GRAPH_DATA = "outbreaker-graph-data"
         SELECTED_GRAPH_FILENAME = "outbreaker-graph-filename"
         DATASET_LABEL = "outbreaker-dataset-label"
         CONFIRM_BUTTON = "outbreaker-dataset-button"
         UPLOADED_GRAPH_STORE = "outbreaker-graph-store"
 
-    # todo this is WIP to add rdata support
     class rdata:
         UPLOAD_GRAPH_DATA = "rdata-graph-data"
         SELECTED_GRAPH_FILENAME = "rdata-graph-filename"
