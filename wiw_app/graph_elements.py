@@ -349,15 +349,35 @@ def process_node_annotations_file(file_content, taxon_column):
     logger.info(f"Processing file content for node annotations...")
     decoded_content = decode_base64_content(file_content).decode("UTF8")
 
-    logger.debug(f"Uploaded stuff with column name {taxon_column}...")
+    logger.debug(f"Uploaded metadata with column name {taxon_column}...")
 
-    # Automatic parsing for the delimiter char, seems to work
-    delimeter = None
-    if delimeter is None:
-        sniffer = csv.Sniffer()
-        sample = decoded_content[:4096]
-        dialect = sniffer.sniff(sample)
-        delimiter = dialect.delimiter
+    def detect_delimiter(text: str):
+        sample = text[:4096]
+
+        try:
+            dialect = csv.Sniffer().sniff(
+                sample,
+                delimiters=(",", "\t", ";", "|"),
+            )
+            return dialect.delimiter
+        except csv.Error:
+            pass
+
+        # fallback in case the above fails
+        first_lines = sample.splitlines()[:10]
+
+        counts = {
+            ",": sum(line.count(",") for line in first_lines),
+            "\t": sum(line.count("\t") for line in first_lines),
+            ";": sum(line.count(";") for line in first_lines),
+            "|": sum(line.count("|") for line in first_lines),
+        }
+
+        return max(counts, key=counts.get)
+
+    delimiter = detect_delimiter(decoded_content)
+
+    logger.debug(f"Detected delimiter '{delimiter}'")
 
     reader = csv.DictReader(io.StringIO(decoded_content), delimiter=delimiter)
 

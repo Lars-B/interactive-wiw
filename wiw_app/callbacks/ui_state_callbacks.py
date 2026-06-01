@@ -234,17 +234,18 @@ def update_label_color_store(values, ids):
     Output(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "disabled"),
     Input(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value"),
     Input("graph-store", "data"),
-    prevent_initial_call=True
+    prevent_initial_call="initial_duplicate",
+    allow_duplicate=True,
 )
 def sanitize_node_annotations_label(label, graph_data):
     if not graph_data or not graph_data.get("nodes"):
         return "", "Please Upload a graph before using this feature!", True, True, True
 
-    DEFAULT_LABEL = "taxon"
+    default_column_label = "taxon"
     if not label:
         # raise PreventUpdate
         logger.info("No label provided, setting default value")
-        return DEFAULT_LABEL, f"No label provided - defaulting to '{DEFAULT_LABEL}'", False, False, False
+        return default_column_label, f"No label provided - defaulting to '{default_column_label}'", False, False, False
 
     return label, "", False, False, False
 

@@ -19,6 +19,7 @@ metadata_upload = html.Div([
             "margin-bottom": "10px"
         },
         multiple=False,
+        accept=".csv, .tsv, .xsv",
     ),
     html.Div(
         id=UploadIDs.SELECTED_NODE_ANNOTATIONS_FILENAME,

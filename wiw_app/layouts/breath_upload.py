@@ -19,6 +19,7 @@ breath_upload = html.Div([
             "margin-bottom": "10px"
         },
         multiple=False,
+        accept=".tree, .trees, .tre",
     ),
     html.Div(id=UploadIDs.SELECTED_TREES_FILENAME,
              style={"marginBottom": "10px",

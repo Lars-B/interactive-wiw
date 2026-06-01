@@ -25,7 +25,7 @@ from wiw_app.ids import UploadIDs, GraphOptions
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_dataset(n_clicks, contents, filename, label, burnin, current_graph_data):
+def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, current_graph_data):
     if not contents:
         raise PreventUpdate
 
@@ -105,17 +105,17 @@ def store_uploaded_dataset(n_clicks, contents, filename, label, existing_data):
 def display_tree_file_name(filename):
     if filename:
         return f"Selected file: {filename}", filename
-    return "No file selected yet.", ""
+    return "No file selected yet. (.trees|.tree|.tre)", ""
 
 
 @myapp.callback(
-    Output("selected-node-annotations-file", "children"),
-    Input("upload-node-annotations", "filename"),
+    Output(UploadIDs.SELECTED_NODE_ANNOTATIONS_FILENAME, "children"),
+    Input(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "filename"),
 )
 def display_node_annotation_file_name(filename):
     if filename:
         return f"Selected file: {filename}"
-    return "No file selected yet."
+    return "No file selected yet. (.csv|.tsv|.xsv)"
 
 
 @myapp.callback(
@@ -130,10 +130,10 @@ def display_node_annotation_file_name(filename):
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     prevent_initial_call=True
 )
-def update_node_annotations(n_clicks, graph_data,
-                            contents, taxon_column,
-                            node_label_annotation_selector,
-                            node_color_label_selector):
+def update_nodes_with_metadata(n_clicks, graph_data,
+                               contents, taxon_column,
+                               node_label_annotation_selector,
+                               node_color_label_selector):
     if not contents or not n_clicks:
         raise PreventUpdate
 
@@ -252,7 +252,7 @@ def display_rdata_file_name(filename):
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_dataset(n_clicks, contents, filename, label, current_graph_data):
+def update_graph_with_rds_data(n_clicks, contents, filename, label, current_graph_data):
     if not contents:
         raise PreventUpdate
 
