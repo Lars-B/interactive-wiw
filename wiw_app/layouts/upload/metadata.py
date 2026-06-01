@@ -5,7 +5,7 @@ from wiw_app.ids import UploadIDs
 
 metadata = html.Div([
     dcc.Upload(
-        id=UploadIDs.UPLOAD_NODE_ANNOTATIONS,
+        id=UploadIDs.metadata.UPLOAD_DATA,
         children=html.Div(
             ["Click to upload or drag a file here"]),
         style={
@@ -22,14 +22,14 @@ metadata = html.Div([
         accept=".csv, .tsv, .xsv",
     ),
     html.Div(
-        id=UploadIDs.SELECTED_NODE_ANNOTATIONS_FILENAME,
+        id=UploadIDs.metadata.SELECTED_FILENAME,
         style={"marginBottom": "10px",
                "fontStyle": "italic"}
     ),
     html.Div(
         [
             dbc.Input(
-                id=UploadIDs.NODE_ANNOTATIONS_TAXON_COL,
+                id=UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL,
                 placeholder="Enter column name containing taxon names...",
                 type="text",
                 style={"marginBottom": "5px"},
@@ -37,7 +37,7 @@ metadata = html.Div([
             html.Div(
                 [
                     html.Small(
-                        id=UploadIDs.NODE_ANNOTATIONS_LABEL_WARNING,
+                        id=UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING,
                         style={"color": "red", "display": "block",
                                "marginBottom": "2px"},
                     ),
@@ -53,7 +53,7 @@ metadata = html.Div([
     ),
     dbc.Button(
         "Confirm File",
-        id=UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN,
+        id=UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN,
         color="primary"
     ),
 ],

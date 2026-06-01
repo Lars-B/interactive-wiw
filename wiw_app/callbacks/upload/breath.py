@@ -10,28 +10,17 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.SELECTED_TREES_FILENAME, "children"),
-    Output(UploadIDs.TREES_DATASET_LABEL, "value"),
-    Input(UploadIDs.UPLOAD_TREES_DATA, "filename"),
-)
-def display_tree_file_name(filename):
-    if filename:
-        return f"Selected file: {filename}", filename
-    return "No file selected yet. (.trees|.tree|.tre)", ""
-
-
-@myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output("loading-modal", "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children"),
     Output(UploadIDs.INFO_TOAST, "is_open"),
     Output(UploadIDs.INFO_TOAST, "duration"),
     Output(UploadIDs.INFO_TOAST, "icon"),
-    Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
-    State(UploadIDs.UPLOAD_TREES_DATA, "contents"),
-    State(UploadIDs.UPLOAD_TREES_DATA, "filename"),
-    State(UploadIDs.TREES_DATASET_LABEL, "value"),
-    State(UploadIDs.BURN_IN_SELECTION, "value"),
+    Input(UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
+    State(UploadIDs.breath_trees.UPLOAD_DATA, "contents"),
+    State(UploadIDs.breath_trees.UPLOAD_DATA, "filename"),
+    State(UploadIDs.breath_trees.DATASET_LABEL, "value"),
+    State(UploadIDs.breath_trees.BURN_IN_SELECTION, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )

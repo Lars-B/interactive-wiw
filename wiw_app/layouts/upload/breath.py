@@ -5,7 +5,7 @@ from wiw_app.ids import UploadIDs
 
 breath = html.Div([
     dcc.Upload(
-        id=UploadIDs.UPLOAD_TREES_DATA,
+        id=UploadIDs.breath_trees.UPLOAD_DATA,
         children=html.Div(
             ["Click to upload or drag a file here"]),
         style={
@@ -21,17 +21,17 @@ breath = html.Div([
         multiple=False,
         accept=".tree, .trees, .tre",
     ),
-    html.Div(id=UploadIDs.SELECTED_TREES_FILENAME,
+    html.Div(id=UploadIDs.breath_trees.SELECTED_FILENAME,
              style={"marginBottom": "10px",
                     "fontStyle": "italic"}),
 
     html.Div([
         html.Label("Burn-in:",
-                   htmlFor=UploadIDs.BURN_IN_SELECTION,
+                   htmlFor=UploadIDs.breath_trees.BURN_IN_SELECTION,
                    style={"width": "200px",
                           }),
         dcc.Slider(
-            id=UploadIDs.BURN_IN_SELECTION,
+            id=UploadIDs.breath_trees.BURN_IN_SELECTION,
             min=0,
             max=0.99,
             step=0.01,
@@ -41,14 +41,14 @@ breath = html.Div([
         ),
     ], style={"margin-bottom": "1rem"}),
 
-    dbc.Input(id=UploadIDs.TREES_DATASET_LABEL,
+    dbc.Input(id=UploadIDs.breath_trees.DATASET_LABEL,
               placeholder="Enter dataset label...",
               type="text",
               style={"marginBottom": "10px"}),
     dbc.Button("Confirm Dataset",
-               id=UploadIDs.CONFIRM_TREES_DATASET_BTN,
+               id=UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN,
                color="primary"),
-    dcc.Store(id=UploadIDs.UPLOADED_TREES_DATA_STORE),
+    dcc.Store(id=UploadIDs.breath_trees.UPLOADED_TREES_DATA_STORE),
 ],
     style={"paddingTop": "1.5rem"}
 )

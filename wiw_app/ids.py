@@ -1,40 +1,39 @@
 class UploadIDs:
-    # todo group these into breath subgroup
-    UPLOAD_TREES_DATA = "upload-trees-data"
-    SELECTED_TREES_FILENAME = "selected-trees-filename"
-    BURN_IN_SELECTION = "burn-in-selection"
-    TREES_DATASET_LABEL = "trees-dataset-label"
-    CONFIRM_TREES_DATASET_BTN = "confirm-dataset-btn"
-    UPLOADED_TREES_DATA_STORE = "uploaded-datasets-store"
-
-    # todo group these into metadata subgroup
-    UPLOAD_NODE_ANNOTATIONS = "upload-node-annotations"
-    SELECTED_NODE_ANNOTATIONS_FILENAME = "selected-node-annotations-file"
-    CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
-    NODE_ANNOTATIONS_TAXON_COL = "node-annotations-label"
-    NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
     INFO_TOAST = "info-toast"
 
+    class breath_trees:
+        UPLOAD_DATA = "upload-trees-data"
+        SELECTED_FILENAME = "selected-trees-filename"
+        BURN_IN_SELECTION = "burn-in-selection"
+        DATASET_LABEL = "trees-dataset-label"
+        CONFIRM_TREES_DATASET_BTN = "confirm-dataset-btn"
+        UPLOADED_TREES_DATA_STORE = "uploaded-datasets-store"
+
+    # todo group these into metadata subgroup
+    class metadata:
+        UPLOAD_DATA = "upload-node-annotations"
+        SELECTED_FILENAME = "selected-node-annotations-file"
+        CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
+        NODE_ANNOTATIONS_TAXON_COL = "node-annotations-label"
+        NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
+
     class custom_csv:
-        UPLOAD_GRAPH_DATA = "outbreaker-graph-data"
+        UPLOAD_DATA = "outbreaker-graph-data"
         SELECTED_FILENAME = "outbreaker-graph-filename"
         DATASET_LABEL = "outbreaker-dataset-label"
         CONFIRM_BUTTON = "outbreaker-dataset-button"
-        UPLOADED_GRAPH_STORE = "outbreaker-graph-store"
 
     class outbreaker_rds:
-        UPLOAD_GRAPH_DATA = "outbreaker_rds-graph-data"
+        UPLOAD_DATA = "outbreaker_rds-graph-data"
         SELECTED_FILENAME = "outbreaker_rds-graph-filename"
         DATASET_LABEL = "outbreaker_rds-dataset-label"
         CONFIRM_BUTTON = "outbreaker_rds-dataset-button"
-        # UPLOADED_GRAPH_STORE = "outbreaker_rds-graph-store"
 
     class transphylo_rds:
-        UPLOAD_GRAPH_DATA = "transphylo-rds-graph-data"
+        UPLOAD_DATA = "transphylo-rds-graph-data"
         SELECTED_FILENAME = "transphylo-rds-graph-filename"
         DATASET_LABEL = "transphylo-rds-dataset-label"
         CONFIRM_BUTTON = "transphylo-rds-dataset-button"
-        # UPLOADED_GRAPH_STORE = "transphylo-rds-graph-store"
 
 
 class GraphOptions:

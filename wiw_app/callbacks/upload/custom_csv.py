@@ -8,21 +8,10 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.custom_csv.SELECTED_FILENAME, "children"),
-    Output(UploadIDs.custom_csv.DATASET_LABEL, "value"),
-    Input(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename")
-)
-def display_custom_csv_file_name(filename):
-    if filename:
-        return f"Selected file: {filename}", filename
-    return "No file selected yet.", ""
-
-
-@myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Input(UploadIDs.custom_csv.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "contents"),
-    State(UploadIDs.custom_csv.UPLOAD_GRAPH_DATA, "filename"),
+    State(UploadIDs.custom_csv.UPLOAD_DATA, "contents"),
+    State(UploadIDs.custom_csv.UPLOAD_DATA, "filename"),
     State(UploadIDs.custom_csv.DATASET_LABEL, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True

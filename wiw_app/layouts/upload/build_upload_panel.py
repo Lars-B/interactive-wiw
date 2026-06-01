@@ -5,7 +5,7 @@ from dash import dcc, html
 def build_simple_upload_panel(ids, accepted_files="*"):
     return html.Div([
         dcc.Upload(
-            id=ids.UPLOAD_GRAPH_DATA,
+            id=ids.UPLOAD_DATA,
             children=html.Div(["Click to upload or drag a file here"]),
             style={
                 "width": "100%",

@@ -16,18 +16,18 @@ from wiw_app.utils import assign_default_colors
 @myapp.callback(
     Output("loading-modal", "is_open"),
     [
-        Input(UploadIDs.CONFIRM_TREES_DATASET_BTN, "n_clicks")
+        Input(UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN, "n_clicks")
     ],
     [
         State("loading-modal", "is_open"),
-        State(UploadIDs.UPLOAD_TREES_DATA, "contents")
+        State(UploadIDs.breath_trees.UPLOAD_DATA, "contents")
     ],
     prevent_initial_call=True,
 )
 def toggle_loading_modal(n_clicks_trees, is_open, trees_contents):
     triggered_id = callback_context.triggered_id
 
-    if triggered_id == UploadIDs.CONFIRM_TREES_DATASET_BTN and trees_contents:
+    if triggered_id == UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN and trees_contents:
         return True
 
     return is_open  # default: no change
@@ -227,12 +227,12 @@ def update_label_color_store(values, ids):
 
 
 @myapp.callback(
-    Output(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value", allow_duplicate=True),
-    Output(UploadIDs.NODE_ANNOTATIONS_LABEL_WARNING, "children"),
-    Output(UploadIDs.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
-    Output(UploadIDs.UPLOAD_NODE_ANNOTATIONS, "disabled"),
-    Output(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "disabled"),
-    Input(UploadIDs.NODE_ANNOTATIONS_TAXON_COL, "value"),
+    Output(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "value", allow_duplicate=True),
+    Output(UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING, "children"),
+    Output(UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
+    Output(UploadIDs.metadata.UPLOAD_DATA, "disabled"),
+    Output(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "disabled"),
+    Input(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "value"),
     Input("graph-store", "data"),
     prevent_initial_call="initial_duplicate",
     allow_duplicate=True,

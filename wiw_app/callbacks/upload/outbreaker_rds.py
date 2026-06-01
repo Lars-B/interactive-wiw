@@ -8,21 +8,10 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.outbreaker_rds.SELECTED_FILENAME, "children"),
-    Output(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
-    Input(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "filename")
-)
-def display_rdata_file_name(filename):
-    if filename:
-        return f"Selected file: {filename}", filename
-    return "No file selected yet.", ""
-
-
-@myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Input(UploadIDs.outbreaker_rds.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "contents"),
-    State(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "filename"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "contents"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "filename"),
     State(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
