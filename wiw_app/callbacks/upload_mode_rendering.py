@@ -1,9 +1,8 @@
 from dash import Input, Output, html
+
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.layouts.breath_upload_tabs import breath_upload_tabs
-from wiw_app.layouts.outbreaker2_upload import outbreaker_upload
-from wiw_app.layouts.transphylo_upload import transphylo_upload
+from wiw_app.layouts import breath_upload, transphylo_upload, outbreaker_upload, metadata_upload
 
 
 @myapp.callback(
@@ -12,19 +11,18 @@ from wiw_app.layouts.transphylo_upload import transphylo_upload
 )
 def render_upload_ui(mode):
     logger.debug(f'This is being loaded with mode: {mode}')
-    if mode == "breath":
-        return breath_upload_tabs
-
-    elif mode == "transphylo":
-        return transphylo_upload
-
-    elif mode == "outbreaker":
-        return outbreaker_upload
-
-    elif mode == "empty":
-        return html.Div([
-            html.H5("WIP"),
-            html.P("This mode is not implemented yet.")
-        ])
-
-    return html.Div()
+    wip = html.Div([
+        html.H5("WIP"),
+        html.P("This mode is not implemented yet.")
+    ])
+    match mode:
+        case "breath":
+            return breath_upload
+        case "transphylo":
+            return transphylo_upload
+        case "outbreaker":
+            return outbreaker_upload
+        case "metadata":
+            return metadata_upload
+        case _:
+            return wip
