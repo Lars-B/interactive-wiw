@@ -3,13 +3,12 @@ from dash import dcc, html
 
 from wiw_app.ids import UploadIDs
 
-
-oubreaker_rds_upload = html.Div(
+custom_csv = html.Div(
     children=[
         html.Div(
             [
                 dcc.Upload(
-                    id=UploadIDs.rdata.UPLOAD_GRAPH_DATA,
+                    id=UploadIDs.custom_csv.UPLOAD_GRAPH_DATA,
                     children=html.Div(
                         ["Click to upload or drag a file here"]
                     ),
@@ -24,10 +23,11 @@ oubreaker_rds_upload = html.Div(
                         "marginBottom": "10px",
                     },
                     multiple=False,
+                    accept=".csv",
                 ),
 
                 html.Div(
-                    id=UploadIDs.rdata.SELECTED_GRAPH_FILENAME,
+                    id=UploadIDs.custom_csv.SELECTED_GRAPH_FILENAME,
                     style={
                         "marginBottom": "10px",
                         "fontStyle": "italic",
@@ -35,7 +35,7 @@ oubreaker_rds_upload = html.Div(
                 ),
 
                 dbc.Input(
-                    id=UploadIDs.rdata.DATASET_LABEL,
+                    id=UploadIDs.custom_csv.DATASET_LABEL,
                     placeholder="Enter dataset label...",
                     type="text",
                     style={"marginBottom": "10px"},
@@ -43,12 +43,12 @@ oubreaker_rds_upload = html.Div(
 
                 dbc.Button(
                     "Confirm Dataset",
-                    id=UploadIDs.rdata.CONFIRM_BUTTON,
+                    id=UploadIDs.custom_csv.CONFIRM_BUTTON,
                     color="primary",
                 ),
 
                 dcc.Store(
-                    id=UploadIDs.rdata.UPLOADED_GRAPH_STORE,
+                    id=UploadIDs.custom_csv.UPLOADED_GRAPH_STORE
                 ),
             ],
             style={"paddingTop": "1.5rem"},

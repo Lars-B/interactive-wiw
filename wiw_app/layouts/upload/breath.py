@@ -3,7 +3,7 @@ from dash import dcc, html
 
 from wiw_app.ids import UploadIDs
 
-breath_upload = html.Div([
+breath = html.Div([
     dcc.Upload(
         id=UploadIDs.UPLOAD_TREES_DATA,
         children=html.Div(

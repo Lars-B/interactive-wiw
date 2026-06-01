@@ -3,7 +3,7 @@ from dash import dcc, html
 
 from wiw_app.ids import UploadIDs
 
-metadata_upload = html.Div([
+metadata = html.Div([
     dcc.Upload(
         id=UploadIDs.UPLOAD_NODE_ANNOTATIONS,
         children=html.Div(
