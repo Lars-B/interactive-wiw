@@ -8,9 +8,9 @@ from wiw_app.ids import UploadIDs
 
 
 @myapp.callback(
-    Output(UploadIDs.rdata.SELECTED_GRAPH_FILENAME, "children"),
-    Output(UploadIDs.rdata.DATASET_LABEL, "value"),
-    Input(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "filename")
+    Output(UploadIDs.outbreaker_rds.SELECTED_GRAPH_FILENAME, "children"),
+    Output(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
+    Input(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "filename")
 )
 def display_rdata_file_name(filename):
     if filename:
@@ -20,10 +20,10 @@ def display_rdata_file_name(filename):
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
-    Input(UploadIDs.rdata.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "contents"),
-    State(UploadIDs.rdata.UPLOAD_GRAPH_DATA, "filename"),
-    State(UploadIDs.rdata.DATASET_LABEL, "value"),
+    Input(UploadIDs.outbreaker_rds.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "contents"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA, "filename"),
+    State(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
@@ -31,7 +31,7 @@ def update_graph_with_rds_data(n_clicks, contents, filename, label, current_grap
     if not contents:
         raise PreventUpdate
 
-    logger.debug("We are in the new rdata upload trigger")
+    logger.debug("We are in the new outbreaker_rds upload trigger")
 
     logger.debug("This is where we will need to handle the rds data stuf...")
 

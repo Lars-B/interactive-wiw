@@ -9,7 +9,7 @@ outbreaker_rds = html.Div(
         html.Div(
             [
                 dcc.Upload(
-                    id=UploadIDs.rdata.UPLOAD_GRAPH_DATA,
+                    id=UploadIDs.outbreaker_rds.UPLOAD_GRAPH_DATA,
                     children=html.Div(
                         ["Click to upload or drag a file here"]
                     ),
@@ -27,7 +27,7 @@ outbreaker_rds = html.Div(
                 ),
 
                 html.Div(
-                    id=UploadIDs.rdata.SELECTED_GRAPH_FILENAME,
+                    id=UploadIDs.outbreaker_rds.SELECTED_GRAPH_FILENAME,
                     style={
                         "marginBottom": "10px",
                         "fontStyle": "italic",
@@ -35,7 +35,7 @@ outbreaker_rds = html.Div(
                 ),
 
                 dbc.Input(
-                    id=UploadIDs.rdata.DATASET_LABEL,
+                    id=UploadIDs.outbreaker_rds.DATASET_LABEL,
                     placeholder="Enter dataset label...",
                     type="text",
                     style={"marginBottom": "10px"},
@@ -43,12 +43,12 @@ outbreaker_rds = html.Div(
 
                 dbc.Button(
                     "Confirm Dataset",
-                    id=UploadIDs.rdata.CONFIRM_BUTTON,
+                    id=UploadIDs.outbreaker_rds.CONFIRM_BUTTON,
                     color="primary",
                 ),
 
                 dcc.Store(
-                    id=UploadIDs.rdata.UPLOADED_GRAPH_STORE,
+                    id=UploadIDs.outbreaker_rds.UPLOADED_GRAPH_STORE,
                 ),
             ],
             style={"paddingTop": "1.5rem"},

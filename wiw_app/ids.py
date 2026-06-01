@@ -22,13 +22,19 @@ class UploadIDs:
         CONFIRM_BUTTON = "outbreaker-dataset-button"
         UPLOADED_GRAPH_STORE = "outbreaker-graph-store"
 
-    class rdata:
-        UPLOAD_GRAPH_DATA = "rdata-graph-data"
-        SELECTED_GRAPH_FILENAME = "rdata-graph-filename"
-        DATASET_LABEL = "rdata-dataset-label"
-        CONFIRM_BUTTON = "rdata-dataset-button"
-        UPLOADED_GRAPH_STORE = "rdata-graph-store"
+    class outbreaker_rds:
+        UPLOAD_GRAPH_DATA = "outbreaker_rds-graph-data"
+        SELECTED_GRAPH_FILENAME = "outbreaker_rds-graph-filename"
+        DATASET_LABEL = "outbreaker_rds-dataset-label"
+        CONFIRM_BUTTON = "outbreaker_rds-dataset-button"
+        UPLOADED_GRAPH_STORE = "outbreaker_rds-graph-store"
 
+    class transphylo_rds:
+        UPLOAD_GRAPH_DATA = "transphylo-rds-graph-data"
+        SELECTED_GRAPH_FILENAME = "transphylo-rds-graph-filename"
+        DATASET_LABEL = "transphylo-rds-dataset-label"
+        CONFIRM_BUTTON = "transphylo-rds-dataset-button"
+        UPLOADED_GRAPH_STORE = "transphylo-rds-graph-store"
 
 
 class GraphOptions:
