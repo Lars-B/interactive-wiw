@@ -16,7 +16,7 @@ from wiw_app.utils import assign_default_colors
 @myapp.callback(
     Output("loading-modal", "is_open"),
     [
-        Input(UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN, "n_clicks")
+        Input(UploadIDs.breath_trees.CONFIRM_BUTTON, "n_clicks")
     ],
     [
         State("loading-modal", "is_open"),
@@ -27,7 +27,7 @@ from wiw_app.utils import assign_default_colors
 def toggle_loading_modal(n_clicks_trees, is_open, trees_contents):
     triggered_id = callback_context.triggered_id
 
-    if triggered_id == UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN and trees_contents:
+    if triggered_id == UploadIDs.breath_trees.CONFIRM_BUTTON and trees_contents:
         return True
 
     return is_open  # default: no change

@@ -2,7 +2,7 @@ from dash import Input, Output, html
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.layouts.upload import breath, metadata, build_simple_upload_panel
+from wiw_app.layouts.upload import metadata, build_upload_panel
 from wiw_app.ids import UploadIDs
 
 @myapp.callback(
@@ -17,21 +17,26 @@ def render_upload_ui(mode):
     ])
     match mode:
         case "breath":
-            return breath
+            return build_upload_panel(
+                UploadIDs.breath_trees,
+                accepted_files=".trees, .tree, .tre",
+                include_burnin_slider=True
+            )
         case "transphylo":
-            return build_simple_upload_panel(
+            return build_upload_panel(
                 UploadIDs.transphylo_rds,
-                accepted_files=".rds"
+                accepted_files=".rds",
+                include_burnin_slider=True
             )
         case "outbreaker":
-            return build_simple_upload_panel(
+            return build_upload_panel(
                 UploadIDs.outbreaker_rds,
                 accepted_files=".rds"
             )
         case "metadata":
             return metadata
         case "custom-csv":
-            return build_simple_upload_panel(
+            return build_upload_panel(
                 UploadIDs.custom_csv,
                 accepted_files=".csv"
             )

@@ -2,8 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 
-def build_simple_upload_panel(ids, accepted_files="*"):
-    return html.Div([
+def build_upload_panel(ids, accepted_files="*", include_burnin_slider=False):
+    children = [
         dcc.Upload(
             id=ids.UPLOAD_DATA,
             children=html.Div(["Click to upload or drag a file here"]),
@@ -25,7 +25,32 @@ def build_simple_upload_panel(ids, accepted_files="*"):
             id=ids.SELECTED_FILENAME,
             style={"marginBottom": "10px", "fontStyle": "italic"},
         ),
+    ]
 
+    if include_burnin_slider:
+        children.append(
+            html.Div([
+                html.Label(
+                    "Burn-in:",
+                    htmlFor=ids.BURN_IN_SELECTION,
+                    style={"width": "200px"},
+                ),
+                dcc.Slider(
+                    id=ids.BURN_IN_SELECTION,
+                    min=0,
+                    max=0.99,
+                    step=0.01,
+                    value=0.1,
+                    marks={i: str(i) for i in [i / 10 for i in range(11)]},
+                    tooltip={
+                        "placement": "bottom",
+                        "always_visible": True,
+                    },
+                ),
+            ], style={"marginBottom": "1rem"})
+        )
+
+    children.extend([
         dbc.Input(
             id=ids.DATASET_LABEL,
             placeholder="Enter dataset label...",
@@ -38,6 +63,9 @@ def build_simple_upload_panel(ids, accepted_files="*"):
             id=ids.CONFIRM_BUTTON,
             color="primary",
         ),
+    ])
 
-        # dcc.Store(id=ids.UPLOADED_GRAPH_STORE),
-    ], style={"paddingTop": "1.5rem"})
+    return html.Div(
+        children,
+        style={"paddingTop": "1.5rem"},
+    )

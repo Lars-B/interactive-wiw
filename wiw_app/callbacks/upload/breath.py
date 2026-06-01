@@ -16,7 +16,7 @@ from wiw_app.ids import UploadIDs
     Output(UploadIDs.INFO_TOAST, "is_open"),
     Output(UploadIDs.INFO_TOAST, "duration"),
     Output(UploadIDs.INFO_TOAST, "icon"),
-    Input(UploadIDs.breath_trees.CONFIRM_TREES_DATASET_BTN, "n_clicks"),
+    Input(UploadIDs.breath_trees.CONFIRM_BUTTON, "n_clicks"),
     State(UploadIDs.breath_trees.UPLOAD_DATA, "contents"),
     State(UploadIDs.breath_trees.UPLOAD_DATA, "filename"),
     State(UploadIDs.breath_trees.DATASET_LABEL, "value"),

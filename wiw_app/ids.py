@@ -4,10 +4,9 @@ class UploadIDs:
     class breath_trees:
         UPLOAD_DATA = "upload-trees-data"
         SELECTED_FILENAME = "selected-trees-filename"
-        BURN_IN_SELECTION = "burn-in-selection"
+        BURN_IN_SELECTION = "BREATH-burn-in-selection"
         DATASET_LABEL = "trees-dataset-label"
-        CONFIRM_TREES_DATASET_BTN = "confirm-dataset-btn"
-        UPLOADED_TREES_DATA_STORE = "uploaded-datasets-store"
+        CONFIRM_BUTTON = "confirm-dataset-btn"
 
     # todo group these into metadata subgroup
     class metadata:
@@ -34,6 +33,7 @@ class UploadIDs:
         SELECTED_FILENAME = "transphylo-rds-graph-filename"
         DATASET_LABEL = "transphylo-rds-dataset-label"
         CONFIRM_BUTTON = "transphylo-rds-dataset-button"
+        BURN_IN_SELECTION = "TP-burn-in-selection"
 
 
 class GraphOptions:
