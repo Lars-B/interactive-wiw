@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 
-def build_upload_panel(ids, accepted_files="*", include_burnin_slider=False):
+def build_upload_panel(ids, accepted_files="*", include_burnin_slider=False, input_types=None):
     children = [
         dcc.Upload(
             id=ids.UPLOAD_DATA,
@@ -27,27 +27,53 @@ def build_upload_panel(ids, accepted_files="*", include_burnin_slider=False):
         ),
     ]
 
+    if input_types:
+        children.append(
+            html.Div(
+                [
+                    html.Label(
+                        "Input type:",
+                        htmlFor=ids.INPUT_TYPE,
+                    ),
+                    dbc.RadioItems(
+                        id=ids.INPUT_TYPE,
+                        options=[
+                            {"label": label, "value": value}
+                            for label, value in input_types
+                        ],
+                        value=input_types[0][1],
+                        inline=True,
+                    ),
+                ],
+                style={"marginBottom": "1rem"},
+            )
+        )
+
     if include_burnin_slider:
         children.append(
-            html.Div([
-                html.Label(
-                    "Burn-in:",
-                    htmlFor=ids.BURN_IN_SELECTION,
-                    style={"width": "200px"},
-                ),
-                dcc.Slider(
-                    id=ids.BURN_IN_SELECTION,
-                    min=0,
-                    max=0.99,
-                    step=0.01,
-                    value=0.1,
-                    marks={i: str(i) for i in [i / 10 for i in range(11)]},
-                    tooltip={
-                        "placement": "bottom",
-                        "always_visible": True,
-                    },
-                ),
-            ], style={"marginBottom": "1rem"})
+            html.Div(
+                [
+                    html.Label(
+                        "Burn-in:",
+                        htmlFor=ids.BURN_IN_SELECTION,
+                        style={"width": "200px"},
+                    ),
+                    dcc.Slider(
+                        id=ids.BURN_IN_SELECTION,
+                        min=0,
+                        max=0.99,
+                        step=0.01,
+                        value=0.1,
+                        marks={i: str(i) for i in [i / 10 for i in range(11)]},
+                        tooltip={
+                            "placement": "bottom",
+                            "always_visible": True,
+                        },
+                    ),
+                ],
+                id=ids.BURN_IN_CONTAINER,
+                style={"marginBottom": "1rem"},
+            )
         )
 
     children.extend([

@@ -21,11 +21,12 @@ from wiw_app.ids import UploadIDs
     State(UploadIDs.transphylo_rds.UPLOAD_DATA, "filename"),
     State(UploadIDs.transphylo_rds.DATASET_LABEL, "value"),
     State(UploadIDs.transphylo_rds.BURN_IN_SELECTION, "value"),
+    Input(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_transphylo_rds_data(n_clicks, contents, filename, label, burnin,
-                                          current_graph_data):
+def update_graph_with_transphylo_rds_data(
+        n_clicks, contents, filename, label, burnin, input_type, current_graph_data):
     if not contents:
         raise PreventUpdate
 
@@ -39,7 +40,8 @@ def update_graph_with_transphylo_rds_data(n_clicks, contents, filename, label, b
     new_nodes, new_edges, num_samples = build_graph_from_transphylo_rds(
         contents,
         effective_label,
-        burnin
+        burnin,
+        input_type
     )
     if num_samples == 0:
         time.sleep(0.1)

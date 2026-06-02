@@ -274,3 +274,15 @@ def sanitize_node_annotations_label(label, graph_data):
 )
 def toggle_edge_scale_input(value):
     return "scale" not in (value or [])
+
+
+@myapp.callback(
+    Output(UploadIDs.transphylo_rds.BURN_IN_CONTAINER, "style"),
+    Input(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
+)
+def toggle_burnin_visibility(input_type):
+
+    if input_type == "wiw_matrix":
+        return {"display": "none"}
+
+    return {"marginBottom": "1rem"}

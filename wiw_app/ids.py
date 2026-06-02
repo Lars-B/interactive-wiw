@@ -7,8 +7,8 @@ class UploadIDs:
         BURN_IN_SELECTION = "BREATH-burn-in-selection"
         DATASET_LABEL = "trees-dataset-label"
         CONFIRM_BUTTON = "confirm-dataset-btn"
+        BURN_IN_CONTAINER = "BREATH-burn-in-container"
 
-    # todo group these into metadata subgroup
     class metadata:
         UPLOAD_DATA = "upload-node-annotations"
         SELECTED_FILENAME = "selected-node-annotations-file"
@@ -34,6 +34,8 @@ class UploadIDs:
         DATASET_LABEL = "transphylo-rds-dataset-label"
         CONFIRM_BUTTON = "transphylo-rds-dataset-button"
         BURN_IN_SELECTION = "TP-burn-in-selection"
+        INPUT_TYPE = "TP-input-type"
+        BURN_IN_CONTAINER = "TP-burnin-container"
 
 
 class GraphOptions:

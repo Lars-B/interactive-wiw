@@ -26,7 +26,11 @@ def render_upload_ui(mode):
             return build_upload_panel(
                 UploadIDs.transphylo_rds,
                 accepted_files=".rds, .Rdata, .RData",
-                include_burnin_slider=True
+                include_burnin_slider=True,
+                input_types=[
+                    ("MCMC chain", "mcmc"),
+                    ("WIW matrix", "wiw_matrix"),
+                ]
             )
         case "outbreaker":
             return build_upload_panel(

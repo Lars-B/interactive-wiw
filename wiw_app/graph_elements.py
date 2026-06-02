@@ -552,21 +552,36 @@ def load_rds_object2(base64_content):
         os.remove(tmp_path)
 
 
-def build_graph_from_transphylo_rds(file_content, label, burnin):
+def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
     obj = load_rds_object2(file_content)
     logger.info(f"Loaded R object type: {type(obj)}")
 
-    wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj, burnin=burnin)
+    logger.info(f"We are using this input_type: {input_type}")
+    match input_type:
+        case "mcmc":
+            wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj, burnin=burnin)
+
+            names = obj[0]["ctree"]["nam"]
+            wiw_matrix = pd.DataFrame(
+                wiw_matrix,
+                index=names,
+                columns=names,
+            )
+
+        case "wiw_matrix":
+            # todo implement intput type correctly here...
+            # todo make it compatible with the existing build_graph_from_wiw_matrix bit...
+
+            wiw_matrix, num_samples = None, 0
+        case _:
+            raise ValueError(
+                f"Unsupported TransPhylo input type: {input_type!r}. "
+                "Expected 'mcmc' or 'wiw_matrix'."
+            )
+
     # This should happen if no samples left after burnin...
     if wiw_matrix is None:
         return [], [], num_samples
-
-    names = obj[0]["ctree"]["nam"]
-    wiw_matrix = pd.DataFrame(
-        wiw_matrix,
-        index=names,
-        columns=names,
-    )
 
     new_nodes, new_edges = build_graph_from_wiw_matrix(wiw_matrix, label)
 
