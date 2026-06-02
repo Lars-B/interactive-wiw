@@ -6,9 +6,7 @@ from wiw_app.dash_logger import logger
 
 wiw_app.callbacks.register_callbacks(my_app)
 
-
 if __name__ == "__main__":
-
     logger.info("Starting wiw_app")
     logger.setLevel(logging.DEBUG)
     my_app.run(debug=True, host="127.0.0.1", port=8050)

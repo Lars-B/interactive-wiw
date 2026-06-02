@@ -1,9 +1,26 @@
 import logging
 import threading
+import warnings
 import webbrowser
+
 import wiw_app.callbacks
 from wiw_app import app
 from wiw_app.dash_logger import logger
+
+warnings.filterwarnings(
+    "ignore",
+    message="Missing constructor for R class*"
+)
+
+warnings.filterwarnings(
+    "ignore",
+    message="Unknown file type*"
+)
+
+warnings.filterwarnings(
+    "ignore",
+    message="Wrong extension*"
+)
 
 PORT = 12712
 

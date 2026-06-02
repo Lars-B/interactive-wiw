@@ -33,8 +33,11 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
 
     try:
-        new_nodes, new_edges, num_trees = build_graph_from_breath_tree_file(contents,
-                                                                            effective_label, burnin)
+        new_nodes, new_edges, num_trees = build_graph_from_breath_tree_file(
+            contents,
+            effective_label,
+            burnin
+        )
     except NoTreesFoundError as e:
         # delay for loading modal to close... dash scheduling/ race condition problem.
         time.sleep(0.1)
@@ -45,7 +48,7 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
             # Info toast related stuff
             str(e),
             True,
-            5000,
+            7000,
             "danger"
         )
 
@@ -67,6 +70,6 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
         # Info toast related stuff
         f"Successfully parsed {num_trees} trees.",
         True,
-        3000,
+        4000,
         "info"
     )
