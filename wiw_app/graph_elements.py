@@ -420,21 +420,17 @@ def process_node_annotations_file(file_content, taxon_column):
     return uploaded_map
 
 
-def build_graph_from_rds(file_content, label):
-    logger.debug("custom_csv file parsing and graph construction...")
-    new_nodes, new_edges = handle_uploaded_rds_file(file_content, label)
+def build_graph_from_outbreaker_rds(file_content, label):
+    obj = load_rds_object(file_content)
+    new_nodes, new_edges = build_graph_from_outbreaker_datframe(obj, label)
     return new_nodes, new_edges
 
 
-def handle_uploaded_rds_file(base64_content, label):
-    logger.debug("Parsing uploaded RDS file...")
-
-    # todo should be at top and new requirement
+def load_rds_object(base64_content):
     import pyreadr
 
-    # remove header if present
     if "," in base64_content:
-        base64_content = base64_content.split(",")[1]
+        base64_content = base64_content.split(",", 1)[1]
 
     file_bytes = base64.b64decode(base64_content)
 
@@ -445,17 +441,16 @@ def handle_uploaded_rds_file(base64_content, label):
     try:
         result = pyreadr.read_r(tmp_path)
 
-        obj = next(iter(result.values()))
+        if not result:
+            raise ValueError("No objects found in RDS file")
 
-        logger.debug(f"Loaded R object type: {type(obj)}")
-
-        return build_graph_from_datframe(obj, label)
+        return next(iter(result.values()))
 
     finally:
         os.remove(tmp_path)
 
 
-def build_graph_from_datframe(res, label):
+def build_graph_from_outbreaker_datframe(res, label):
     alpha_prefix = "alpha"  # outbreaker specific...
 
     alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
@@ -518,3 +513,49 @@ def build_graph_from_datframe(res, label):
         })
 
     return nodes, edges
+
+
+def load_rds_object2(base64_content):
+
+    # todo this should be an alternative version to the load_rds_object function...
+
+    # import pyreadr
+    import rdata
+
+    if "," in base64_content:
+        base64_content = base64_content.split(",", 1)[1]
+
+    file_bytes = base64.b64decode(base64_content)
+
+    with tempfile.NamedTemporaryFile(suffix=".rds", delete=False) as tmp:
+        tmp.write(file_bytes)
+        tmp_path = tmp.name
+
+    try:
+        # result = pyreadr.read_r(tmp_path)
+        parsed = rdata.parser.parse_file(tmp_path)
+
+        logger.debug(f"parsed file {parsed}")
+
+        # Convert the parsed data into native Python objects
+        converted = rdata.conversion.convert(parsed)
+
+        logger.debug(f"The converted rds file was {converted}")
+
+        if not converted:
+            raise ValueError("No objects found in RDS file")
+
+        return converted
+
+    finally:
+        os.remove(tmp_path)
+
+
+def build_graph_from_transphylo_rds(file_content, label):
+    obj = load_rds_object2(file_content)
+    logger.debug(f"Loaded R object type: {type(obj)}")
+    # todo WIP
+    # todo the rdata package does work, but we need the loading modal
+    # todo we will need to either write a converter or otherwise sort out how this works
+
+    return [], []

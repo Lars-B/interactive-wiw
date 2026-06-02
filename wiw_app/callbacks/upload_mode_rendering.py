@@ -25,13 +25,13 @@ def render_upload_ui(mode):
         case "transphylo":
             return build_upload_panel(
                 UploadIDs.transphylo_rds,
-                accepted_files=".rds",
+                accepted_files=".rds, .Rdata, .RData",
                 include_burnin_slider=True
             )
         case "outbreaker":
             return build_upload_panel(
                 UploadIDs.outbreaker_rds,
-                accepted_files=".rds"
+                accepted_files=".rds, .Rdata, .RData"
             )
         case "metadata":
             return metadata
