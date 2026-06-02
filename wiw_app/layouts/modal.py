@@ -15,3 +15,18 @@ data_loading_modal = dbc.Modal(
     keyboard=False,  # disables Esc key
     centered=True,
 )
+
+data_loading_modal_tp = dbc.Modal(
+    [
+        dbc.ModalHeader(dbc.ModalTitle("Processing Dataset")),
+        dbc.ModalBody([
+            html.P("Please wait while we process your file..."),
+            dbc.Spinner(size="md", color="primary", type="border"),
+        ]),
+    ],
+    id="loading-modal-tp",
+    is_open=False,
+    backdrop="static",  # prevents closing by clicking outside
+    keyboard=False,  # disables Esc key
+    centered=True,
+)

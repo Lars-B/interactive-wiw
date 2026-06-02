@@ -32,6 +32,7 @@ app = Dash(
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
     data_loading_modal,
+    data_loading_modal_tp,
     dbc.Row([
         # Sidebar
         dbc.Col(

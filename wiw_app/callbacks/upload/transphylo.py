@@ -11,6 +11,7 @@ from wiw_app.ids import UploadIDs
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output("loading-modal-tp", "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "duration", allow_duplicate=True),
@@ -45,6 +46,7 @@ def update_graph_with_transphylo_rds_data(n_clicks, contents, filename, label, b
 
         return (
             current_graph_data,
+            False,
             # Info toast related stuff
             "No samples in input file. Reduce burnin?",
             True,
@@ -64,6 +66,7 @@ def update_graph_with_transphylo_rds_data(n_clicks, contents, filename, label, b
     return (
         {"nodes": merged_nodes,
          "edges": current_graph_data["edges"] + new_edges},
+        False,
         # Info toast related stuff
         f"Successfully parsed {num_samples} samples.",
         True,

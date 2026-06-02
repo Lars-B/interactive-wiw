@@ -1,5 +1,3 @@
-import re
-
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State
 from dash import callback_context
@@ -28,6 +26,26 @@ def toggle_loading_modal(n_clicks_trees, is_open, trees_contents):
     triggered_id = callback_context.triggered_id
 
     if triggered_id == UploadIDs.breath_trees.CONFIRM_BUTTON and trees_contents:
+        return True
+
+    return is_open  # default: no change
+
+
+@myapp.callback(
+    Output("loading-modal-tp", "is_open"),
+    [
+        Input(UploadIDs.transphylo_rds.CONFIRM_BUTTON, "n_clicks")
+    ],
+    [
+        State("loading-modal-tp", "is_open"),
+        State(UploadIDs.transphylo_rds.UPLOAD_DATA, "contents")
+    ],
+    prevent_initial_call=True,
+)
+def toggle_loading_modal_tp(n_clicks_trees, is_open, trees_contents):
+    triggered_id = callback_context.triggered_id
+
+    if triggered_id == UploadIDs.transphylo_rds.CONFIRM_BUTTON and trees_contents:
         return True
 
     return is_open  # default: no change
