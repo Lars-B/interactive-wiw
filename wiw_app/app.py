@@ -40,6 +40,7 @@ app.layout = html.Div([
                 ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
                                switch_props={"value": False}),
                 html.Div([
+                    html.Hr(),
                     dbc.InputGroup([
                         dbc.InputGroupText("Upload type"),
                         upload_mode_selector
@@ -68,6 +69,7 @@ app.layout = html.Div([
 
                 html.Div([graph_option_tabs]),
 
+                html.Hr(),
                 html.H2("Export Graph", style={"marginBottom": "15px"}),
                 html.Hr(),
                 download_layout,

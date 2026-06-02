@@ -553,12 +553,13 @@ def load_rds_object2(base64_content):
 
 
 def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
-    obj = load_rds_object2(file_content)
-    logger.info(f"Loaded R object type: {type(obj)}")
-
     logger.info(f"We are using this input_type: {input_type}")
+
     match input_type:
         case "mcmc":
+            obj = load_rds_object2(file_content)
+            logger.info(f"Loaded R object type: {type(obj)}")
+
             wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj, burnin=burnin)
 
             names = obj[0]["ctree"]["nam"]
@@ -569,10 +570,10 @@ def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
             )
 
         case "wiw_matrix":
-            # todo implement intput type correctly here...
-            # todo make it compatible with the existing build_graph_from_wiw_matrix bit...
+            wiw_matrix = load_rds_object(file_content)
+            logger.debug(f"Loaded R object type: {type(wiw_matrix)}")
 
-            wiw_matrix, num_samples = None, 0
+            num_samples = 1
         case _:
             raise ValueError(
                 f"Unsupported TransPhylo input type: {input_type!r}. "

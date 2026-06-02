@@ -21,7 +21,7 @@ from wiw_app.ids import UploadIDs
     State(UploadIDs.transphylo_rds.UPLOAD_DATA, "filename"),
     State(UploadIDs.transphylo_rds.DATASET_LABEL, "value"),
     State(UploadIDs.transphylo_rds.BURN_IN_SELECTION, "value"),
-    Input(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
+    State(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )

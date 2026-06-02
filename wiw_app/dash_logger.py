@@ -18,7 +18,6 @@ class DashLogHandler(logging.Handler):
 
 # Create and configure the logger
 logger = logging.getLogger("dash_app")
-logger.setLevel(logging.DEBUG)
 
 # Formatter for all handlers
 formatter = logging.Formatter(
@@ -40,7 +39,6 @@ file_handler = RotatingFileHandler(
     encoding="utf-8"
 )
 
-file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
@@ -48,7 +46,6 @@ logger.addHandler(file_handler)
 # Console output handler
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(formatter)
-console_handler.setLevel(logging.INFO)
 logger.addHandler(console_handler)
 
 # Buffer handler for Dash UI
