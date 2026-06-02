@@ -6,5 +6,7 @@ dash_iconify
 networkx
 pydot
 pillow
+rdata
+pyreadr
 
 brokilon @ git+https://github.com/Lars-B/pyccd@main

@@ -10,6 +10,8 @@ PORT = 12712
 logger.setLevel(logging.INFO)
 logger.info("Starting packaged wiw_app")
 
+wiw_app.callbacks.register_callbacks(app)
+
 for log_name in ["werkzeug", "flask.app", "dash"]:
     cur_logger = logging.getLogger(log_name)
     cur_logger.setLevel(logging.WARNING)
