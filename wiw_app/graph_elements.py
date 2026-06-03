@@ -507,7 +507,6 @@ def build_graph_from_outbreaker_datframe(res, label):
             "data": {
                 "id": str(node_id),
                 "label": str(node_id),
-                "strength": round(node_strength[node_id], 4),
             }
         })
 
