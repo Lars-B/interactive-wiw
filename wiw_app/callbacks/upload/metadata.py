@@ -48,12 +48,12 @@ def update_nodes_with_metadata(n_clicks, graph_data,
     # merge uploaded data into existing graph
     nodes = graph_data.get("nodes", [])
 
-    # Todo make "taxon" an input and then raise warning if two input columns don't match
-    #  This will allow more general inputs
-    #  can we somehow use index to simply upload a list of things without a column? check...
-
+    logger.debug(f"We picked this taxon: {taxon_column}")
+    # todo this currently uses taxon and id as fallback, should become an input option ...
     for n in nodes:
-        for new_label, value in uploaded_map.get(n['data']['taxon'], {}).items():
+        for new_label, value in uploaded_map.get(
+                n["data"].get("taxon", n["data"].get("id", {})), {}
+        ).items():
             if not new_label in n['data']:
                 # Adding the new annotation to the node
                 n['data'][new_label] = value

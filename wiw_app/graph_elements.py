@@ -389,10 +389,11 @@ def process_node_annotations_file(file_content, taxon_column):
     normalized_fieldnames = [
         _normalize_column_name(col) for col in reader.fieldnames
     ]
-    fieldname_map = dict(zip(normalized_fieldnames, reader.fieldnames))
+    fieldnames_map = dict(zip(normalized_fieldnames, reader.fieldnames))
     taxon_column_normalized = _normalize_column_name(taxon_column)
 
-    if taxon_column_normalized not in fieldname_map:
+    if taxon_column_normalized not in fieldnames_map:
+        # todo make this an info toast popup...
         raise ValueError(
             f"Taxon column '{taxon_column}' not found.\n"
             f"Available columns: {normalized_fieldnames}"
@@ -409,12 +410,12 @@ def process_node_annotations_file(file_content, taxon_column):
     uploaded_map = {}
 
     for row in reader:
-        taxon = row.get(fieldname_map.get(taxon_column))
+        taxon = row.get(fieldnames_map.get(taxon_column))
         if not taxon:
             continue
 
         uploaded_map[taxon] = {
-            col: (row[fieldname_map.get(col)] if row[fieldname_map.get(col)] is not None else "")
+            col: (row[fieldnames_map.get(col)] if row[fieldnames_map.get(col)] is not None else "")
             for col in annotation_columns
         }
 
@@ -453,6 +454,8 @@ def load_rds_object(base64_content):
 
 def build_graph_from_outbreaker_datframe(res, label):
     alpha_prefix = "alpha"  # outbreaker specific...
+
+    logger.debug(f"This is the result: {res}")
 
     alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
 
@@ -729,8 +732,10 @@ def build_graph_from_wiw_matrix(mat, label):
         nodes.append({
             "data": {
                 "id": str(node_id),
-                "label": str(node_id) if node_ids is None else str(node_ids[i]),
-                "strength": round(node_strength[node_id], 6),
+                "label": str(node_id),
+                "taxon": str(node_id) if node_ids is None else str(node_ids[i])
+                # todo this could possibly be used to size the nodes
+                # "strength": round(node_strength[node_id], 6),
             }
         })
 
