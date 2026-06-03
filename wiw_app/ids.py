@@ -14,7 +14,8 @@ class UploadIDs:
         UPLOAD_DATA = "upload-node-annotations"
         SELECTED_FILENAME = "selected-node-annotations-file"
         CONFIRM_NODE_ANNOTATIONS_BTN = "confirm-node-annotation-btn"
-        NODE_ANNOTATIONS_TAXON_COL = "node-annotations-label"
+        UPLOAD_COLUMN_NAME = "upload-column-name-association"
+        GRAPH_NODE_INFO_NAME = "graph-node-info-name-association"
         NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
 
     class custom_csv:

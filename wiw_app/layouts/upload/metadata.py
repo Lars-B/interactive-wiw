@@ -26,31 +26,46 @@ metadata = html.Div([
         style={"marginBottom": "10px",
                "fontStyle": "italic"}
     ),
+
     html.Div(
         [
-            dbc.Input(
-                id=UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL,
-                placeholder="Enter column name containing taxon names...",
-                type="text",
-                style={"marginBottom": "5px"},
-            ),
-            html.Div(
+            dbc.InputGroup(
                 [
-                    html.Small(
-                        id=UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING,
-                        style={"color": "red", "display": "block",
-                               "marginBottom": "2px"},
-                    ),
-                    html.Small(
-                        "Enter column name containing taxon names...",
-                        style={"fontStyle": "italic", "color": "#666"},
+                    dbc.InputGroupText("Upload"),
+                    dbc.Input(
+                        id=UploadIDs.metadata.UPLOAD_COLUMN_NAME,
+                        placeholder="Enter column name containing taxon names...",
+                        type="text",
                     ),
                 ],
-                style={"marginLeft": "2px"}  # slight indent from input
+                className="mb-1",
             ),
+
+            html.Small(
+                id=UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING,
+                style={"color": "red", "display": "block", "marginBottom": "2px"},
+            ),
+
+            html.Small(
+                "Enter column name containing taxon names...",
+                style={"fontStyle": "italic", "color": "#666"},
+            ),
+
+            dbc.InputGroup(
+                [
+                    dbc.InputGroupText("Graph"),
+                    dbc.Select(
+                        id=UploadIDs.metadata.GRAPH_NODE_INFO_NAME,
+                        options=[],
+                        placeholder="Select node annotation field",
+                    ),
+                ],
+                className="mb-1",
+            )
         ],
-        style={"marginBottom": "15px"}
+        style={"marginBottom": "15px"},
     ),
+
     dbc.Button(
         "Confirm File",
         id=UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN,

@@ -265,12 +265,12 @@ def update_label_color_store(values, ids):
 
 
 @myapp.callback(
-    Output(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "value", allow_duplicate=True),
+    Output(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "value", allow_duplicate=True),
     Output(UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING, "children"),
     Output(UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
     Output(UploadIDs.metadata.UPLOAD_DATA, "disabled"),
-    Output(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "disabled"),
-    Input(UploadIDs.metadata.NODE_ANNOTATIONS_TAXON_COL, "value"),
+    Output(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "disabled"),
+    Input(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "value"),
     Input("graph-store", "data"),
     prevent_initial_call="initial_duplicate",
     allow_duplicate=True,
@@ -306,3 +306,18 @@ def toggle_burnin_visibility(input_type):
         return {"display": "none"}
 
     return {"marginBottom": "1rem"}
+
+
+@myapp.callback(
+    Output(UploadIDs.metadata.GRAPH_NODE_INFO_NAME, "options"),
+    Input("graph-store", "data")
+)
+def update_dropdown_metadata_upload(graph_data):
+    if not graph_data or not graph_data.get("nodes"):
+        return []
+
+    fields = set()
+    for n in graph_data.get("nodes"):
+        fields.update(n.get("data", {}).keys())
+
+    return [{"label": f, "value": f} for f in sorted(fields)]
