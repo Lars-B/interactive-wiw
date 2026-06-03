@@ -60,7 +60,7 @@ metadata = html.Div([
                         placeholder="Select node annotation field",
                     ),
                 ],
-                className="mb-1",
+                className="mb-2",
             )
         ],
         style={"marginBottom": "15px"},

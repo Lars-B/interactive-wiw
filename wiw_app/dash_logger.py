@@ -1,10 +1,9 @@
 import logging
-import os
-import tempfile
 import uuid
 from logging.handlers import RotatingFileHandler
-from platformdirs import user_log_dir
 from pathlib import Path
+
+from platformdirs import user_log_dir
 
 # Where logs will be stored for browser display
 log_buffer = []
