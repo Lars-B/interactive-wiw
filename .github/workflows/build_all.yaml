@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: 
+        os:
           - ubuntu-latest
           - windows-latest
           - macos-latest
@@ -22,9 +22,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.12.9
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -34,29 +34,27 @@ jobs:
           pip install pyinstaller
 
       - name: Build executable
-        run: pyinstaller --onefile spread_viz.py --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app
+        run: |
+          pyinstaller --onefile spread_viz.py \
+            --collect-all dash_cytoscape \
+            --collect-all dash_iconify \
+            --collect-all dash_bootstrap_templates \
+            --collect-all wiw_app
 
-      - name: Zip the executable
+      - name: Zip the executable (cross-platform)
         shell: bash
         run: |
+          mkdir -p dist
+
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            pwsh -Command "Compress-Archive -Path dist\spread_viz.exe -DestinationPath dist\SpreadViz-Windows-${{ runner.arch }}.zip"
+            pwsh -Command "Compress-Archive -Path dist\spread_viz.exe -DestinationPath dist/SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip"
           else
             cd dist
             zip SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip spread_viz
           fi
-          
-      - name: Get latest release tag
-        id: get_latest
-        shell: bash
-        run: |
-          TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload binaries to release
-        uses: softprops/action-gh-release@v2
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: dist/SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip
-          tag_name: ${{ steps.get_latest.outputs.tag }}
+          name: SpreadViz-${{ runner.os }}-${{ runner.arch }}
+          path: dist/SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip
