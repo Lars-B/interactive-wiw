@@ -37,20 +37,10 @@ jobs:
         run: |
           pyinstaller --onefile spread_viz.py --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app
 
-      - name: Zip the executable (cross-platform)
-        shell: bash
-        run: |
-          mkdir -p dist
-
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
-            pwsh -Command "Compress-Archive -Path dist\spread_viz.exe -DestinationPath dist/SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip"
-          else
-            cd dist
-            zip SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip spread_viz
-          fi
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: SpreadViz-${{ runner.os }}-${{ runner.arch }}
-          path: dist/SpreadViz-${{ runner.os }}-${{ runner.arch }}.zip
+          path: |
+            dist/spread_viz
+            dist/spread_viz.exe
