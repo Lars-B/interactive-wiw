@@ -210,22 +210,54 @@ def update_label_color_store(values, ids):
     Output(UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
     Output(UploadIDs.metadata.UPLOAD_DATA, "disabled"),
     Output(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "disabled"),
+    Output(UploadIDs.metadata.GRAPH_NODE_INFO_NAME, "disabled"),
     Input(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "value"),
     Input("graph-store", "data"),
     prevent_initial_call="initial_duplicate",
     allow_duplicate=True,
 )
 def sanitize_node_annotations_label(label, graph_data):
+    # ----------------------------
+    # 1. No graph loaded yet, lock this input
+    # ----------------------------
     if not graph_data or not graph_data.get("nodes"):
-        return "", "Please Upload a graph before using this feature!", True, True, True
+        return (
+            "",
+            "Please upload a graph before using this feature!",
+            True,
+            True,
+            True,
+            True,
+        )
 
+    # ----------------------------
+    # 2. Default column name, enabling buttons
+    # ----------------------------
     default_column_label = "taxon"
-    if not label:
-        # raise PreventUpdate
-        logger.info("No label provided, setting default value")
-        return default_column_label, f"No label provided - defaulting to '{default_column_label}'", False, False, False
 
-    return label, "", False, False, False
+    if not label:
+        logger.info("No label provided, setting default value")
+
+        return (
+            default_column_label,
+            f"No label provided - defaulting to '{default_column_label}'",
+            False,
+            False,
+            False,
+            False,
+        )
+
+    # ----------------------------
+    # 3. Enabling all the buttons
+    # ----------------------------
+    return (
+        label,
+        "",
+        False,
+        False,
+        False,
+        False,
+    )
 
 
 @myapp.callback(

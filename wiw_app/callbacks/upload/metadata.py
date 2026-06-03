@@ -48,7 +48,7 @@ def update_nodes_with_metadata(
     if not graph_data:
         logger.info("No graph data loaded, nothing happens.")
         time.sleep(0.1)
-        return no_update, no_update, no_update, False
+        return no_update, no_update, False
 
     logger.info(
         f"User selection: **{upload_column_name}** for upload column "
