@@ -12,3 +12,6 @@ platformdirs
 Flask
 
 brokilon @ git+https://github.com/Lars-B/pyccd@main
+
+numpy
+pandas
