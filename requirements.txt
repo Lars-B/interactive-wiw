@@ -8,5 +8,6 @@ pydot
 pillow
 rdata
 pyreadr
+platformdirs
 
 brokilon @ git+https://github.com/Lars-B/pyccd@main

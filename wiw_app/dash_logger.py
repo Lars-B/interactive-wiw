@@ -3,6 +3,8 @@ import os
 import tempfile
 import uuid
 from logging.handlers import RotatingFileHandler
+from platformdirs import user_log_dir
+from pathlib import Path
 
 # Where logs will be stored for browser display
 log_buffer = []
@@ -27,15 +29,15 @@ formatter = logging.Formatter(
 # File log path in /tmp
 session_id = uuid.uuid4().hex[:8]
 
-log_file_path = os.path.join(
-    tempfile.gettempdir(),
-    f"wiw_visualization_app_{session_id}.log"
-)
+log_dir = Path(user_log_dir("wiw_visualization_app"))
+log_dir.mkdir(parents=True, exist_ok=True)
+
+log_file_path = log_dir / f"{session_id}.log"
 
 file_handler = RotatingFileHandler(
     log_file_path,
     maxBytes=2_000_000,
-    backupCount=5,
+    backupCount=10,
     encoding="utf-8"
 )
 
