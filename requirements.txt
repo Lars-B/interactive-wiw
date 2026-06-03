@@ -9,7 +9,7 @@ pillow
 rdata
 pyreadr
 platformdirs
-Flask
+flask
 
 brokilon @ git+https://github.com/Lars-B/pyccd@main
 
