@@ -1,6 +1,5 @@
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State
-from dash import callback_context
 from dash import html
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -273,7 +272,6 @@ def toggle_edge_scale_input(value):
     Input(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
 )
 def toggle_burnin_visibility(input_type):
-
     if input_type == "wiw_matrix":
         return {"display": "none"}
 
@@ -293,3 +291,32 @@ def update_dropdown_metadata_upload(graph_data):
         fields.update(n.get("data", {}).keys())
 
     return [{"label": f, "value": f} for f in sorted(fields)]
+
+
+@myapp.callback(
+    Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
+    Output(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    Input("graph-store", "data"),
+)
+def update_node_label_annotation_dropdown(graph_data):
+    options = [
+        {"label": "None", "value": "none"}
+    ]
+    col_options = [
+        {"label": "Label", "value": "label"}
+    ]
+
+    if not graph_data or not graph_data.get("nodes"):
+        return options, col_options
+
+    # dynamically discover annotations
+    seen = set(opt["value"] for opt in options)
+
+    for n in graph_data["nodes"]:
+        for key in n.get("data", {}).keys():
+            if key not in seen:
+                options.append({"label": key, "value": key})
+                col_options.append({"label": key, "value": key})
+                seen.add(key)
+
+    return options, col_options

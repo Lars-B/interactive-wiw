@@ -255,9 +255,7 @@ graph_option_tabs = dbc.Tabs(
                     dcc.Dropdown(
                         id=GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR,
                         options=[
-                            {"label": "None", "value": "none"},
-                            {"label": "Label", "value": "label"},
-                            {"label": "Taxon", "value": "taxon"}
+                            # dynamically updated via callback...
                         ],
                         value="label",
                         clearable=False,
@@ -317,7 +315,9 @@ graph_option_tabs = dbc.Tabs(
                         html.Div([
                             dcc.Checklist(
                                 id=GraphOptions.Nodes.COLOR_BY_LABEL,
-                                options=[{"label": "Color nodes by label", "value": "color"}],
+                                options=[
+                                    {"label": "Color nodes by label", "value": "color"}
+                                ],
                                 value=[],
                                 inline=True,
                                 style={"marginBottom": "10px"}
@@ -336,8 +336,7 @@ graph_option_tabs = dbc.Tabs(
                                             dcc.Dropdown(
                                                 id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
                                                 options=[
-                                                    {"label": "Label", "value": "label"},
-                                                    {"label": "Taxon", "value": "taxon"}
+                                                    {"label": "Label", "value": "label"}
                                                 ],
                                                 value="label",
                                                 clearable=False,
