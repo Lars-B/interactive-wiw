@@ -12,66 +12,6 @@ from wiw_app.utils import assign_default_colors
 
 
 @myapp.callback(
-    Output(UploadIDs.breath_trees.LOADING_MODAL, "is_open"),
-    [
-        Input(UploadIDs.breath_trees.CONFIRM_BUTTON, "n_clicks")
-    ],
-    [
-        State(UploadIDs.breath_trees.LOADING_MODAL, "is_open"),
-        State(UploadIDs.breath_trees.UPLOAD_DATA, "contents")
-    ],
-    prevent_initial_call=True,
-)
-def toggle_loading_modal(n_clicks_trees, is_open, trees_contents):
-    triggered_id = callback_context.triggered_id
-
-    if triggered_id == UploadIDs.breath_trees.CONFIRM_BUTTON and trees_contents:
-        return True
-
-    return is_open  # default: no change
-
-
-@myapp.callback(
-    Output(UploadIDs.transphylo_rds.LOADING_MODAL, "is_open"),
-    [
-        Input(UploadIDs.transphylo_rds.CONFIRM_BUTTON, "n_clicks")
-    ],
-    [
-        State(UploadIDs.transphylo_rds.LOADING_MODAL, "is_open"),
-        State(UploadIDs.transphylo_rds.UPLOAD_DATA, "contents")
-    ],
-    prevent_initial_call=True,
-)
-def toggle_loading_modal_tp(n_clicks_trees, is_open, trees_contents):
-    triggered_id = callback_context.triggered_id
-
-    if triggered_id == UploadIDs.transphylo_rds.CONFIRM_BUTTON and trees_contents:
-        return True
-
-    return is_open  # default: no change
-
-
-@myapp.callback(
-    Output(UploadIDs.outbreaker_rds.LOADING_MODAL, "is_open"),
-    [
-        Input(UploadIDs.outbreaker_rds.CONFIRM_BUTTON, "n_clicks")
-    ],
-    [
-        State(UploadIDs.outbreaker_rds.LOADING_MODAL, "is_open"),
-        State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "contents")
-    ],
-    prevent_initial_call=True,
-)
-def toggle_loading_modal_outbreaker(n_clicks_trees, is_open, trees_contents):
-    triggered_id = callback_context.triggered_id
-
-    if triggered_id == UploadIDs.outbreaker_rds.CONFIRM_BUTTON and trees_contents:
-        return True
-
-    return is_open  # default: no change
-
-
-@myapp.callback(
     Output(GraphOptions.Edges.ADVANCED_OPTIONS_COLLAPSE, "is_open"),
     Output(GraphOptions.Edges.ADVANCED_OPTIONS_ICON, "icon"),
     Input(GraphOptions.Edges.ADVANCED_OPTION_TOGGLE_BTN, "n_clicks"),
