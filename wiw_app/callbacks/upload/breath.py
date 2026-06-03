@@ -11,7 +11,7 @@ from wiw_app.ids import UploadIDs
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
-    Output("loading-modal", "is_open", allow_duplicate=True),
+    Output(UploadIDs.breath_trees.LOADING_MODAL, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "duration", allow_duplicate=True),

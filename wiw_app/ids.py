@@ -8,6 +8,7 @@ class UploadIDs:
         DATASET_LABEL = "trees-dataset-label"
         CONFIRM_BUTTON = "confirm-dataset-btn"
         BURN_IN_CONTAINER = "BREATH-burn-in-container"
+        LOADING_MODAL = "loading-modal-breath"
 
     class metadata:
         UPLOAD_DATA = "upload-node-annotations"
@@ -27,6 +28,7 @@ class UploadIDs:
         SELECTED_FILENAME = "outbreaker_rds-graph-filename"
         DATASET_LABEL = "outbreaker_rds-dataset-label"
         CONFIRM_BUTTON = "outbreaker_rds-dataset-button"
+        LOADING_MODAL = "loading-modal-outbreaker"
 
     class transphylo_rds:
         UPLOAD_DATA = "transphylo-rds-graph-data"
@@ -36,6 +38,7 @@ class UploadIDs:
         BURN_IN_SELECTION = "TP-burn-in-selection"
         INPUT_TYPE = "TP-input-type"
         BURN_IN_CONTAINER = "TP-burnin-container"
+        LOADING_MODAL = "loading-modal-tp"
 
 
 class GraphOptions:

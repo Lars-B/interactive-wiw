@@ -9,6 +9,7 @@ from wiw_app.ids import UploadIDs
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output(UploadIDs.outbreaker_rds.LOADING_MODAL, "is_open", allow_duplicate=True),
     Input(UploadIDs.outbreaker_rds.CONFIRM_BUTTON, "n_clicks"),
     State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "contents"),
     State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "filename"),
@@ -38,5 +39,6 @@ def update_graph_with_outbreaker_rds_data(n_clicks, contents, filename, label, c
         {
             "nodes": merged_nodes,
             "edges": current_graph_data["edges"] + new_edges
-        }
+        },
+        False,
     )

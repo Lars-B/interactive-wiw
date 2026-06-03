@@ -455,17 +455,12 @@ def load_rds_object(base64_content):
 def build_graph_from_outbreaker_datframe(res, label):
     alpha_prefix = "alpha"  # outbreaker specific...
 
-    logger.debug(f"This is the result: {res}")
-
     alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
 
     alpha_mat = res[alpha_cols]
 
     n_states = len(alpha_cols)
     n_samples = len(alpha_mat)
-
-    # todo should be at top and new requirement
-    from collections import Counter
 
     # -------------------------
     # edges

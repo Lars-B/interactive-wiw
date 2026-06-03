@@ -33,6 +33,7 @@ app.layout = html.Div([
     dcc.Store(id="graph-store"),
     data_loading_modal,
     data_loading_modal_tp,
+    data_loading_modal_outbreaker,
     dbc.Row([
         # Sidebar
         dbc.Col(
