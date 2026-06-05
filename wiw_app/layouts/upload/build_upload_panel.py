@@ -64,7 +64,8 @@ def build_upload_panel(ids, accepted_files="*", include_burnin_slider=False, inp
                         max=0.99,
                         step=0.01,
                         value=0.1,
-                        marks={i: str(i) for i in [i / 10 for i in range(11)]},
+                        marks={i: {"label": str(i), "style": {"color": "#20c997"}}
+                               for i in [i / 10 for i in range(11)]},
                         tooltip={
                             "placement": "bottom",
                             "always_visible": True,
