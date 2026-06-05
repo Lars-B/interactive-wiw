@@ -179,33 +179,40 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
     logger.info(f"Added {edge_count} edges to network...")
 
     if num_trees > 1 and net.number_of_nodes() > 1:
-        mst = None
-        try:
-            mst = maximum_spanning_arborescence(net, attr="posterior", preserve_attrs=True)
-        except NetworkXException:
-            logger.info("Maximum spanning arborescence failed and will be ignored...")
-
-        if mst:
-            mst_edges = []
-            edge_count = 1
-            for u, v, data in mst.edges(data=True):
-                mst_edges.append({
-                    "data": {
-                        "source": u,
-                        "target": v,
-                        "label": f"MST-{label}",
-                        "posterior": round(data["posterior"], 2),
-                        "weight": data["weight"],
-                        "penwidth": 1,
-                        "color": "black",
-                        "id": f'MST-{edge_count}'
-                    }
-                })
-                edge_count += 1
-
-            edges.extend(mst_edges)
+        mst_edges = generate_mst_edges_from_network(net, label)
+        edges.extend(mst_edges)
 
     return nodes, edges, num_trees
+
+
+def generate_mst_edges_from_network(network, label):
+    try:
+        mst = maximum_spanning_arborescence(network, attr="posterior", preserve_attrs=True)
+    except NetworkXException:
+        logger.info("Maximum spanning arborescence failed and will be ignored...")
+        return []
+
+    if mst is None:
+        logger.debug("Maximum spanning tree didn't fail but returned None, will be ignored...")
+        return []
+
+    mst_edges = []
+    edge_count = 1
+    for u, v, data in mst.edges(data=True):
+        mst_edges.append({
+            "data": {
+                "source": u,
+                "target": v,
+                "label": f"MST-{label}",
+                "posterior": round(data["posterior"], 2),
+                "weight": data["weight"],
+                "penwidth": 1,
+                "color": "black",
+                "id": f'MST-{edge_count}'
+            }
+        })
+        edge_count += 1
+    return mst_edges
 
 
 def add_posterior_edges(
@@ -479,6 +486,7 @@ def build_graph_from_outbreaker_datframe(res, label):
 
     edges = []
     node_strength = Counter()
+    net = nx.DiGraph()
 
     for edge_id, ((source, target), count) in enumerate(edge_counter.items()):
         weight = count / n_samples
@@ -495,7 +503,18 @@ def build_graph_from_outbreaker_datframe(res, label):
             }
         })
 
+        net.add_edge(
+            str(source),
+            str(target),
+            weight=round(weight, 2),
+            posterior=round(weight, 2)
+        )
         node_strength[source] += weight
+
+    # Construct MST if possible:
+    if net.number_of_nodes() > 1:
+        mst_edges = generate_mst_edges_from_network(net, label)
+        edges.extend(mst_edges)
 
     # -------------------------
     # nodes
@@ -514,7 +533,6 @@ def build_graph_from_outbreaker_datframe(res, label):
 
 
 def load_rds_object2(base64_content):
-
     # todo this should be an alternative version to the load_rds_object function...
 
     # import pyreadr
@@ -603,8 +621,8 @@ def compute_mat_wiw_transphylo_mcmc_rds(record, burnin):
     first_ctree = record[0]["ctree"]["ctree"]
 
     sampled_mask = (
-        (first_ctree[:, 1] == 0) &
-        (first_ctree[:, 2] == 0)
+            (first_ctree[:, 1] == 0) &
+            (first_ctree[:, 2] == 0)
     )
 
     n = int(sampled_mask.sum())
@@ -689,9 +707,10 @@ def build_graph_from_wiw_matrix(mat, label):
     edges = []
     node_strength = Counter()
     edge_id = 0
+    net = nx.DiGraph()
 
-    for i in range(n):          # infector
-        for j in range(n):      # infectee
+    for i in range(n):  # infector
+        for j in range(n):  # infectee
             weight = mat[i, j]
 
             if weight == 0:
@@ -712,8 +731,19 @@ def build_graph_from_wiw_matrix(mat, label):
                 }
             })
 
+            net.add_edge(
+                str(source),
+                str(target),
+                weight=round(float(weight), 4),
+                posterior=round(float(weight), 4),
+            )
             node_strength[source] += float(weight)
             edge_id += 1
+
+    # Construct MST if possible
+    if net.number_of_nodes() > 0:
+        mst_edges = generate_mst_edges_from_network(net, label)
+        edges.extend(mst_edges)
 
     # -------------------------
     # nodes
