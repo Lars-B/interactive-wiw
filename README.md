@@ -34,7 +34,7 @@ Available for:
 
 ## Documentation
 
-Full guidance on how to use the App is available at [docs](docs/).
+Full guidance on how to use the App is available at [docs](https://lars-b.github.io/interactive-wiw/).
 
 ## For Developers
 
