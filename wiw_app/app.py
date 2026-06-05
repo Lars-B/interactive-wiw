@@ -11,6 +11,8 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from wiw_app.graph_elements import get_cytoscape_style
 from wiw_app.layouts import *
 
+from dash_resizable_panels import PanelGroup, Panel, PanelResizeHandle
+
 dcc.Store(id="graph-store")
 
 template_theme1 = "morph"
@@ -34,79 +36,103 @@ app.layout = html.Div([
     data_loading_modal,
     data_loading_modal_tp,
     data_loading_modal_outbreaker,
-    dbc.Row([
-        # Sidebar
-        dbc.Col(
-            [
-                ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2],
-                               switch_props={"value": False}),
-                html.Div([
-                    html.Hr(),
-                    dbc.InputGroup([
-                        dbc.InputGroupText("Upload type"),
-                        upload_mode_selector
-                    ]),
-                    html.Hr(),
-                    html.Div(id="upload-ui-container")
-                ]),
 
-                dbc.Toast(
-                    id=UploadIDs.INFO_TOAST,
-                    header="Upload Info",
-                    is_open=False,
-                    dismissable=True,
-                    style={
-                        "position": "fixed",
-                        "top": 66,
-                        "right": "50%",
-                        "width": 350,
-                        "zIndex": 2000
-                    },
-                ),
+    PanelGroup(
+        id="panel-group",
+        direction="horizontal",
+        children=[
 
-                html.Hr(),
-                html.H2("Graph Controls", className="mt-2"),
-                html.Hr(),
+            # Sidebar
+            Panel(
+                id="sidebar-panel",
+                collapsible=True,
+                defaultSizePercentage=20,
+                minSizePercentage=10,
+                maxSizePercentage=50,
+                children=[
+                    html.Div(
+                        [
+                            ThemeSwitchAIO(
+                                aio_id="theme",
+                                themes=[url_theme1, url_theme2],
+                                switch_props={"value": False}
+                            ),
 
-                html.Div([graph_option_tabs]),
+                            html.Div([
+                                html.Hr(),
+                                dbc.InputGroup([
+                                    dbc.InputGroupText("Upload type"),
+                                    upload_mode_selector
+                                ]),
+                                html.Hr(),
+                                html.Div(id="upload-ui-container")
+                            ]),
 
-                html.Hr(),
-                html.H2("Export Graph", style={"marginBottom": "15px"}),
-                html.Hr(),
-                download_layout,
-                html.Hr(),
-            ],
-            xs=6,
-            sm=6,
-            md=5,
-            lg=4,
-            xl=3,
-            xxl=2,
-            style={
-                "padding": "15px",
-                "height": "100vh",
-                "overflowY": "auto"
-            }
-        ),
-        # Graph Area
-        dbc.Col(
-            cyto.Cytoscape(
-                id='cytoscape',
-                elements=[],
-                layout={'name': 'cose'},
-                style=get_cytoscape_style(False),
-                zoom=1,
-                pan={'x': 0, 'y': 0}
+                            dbc.Toast(
+                                id=UploadIDs.INFO_TOAST,
+                                header="Upload Info",
+                                is_open=False,
+                                dismissable=True,
+                                style={
+                                    "position": "fixed",
+                                    "top": 66,
+                                    "right": "50%",
+                                    "width": 350,
+                                    "zIndex": 2000
+                                },
+                            ),
+
+                            html.Hr(),
+                            html.H2("Graph Controls", className="mt-2"),
+                            html.Hr(),
+
+                            html.Div([graph_option_tabs]),
+
+                            html.Hr(),
+                            html.H2(
+                                "Export Graph",
+                                style={"marginBottom": "15px"}
+                            ),
+                            html.Hr(),
+
+                            download_layout,
+
+                            html.Hr(),
+                        ],
+                        style={
+                            "padding": "15px",
+                            "height": "100vh",
+                            "overflowY": "auto"
+                        }
+                    )
+                ]
             ),
-            xs=6,
-            sm=6,
-            md=7,
-            lg=8,
-            xl=9,
-            xxl=10,
-            style={"padding": "0"}
-            # Remove padding for full-width visualization
-        )
-    ], style={"margin": "0", "width": "100%", "height": "100vh",
-              "overflow": "hidden"}),
-])
+
+            PanelResizeHandle(
+                html.Div(
+                    style={
+                        "width": "5px",
+                        "height": "100%",
+                        "backgroundColor": "#ccc",
+                        "cursor": "col-resize"
+                    }
+                )
+            ),
+
+            # Cytoscape panel
+            Panel(
+                id="graph-panel",
+                children=[
+                    cyto.Cytoscape(
+                        id="cytoscape",
+                        elements=[],
+                        layout={"name": "cose"},
+                        style=get_cytoscape_style(False),
+                        zoom=1,
+                        pan={"x": 0, "y": 0},
+                    )
+                ]
+            ),
+        ]
+    )
+], style={"height": "100vh"})

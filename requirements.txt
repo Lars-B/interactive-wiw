@@ -10,6 +10,7 @@ rdata
 pyreadr
 platformdirs
 flask
+dash_resizable_panels
 
 brokilon @ git+https://github.com/Lars-B/pyccd@main
 
