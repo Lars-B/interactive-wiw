@@ -1,56 +1,49 @@
-# Interactive WIW visualization
+# Interactive WIW Visualization
 
-This provides a browser app for visualizing the WIW network of 
-[BREATH](https://github.com/rbouckaert/BREATH) trees.
+Interactive browser-based visualization tool for exploring who-infected-whom (WIW) transmission networks.
+Supports input from BREATH MCMC runs, Outbreaker2, and Transphylo.
+Furthermore, you can uplaod a custom `csv` file to generate a graph, more detail can be found in documentation.
 
----
+## Features
 
-## Usage/Tutorial
-
-> [!Note]
-> This is work in progress, if you encounter a problem or have a question let me know.
+- Interactive network visualization
+- Upload and compare multiple datasets from different programs
+- Edge filtering, thresholding by posterior support, and styling
+- Maximum Spanning Tree computation (currently only available for BREATH)
+- Indirect infection network (currently only available for BREATH)
+- Export graphs
+- Browser-based interactive interface 
 
 ## Installation
 
-There are executables for MacOS, Linux and Windows to download [at the latest release](https://github.com/Lars-B/interactive-wiw/releases/latest).
-Under MacOS you have to use "System Settings -- Security -- Open anyway" to trust and open the application.
-Linux and Windows are currently untested.
+Download the latest executable from the Releases page:
 
----
+https://github.com/Lars-B/interactive-wiw/releases/latest
 
-## Install and run from source
+Available for:
+- macOS (Intel and M)
+- Linux
+- Windows
 
-Requires a python installation.
-The instructions below should be up to date when downloading the latest release source code and 
-unzipping it.
-Open a terminal and `cd` into the downloaded (and unzipped) directory.
+## Quick Start
 
-When cloning the repository instead, some requirements and new features might not be fully 
-functioning without additional tinkering and package installation.
+1. Launch the application.
+2. Open the browser interface.
+3. Upload the output of one supported application.
+4. Explore the network interactively.
 
-Create a python virtual environment named `appenv` with
-```bash
-python -m venv appenv
-```
-Activate this environment
-```bash
-source appenv/bin/activate
-```
-Now we have to install the required packages inside of this environment with: 
-```bash
-pip install -r requirements.txt
-```
-Then you can execute the app with
-```bash
-python run.py
-```
-This will host the app in your browser of choice at
-[http://127.0.0.1:8050/](http://127.0.0.1:8050/).
+## Documentation
 
-You can find an example input file at
-[the first release](https://github.com/Lars-B/interactive-wiw/releases/download/v1.0.0/Filter-roetzer40.trees)
-, download this file and upload it within the app.
+Full guidance on how to use the App is available at [docs](docs/).
 
-## Pip
+## For Developers
 
-The app can also be installed as a package for python via `pip install .` while in the directory of the repository.
+See the developer documentation for:
+- Running from source
+- Building executables
+- Project structure
+- Contributing
+
+## Bugs/Problems
+
+If you find a bug, please submit an issue here, ideally with a minimal reproducable example of the probelm.
