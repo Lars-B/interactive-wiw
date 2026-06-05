@@ -49,7 +49,7 @@ legend_styles = [
     Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Nodes.COLOR_STORE, "data"),
     Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
-    Input(GraphOptions.Nodes.SUPRESS_SINGLETONS, "value"),
+    Input(GraphOptions.Nodes.SUPPRESS_SINGLETONS, "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value")
 )

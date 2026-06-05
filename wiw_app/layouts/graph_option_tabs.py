@@ -300,9 +300,9 @@ graph_option_tabs = dbc.Tabs(
                                 ], style={"width": "100%", "marginBottom": "1rem"}),
                                 html.Div([
                                     dcc.Checklist(
-                                        id=GraphOptions.Nodes.SUPRESS_SINGLETONS,
+                                        id=GraphOptions.Nodes.SUPPRESS_SINGLETONS,
                                         options=[
-                                            {"label": "Supress Singletons", "value": "on"}],
+                                            {"label": "Suppress Singletons", "value": "on"}],
                                         value=[],
                                         inline=True,
                                         style={"marginBottom": "10px"}
