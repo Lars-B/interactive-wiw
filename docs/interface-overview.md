@@ -2,14 +2,14 @@
 
 The application consists of two panels, a settings panel on the left (1) and the interactive graph panel on the right (2):
 
-![App](assets/screenshots/app.png)
+![App](assets/screenshots/ui/app.png)
 
 Starting the app will also open a terminal, note that the app is running only with this open.
 The terminal will also contain log information messages.
 
 ## Main Options
 
-![Main Options](assets/screenshots/general_overview.png){: style="width:300px;"}
+![Main Options](assets/screenshots/ui/general_overview.png){: style="width:300px;"}
 
 ### Controls explained
 
@@ -44,7 +44,7 @@ Invalid or unexpected files are not strictly validated. Uploading unsupported fo
 
 ### BREATH trees
 
-![breath uplaod](assets/screenshots/breath_upload.png){: style="width:300px;"}
+![breath uplaod](assets/screenshots/ui/breath_upload.png){: style="width:300px;"}
 
 1. **File Upload Panel** Click to select a file or drag and drop a file into the upload area.
 2. **Burn-in selection** Select the burn-in value used for processing the tree data.
@@ -57,7 +57,7 @@ Invalid or unexpected files are not strictly validated. Uploading unsupported fo
 For transphylo the app supports two types of `rds` data upload.
 The whole MCMC output or a precomputed WIW matrix. 
 
-![transphylo combined](assets/screenshots/transphylo_uplaod.png){: style="width:600px;"}
+![transphylo combined](assets/screenshots/ui/transphylo_uplaod.png){: style="width:600px;"}
 
 1. **File Upload Panel** Click to select a file or drag and drop a file into the upload area.
 2. **Input type Selection** Select between MCMC or Matrix Upload.
@@ -68,7 +68,7 @@ The whole MCMC output or a precomputed WIW matrix.
 ---
 ### Outbreaker2
 
-![outbreaker upload](assets/screenshots/outbreaker_upload.png){: style="width:300px;"}
+![outbreaker upload](assets/screenshots/ui/outbreaker_upload.png){: style="width:300px;"}
 
 1. **File Upload Panel** Click to select a file or drag and drop a file into the upload area.
 2. **Dataset Label** Assigned Label for the resulting network edges. *Note: duplicate labels are not currently prevented and will result in multiple edges*
@@ -77,7 +77,7 @@ The whole MCMC output or a precomputed WIW matrix.
 ---
 ### Custom CSV file
 
-![custom csv](assets/screenshots/customcsv_upload.png){: style="width:300px;"}
+![custom csv](assets/screenshots/ui/customcsv_upload.png){: style="width:300px;"}
 
 1. **File Upload Panel** Click to select a file or drag and drop a file into the upload area.
 2. **Dataset Label** Assigned Label for the resulting network edges. *Note: duplicate labels are not currently prevented and will result in multiple edges*
@@ -86,7 +86,7 @@ The whole MCMC output or a precomputed WIW matrix.
 ---
 ### Metadata Annotation
 
-![Metadata upload](assets/screenshots/metadata_upload.png){: style="width: 300px; height: auto;"}
+![Metadata upload](assets/screenshots/ui/metadata_upload.png){: style="width: 300px; height: auto;"}
 
 This panel is used to map metadata from an uploaded file onto existing graph nodes.
 
@@ -115,7 +115,7 @@ The following controls dynamically update the displayed network.
 
 ### Graph Settings
 
-![Graph options](assets/screenshots/graph_options.png){: style="width: 300px; height: auto;"}
+![Graph options](assets/screenshots/ui/graph_options.png){: style="width: 300px; height: auto;"}
 
 1. **Graph layout**  
    Select the layout algorithm used to position nodes in the network.
@@ -131,7 +131,7 @@ The following controls dynamically update the displayed network.
 
 ### Edge Settings
 
-![Edge settings](assets/screenshots/edge_options.png){: style="width: 300px; height: auto;"}
+![Edge settings](assets/screenshots/ui/edge_options.png){: style="width: 300px; height: auto;"}
 
 1. **Displayed edge labels**  
    Select which edge labels are visible in the graph.
@@ -155,7 +155,7 @@ The following controls dynamically update the displayed network.
 
 #### Advanced Edge Options
 
-![Advanced edge options](assets/screenshots/further_edge_options.png){: style="width: 300px; height: auto;"}
+![Advanced edge options](assets/screenshots/ui/further_edge_options.png){: style="width: 300px; height: auto;"}
 
 1. **Edge threshold**  
    Filters edges by weight; only edges above the threshold are displayed.
@@ -170,7 +170,7 @@ The following controls dynamically update the displayed network.
 
 ### Node Settings
 
-![Node settings](assets/screenshots/node_options.png){: style="width: 300px; height: auto;"}
+![Node settings](assets/screenshots/ui/node_options.png){: style="width: 300px; height: auto;"}
 
 1. **Node annotation attribute**  
    Select which node attribute is displayed as the node label.  
@@ -186,7 +186,7 @@ The following controls dynamically update the displayed network.
 
 #### Advanced Node Options
 
-![Advanced node options](assets/screenshots/further_node_options.png){: style="width: 300px; height: auto;"}
+![Advanced node options](assets/screenshots/ui/further_node_options.png){: style="width: 300px; height: auto;"}
 
 1. **Node label font size**  
    Controls the font size of node labels.
@@ -197,7 +197,7 @@ The following controls dynamically update the displayed network.
 ---
 ## Export Graph
 
-![Export Options](assets/screenshots/export_options.png){: style="width: 400px;"}
+![Export Options](assets/screenshots/ui/export_options.png){: style="width: 400px;"}
 
 1. **Filename**  
    Specifies the filename used for exported files.
