@@ -14,6 +14,14 @@ The supported upload format is a `.trees` file as is produced when running the p
 
 These trees have to have a `blockcount` annotation on the edges.
 
+### Download Example Data
+
+If you want to follow along the data can be downloaded here:
+
+- [The input trees file](../assets/tutorial-data/breath32sim.trees)
+- [The additional metadata](../assets/tutorial-data/breath32-metadata.csv)
+
+
 ---
 ## Step 1: Upload a trees file
 
@@ -123,14 +131,5 @@ We can now download the network as an image:
 3. Download the currently displayed network as an `svg` file.
 
 Other file formats are also provided, however I would recommend using `svg` because it is a vector image and has infinite resolution. 
-
----
-
-## Download Example Data
-
-If you want you can download the data used in this tutorial below:
-
-- [The input trees file](../assets/tutorial-data/breath32sim.trees)
-- [The additional metadata](../assets/tutorial-data/breath32-metadata.csv)
 
 ---
