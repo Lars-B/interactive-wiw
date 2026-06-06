@@ -25,7 +25,7 @@ def render_upload_ui(mode):
         case "transphylo":
             return build_upload_panel(
                 UploadIDs.transphylo_rds,
-                accepted_files=".rds, .Rdata, .RData",
+                accepted_files=".rds, .RDS, Rds",
                 include_burnin_slider=True,
                 input_types=[
                     ("MCMC chain", "mcmc"),
@@ -35,7 +35,7 @@ def render_upload_ui(mode):
         case "outbreaker":
             return build_upload_panel(
                 UploadIDs.outbreaker_rds,
-                accepted_files=".rds, .Rdata, .RData"
+                accepted_files=".rds, .RDS, Rds"
             )
         case "metadata":
             return metadata
