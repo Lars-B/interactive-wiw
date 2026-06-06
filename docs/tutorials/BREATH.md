@@ -2,7 +2,7 @@
 
 ## Overview
 
-Here we use the output of the **BREATH** package for BEAST2 to infer a WIW network.
+Here we use the output of the **BREATH** package for BEAST2 to visualize a WIW network.
 
 You can find the full tutorial of the package [here](https://github.com/rbouckaert/BREATH/tree/main/doc/tutorial).
 
@@ -20,7 +20,6 @@ If you want to follow along the data can be downloaded here:
 
 - [The input trees file](../assets/tutorial-data/breath32sim.trees)
 - [The additional metadata](../assets/tutorial-data/breath32-metadata.csv)
-
 
 ---
 ## Step 1: Upload a trees file
