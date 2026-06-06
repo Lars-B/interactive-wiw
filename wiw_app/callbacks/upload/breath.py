@@ -29,8 +29,23 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
         raise PreventUpdate
 
     effective_label = label or filename
-    # Merge with current graph (if any)
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
+
+    current_edges = current_graph_data.get("edges", [])
+    current_labels = {e["data"]["label"] for e in current_edges}
+
+    if effective_label in current_labels:
+        logger.info(f"{effective_label} is already present in the graph.")
+
+        return (
+            current_graph_data,
+            False,
+            # Info toast related stuff
+            f"The label {effective_label} is already present in the graph!",
+            True,
+            7000,
+            "danger"
+        )
 
     try:
         new_nodes, new_edges, num_trees = build_graph_from_breath_tree_file(

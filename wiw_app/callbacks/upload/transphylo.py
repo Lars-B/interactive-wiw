@@ -30,13 +30,26 @@ def update_graph_with_transphylo_rds_data(
     if not contents:
         raise PreventUpdate
 
-    logger.debug("We are in the new transphylo_rds upload trigger")
-
-    logger.info("Start with parsing the transphylo input...")
-
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
 
     effective_label = label or filename
+
+    current_edges = current_graph_data.get("edges", [])
+    current_labels = {e["data"]["label"] for e in current_edges}
+
+    if effective_label in current_labels:
+        logger.info(f"{effective_label} is already present in the graph.")
+
+        return (
+            current_graph_data,
+            False,
+            # Info toast related stuff
+            f"The label {effective_label} is already present in the graph!",
+            True,
+            7000,
+            "danger"
+        )
+
     new_nodes, new_edges, num_samples = build_graph_from_transphylo_rds(
         contents,
         effective_label,
