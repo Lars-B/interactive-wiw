@@ -19,17 +19,17 @@ class UploadIDs:
         NODE_ANNOTATIONS_LABEL_WARNING = "node-annotations-label-warning"
 
     class custom_csv:
-        UPLOAD_DATA = "outbreaker-graph-data"
-        SELECTED_FILENAME = "outbreaker-graph-filename"
-        DATASET_LABEL = "outbreaker-dataset-label"
-        CONFIRM_BUTTON = "outbreaker-dataset-button"
+        UPLOAD_DATA = "outbreaker2-graph-data"
+        SELECTED_FILENAME = "outbreaker2-graph-filename"
+        DATASET_LABEL = "outbreaker2-dataset-label"
+        CONFIRM_BUTTON = "outbreaker2-dataset-button"
 
     class outbreaker_rds:
         UPLOAD_DATA = "outbreaker_rds-graph-data"
         SELECTED_FILENAME = "outbreaker_rds-graph-filename"
         DATASET_LABEL = "outbreaker_rds-dataset-label"
         CONFIRM_BUTTON = "outbreaker_rds-dataset-button"
-        LOADING_MODAL = "loading-modal-outbreaker"
+        LOADING_MODAL = "loading-modal-outbreaker2"
 
     class transphylo_rds:
         UPLOAD_DATA = "transphylo-rds-graph-data"

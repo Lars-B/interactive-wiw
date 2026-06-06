@@ -62,7 +62,7 @@ def update_graph_with_outbreaker_rds_data(n_clicks, contents, filename, label, c
         },
         False,
         # Info toast stuff
-        "Successfully parsed the outbreaker data!",
+        "Successfully parsed the outbreaker2 data!",
         True,
         4000,
         "info"

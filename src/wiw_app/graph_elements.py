@@ -460,7 +460,7 @@ def load_rds_object(base64_content):
 
 
 def build_graph_from_outbreaker_datframe(res, label):
-    alpha_prefix = "alpha"  # outbreaker specific...
+    alpha_prefix = "alpha"  # outbreaker2 specific...
 
     alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
 

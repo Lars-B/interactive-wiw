@@ -32,7 +32,7 @@ def render_upload_ui(mode):
                     ("WIW matrix", "wiw_matrix"),
                 ]
             )
-        case "outbreaker":
+        case "outbreaker2":
             return build_upload_panel(
                 UploadIDs.outbreaker_rds,
                 accepted_files=".rds, .RDS, Rds"
