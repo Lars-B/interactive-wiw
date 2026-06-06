@@ -34,8 +34,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile run.py --name spread_viz --collect-all dash_resizable_panels --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app --hidden-import=dash.backends._flask
-
+          pyinstaller spread_viz.spec
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
