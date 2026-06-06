@@ -10,7 +10,7 @@ You can find the full tutorial of the pacakge [here](https://www.repidemicsconso
 
 ## Input Data
 
-The supported uplaod format is a `.rds` file which can easily be produced from R by using the `saveRDS()` function.
+The supported upload format is a `.rds` file which can easily be produced from R by using the `saveRDS()` function.
 
 See below for how the example data was created from the fake outbreak that comes alongside the outbreaker package:
 
@@ -35,8 +35,8 @@ saveRDS(res, file="fake_outbreaker.rds")
 
 If you want to follow along the data can be downloaded here:
 
-- [The input rds file]()
-- [The additional metadata]()
+- [The input rds file](../assets/tutorial-data/outbreaker2.rds)
+- [The additional metadata](../assets/tutorial-data/outbreaker2-transphylo-metadata.csv)
 
 ---
 ## Step 1: Upload the rds file
