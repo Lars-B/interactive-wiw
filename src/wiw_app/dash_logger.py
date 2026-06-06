@@ -18,22 +18,35 @@ class DashLogHandler(logging.Handler):
             log_buffer.pop(0)  # keep last 100 lines
 
 
-def cleanup_old_logs(log_dir: Path, days: int = 10):
+def cleanup_old_logs(log_dir: Path, days: int = 10, max_files: int = 50):
     cutoff = datetime.now() - timedelta(days=days)
     deleted = []
-    found = []
 
-    for log_file in log_dir.glob("*.log"):
+    log_files = list(log_dir.glob("*.log"))
+    remaining = []
+
+    for log_file in log_files:
         try:
             if datetime.fromtimestamp(log_file.stat().st_mtime) < cutoff:
                 log_file.unlink()
-                deleted.append(log_file.name)
+                deleted.append(log_file)
             else:
-                found.append(log_file.name)
+                remaining.append(log_file)
         except Exception:
             pass
+    if len(remaining) > max_files:
+        remaining.sort(key=lambda x: x.stat().st_mtime)
 
-    return deleted, found
+        excess = len(remaining) - max_files
+        for log_file in remaining[:excess]:
+            try:
+                log_file.unlink()
+                deleted.append(log_file)
+            except Exception:
+                pass
+        remaining = remaining[excess:]
+
+    return len(deleted), len(remaining)
 
 
 # Create and configure the logger
@@ -51,9 +64,9 @@ log_dir = Path(user_log_dir("wiw_visualization_app"))
 log_dir.mkdir(parents=True, exist_ok=True)
 
 # removing logs older than 10 days...
-deleted_logs, found = cleanup_old_logs(log_dir, days=10)
-print(f"Found and removed {len(deleted_logs)} log files...")
-print(f"There are {len(found)} log files remaining...")
+nmbr_del, nmbr_existing = cleanup_old_logs(log_dir, days=10)
+print(f"Found and removed {nmbr_del} log files...")
+print(f"There are {nmbr_existing} log files remaining...")
 
 log_file_path = log_dir / f"{session_id}.log"
 
