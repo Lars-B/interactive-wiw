@@ -1,6 +1,7 @@
 *__pycache__/
 .DS_Store
 appenv/
+bt/
 .idea/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python

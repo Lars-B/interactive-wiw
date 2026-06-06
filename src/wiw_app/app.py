@@ -1,15 +1,15 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 
-from wiw_app.ids import UploadIDs
+from .ids import UploadIDs
 
 cyto.load_extra_layouts()
 
 from dash import html, dcc, Dash
 from dash_bootstrap_templates import ThemeSwitchAIO
 
-from wiw_app.graph_elements import get_cytoscape_style
-from wiw_app.layouts import *
+from .graph_elements import get_cytoscape_style
+from .layouts import *
 
 from dash_resizable_panels import PanelGroup, Panel, PanelResizeHandle
 

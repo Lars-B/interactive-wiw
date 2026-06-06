@@ -29,13 +29,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install .
           pip install pyinstaller
+          pip install -e .
 
       - name: Build executable
         run: |
-          pyinstaller --onefile spread_viz.py --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app --hidden-import=dash.backends._flask
+          pyinstaller --onefile run.py --name spread_viz --collect-all dash_resizable_panels --collect-all dash_cytoscape --collect-all dash_iconify --collect-all dash_bootstrap_templates --collect-all wiw_app --hidden-import=dash.backends._flask
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

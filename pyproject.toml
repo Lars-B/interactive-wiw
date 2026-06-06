@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "wiw_app"
+version = "1.2.0"
+description = "WIW Visualization Dash application"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "dash",
+    "dash_bootstrap_components",
+    "dash_bootstrap_templates",
+    "dash_cytoscape",
+    "dash_iconify",
+    "networkx",
+    "pydot",
+    "pillow",
+    "rdata",
+    "pyreadr",
+    "platformdirs",
+    "flask",
+    "dash_resizable_panels",
+    "numpy",
+    "pandas",
+    "brokilon @ git+https://github.com/Lars-B/pyccd@main"
+]
+
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
