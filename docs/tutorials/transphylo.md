@@ -42,7 +42,7 @@ If you want to follow along the data can be downloaded here:
 
 ---
 
-## Step 1: Upload rds files
+## Upload rds files
 
 ### Upload the MCMC rds file
 
@@ -112,7 +112,7 @@ Note that there are also minor differences in the computation between the R pack
 
 ---
 
-## Step 2: Add metadata (optional)
+## Add metadata (optional)
 
 To add more information to the nodes, we can upload a metadata `csv` file:
 

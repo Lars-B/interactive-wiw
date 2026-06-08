@@ -22,7 +22,7 @@ If you want to follow along the data can be downloaded here:
 - [The additional metadata](../assets/tutorial-data/breath32-metadata.csv)
 
 ---
-## Step 1: Upload a trees file
+## Upload a trees file
 
 First we upload the dataset with the following steps:
 
@@ -91,7 +91,7 @@ We could now:
 
 ---
 
-## Step 2: Add metadata (optional)
+## Add metadata (optional)
 
 To add more information to our nodes, we can upload a metadata `csv` file.
 
