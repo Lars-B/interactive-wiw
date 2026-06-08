@@ -7,8 +7,9 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from wiw_app.app import app as myapp
 from wiw_app.graph_elements import get_node_style, get_edge_style, get_cytoscape_style
 from wiw_app.ids import GraphOptions
+from wiw_app.config import EdgeConfig
 from wiw_app.plotting_utils import draw_legend
-
+from wiw_app.validators import validate_int
 
 # Stylesheet fixed for the legend that can be added now
 LEGEND_NODE_ID = "__legend__"
@@ -59,7 +60,18 @@ def update_elements(graph_data, selected_labels, selected_layout,
                     edge_label_colors, edge_arrow_toggle, edge_scale, node_color_toggle,
                     node_label_colors, node_color_label_selection, supress_singletons,
                     is_light_theme, node_annotation_selection):
+
+    # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
+    edges_scale_factor = 1
+
+    if scale_edges:
+        edges_scale_factor = validate_int(
+            edge_scale,
+            default_value=EdgeConfig.SCALE_DEFAULT,
+            minimum=EdgeConfig.SCALE_MIN,
+            maximum=EdgeConfig.SCALE_MAX,
+        )
 
     threshold = min(max(threshold or 0, 0), 1)
 
@@ -107,7 +119,7 @@ def update_elements(graph_data, selected_labels, selected_layout,
     for edge in filtered_edges:
         label = edge["data"]["label"]
         edge["data"]["color"] = edge_label_colors.get(label, "purple")
-        edge["data"]["weight"] = round(edge["data"]["posterior"] * edge_scale, 2)
+        edge["data"]["weight"] = round(edge["data"]["posterior"] * edges_scale_factor, 2)
 
     elements = filtered_nodes + filtered_edges
     layout = {"name": selected_layout}

@@ -3,6 +3,7 @@ from dash import html, dcc
 from dash_iconify import DashIconify
 
 from wiw_app.ids import GraphOptions
+from wiw_app.config import EdgeConfig
 
 graph_option_tabs = dbc.Tabs(
     children=
@@ -213,10 +214,12 @@ graph_option_tabs = dbc.Tabs(
                         dcc.Input(
                             id=GraphOptions.Edges.SCALE_VALUE_INPUT,
                             type="number",
-                            value=10,
-                            min=1,
-                            step=1,
+                            value=EdgeConfig.SCALE_DEFAULT,
+                            min=EdgeConfig.SCALE_MIN,
+                            max=EdgeConfig.SCALE_MAX,
+                            step=EdgeConfig.SCALE_STEP,
                             style={"width": "80px", "marginLeft": "10px"},
+                            debounce=True,
                         ),
                     ], style={"display": "flex", "alignItems": "center"}),
 
