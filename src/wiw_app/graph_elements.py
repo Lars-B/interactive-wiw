@@ -16,6 +16,7 @@ from networkx.exception import NetworkXException
 
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
+from wiw_app.config import EdgeConfig
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -316,7 +317,7 @@ def get_edge_style(annotation_field, label_position, scale_edges,
                 "mapData(data(weight), 0, 1, 0.5, 2)"
             )
     else:
-        edge_style["width"] = 2
+        edge_style["width"] = EdgeConfig.NO_SCALE_DEFAULT
 
         if arrows_enabled:
             edge_style["arrow-scale"] = 1
