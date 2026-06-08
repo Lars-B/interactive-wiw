@@ -5,6 +5,7 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from wiw_app.app import app as myapp
+from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import get_node_style, get_edge_style, get_cytoscape_style
 from wiw_app.ids import GraphOptions
 from wiw_app.config import EdgeConfig
@@ -34,6 +35,7 @@ legend_styles = [
     Output('cytoscape', 'elements'),
     Output('cytoscape', 'layout'),
     Output('cytoscape', 'stylesheet'),
+    # Inputs below
     Input("graph-store", "data"),
     Input(GraphOptions.Edges.DISPLAY_FILTER, 'value'),
     Input(GraphOptions.Graph.LAYOUT_SELECTOR, 'value'),
@@ -54,7 +56,7 @@ legend_styles = [
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value")
 )
-def update_elements(graph_data, selected_labels, selected_layout,
+def update_elements(graph_data, selected_edge_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
                     edge_label_font_size, node_label_font_size, edge_color_toggle,
                     edge_label_colors, edge_arrow_toggle, edge_scale, node_color_toggle,
@@ -85,7 +87,7 @@ def update_elements(graph_data, selected_labels, selected_layout,
     seen_nodes_source = set()
     seen_nodes_target = set()
     for e in edges:
-        if e["data"]["label"] in selected_labels and e["data"].get("posterior", 0) >= threshold:
+        if e["data"]["label"] in selected_edge_labels and e["data"].get("posterior", 0) >= threshold:
             filtered_edges.append(e)
             seen_nodes_source.add(e["data"]["source"])
             seen_nodes_target.add(e["data"]["target"])
@@ -173,17 +175,29 @@ def reset_graph(_):
     Output(GraphOptions.Edges.DISPLAY_FILTER, "options"),
     Output(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     Input("graph-store", "data"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     prevent_initial_call=True
 )
-def update_label_filter_options(graph_data):
+def update_label_filter_options(graph_data, selection):
     if not graph_data:
+        logger.debug("Update-label-filer: graph_data is None, no update")
         raise PreventUpdate
 
     edges = graph_data.get("edges", [])
-    labels = sorted({edge["data"].get("label") for edge in edges if "label" in edge["data"]})
+
+    labels = sorted(
+        {edge.get("data", {}).get("label") for edge in edges if "label" in edge["data"]}
+    )
 
     options = [{"label": label, "value": label} for label in labels]
-    return options, labels
+
+    # Keep previous still existing selections
+    selection = [s for s in (selection or []) if s in labels]
+    # If no selection has been made, add all uploaded ones to it
+    if not selection:
+        selection = labels
+
+    return options, selection
 
 
 @myapp.callback(
