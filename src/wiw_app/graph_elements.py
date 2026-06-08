@@ -209,7 +209,7 @@ def generate_mst_edges_from_network(network, label):
                 "weight": data["weight"],
                 "penwidth": 1,
                 "color": "black",
-                "id": f'MST-{edge_count}'
+                "id": f'MST-{label}-{edge_count}'
             }
         })
         edge_count += 1
