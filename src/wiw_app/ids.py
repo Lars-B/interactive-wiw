@@ -72,7 +72,7 @@ class GraphOptions:
 
     class Edges:
         TAB = "tab-edge-options"
-        DISPLAY_FILTER = "label-filter"
+        DISPLAY_FILTER = "edge-label-filter"
         ANNOTATION_SELECTOR = "edge-annotation-selector"
         LABEL_POSITION = "edge-label-position"
         SCALE_WIDTH_BY_WEIGHT = "scale-width-toggle"

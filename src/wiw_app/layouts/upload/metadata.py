@@ -36,6 +36,7 @@ metadata = html.Div([
                         id=UploadIDs.metadata.UPLOAD_COLUMN_NAME,
                         placeholder="Enter column name containing taxon names...",
                         type="text",
+                        debounce=True,
                     ),
                 ],
                 className="mb-1",
