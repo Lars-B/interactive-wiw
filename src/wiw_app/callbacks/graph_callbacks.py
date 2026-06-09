@@ -250,6 +250,7 @@ def rename_labels(new_labels, ids, graph_data):
     Output("cytoscape", "elements", allow_duplicate=True),
     Input(GraphOptions.Legend.ADD_LEG_NODE, "n_clicks"),
     Input(GraphOptions.Legend.REMOVE_LEG_NODE, "n_clicks"),
+    Input(GraphOptions.Nodes.SIZE_SELECTOR, "value"),
     State("cytoscape", "elements"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
@@ -262,6 +263,7 @@ def rename_labels(new_labels, ids, graph_data):
 def toggle_legend(
         add_clicks,
         remove_clicks,
+        node_size,
         elements,
         node_color_container, node_color_toggle, node_color_title,
         node_color_options,
@@ -293,6 +295,8 @@ def toggle_legend(
         )
 
         encoded_svg = urllib.parse.quote(legend_svg)
+        legend_node_size = node_size * 4
+
         legend_node = {
             "data": {
                 "id": LEGEND_NODE_ID,
@@ -300,6 +304,10 @@ def toggle_legend(
             },
             "position": {"x": 1000, "y": 100},
             "grabbable": True,
+            "style": {
+                "width": legend_node_size,
+                "height": legend_node_size,
+            }
         }
 
         return elements + [legend_node]

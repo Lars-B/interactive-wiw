@@ -7,9 +7,7 @@ from networkx.drawing.nx_pydot import to_pydot
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
 from wiw_app.ids import GraphOptions
-from wiw_app.plotting_utils import (make_image_with_legend_png,
-                                    extract_color_map_from_pallete,
-                                    draw_legend)
+from wiw_app.plotting_utils import make_image_with_legend_png, draw_legend
 
 
 @myapp.callback(
