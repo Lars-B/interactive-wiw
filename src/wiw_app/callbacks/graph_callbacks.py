@@ -1,14 +1,16 @@
+import urllib.parse
 from collections import Counter
 
+import dash
 from dash import Input, Output, State, ALL, no_update, callback
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
-
 from wiw_app.app import app as myapp
-from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import get_node_style, get_edge_style, get_cytoscape_style
-from wiw_app.ids import GraphOptions
 from wiw_app.config import EdgeConfig
+from wiw_app.dash_logger import logger
+from wiw_app.graph_elements import get_node_style, get_edge_style, \
+    get_cytoscape_style
+from wiw_app.ids import GraphOptions
 from wiw_app.plotting_utils import draw_legend
 from wiw_app.validators import validate_int
 
@@ -21,7 +23,8 @@ legend_styles = [
             "shape": "rectangle",
             "width": "150px",
             "height": "150px",
-            "background-image": "data(legend)",  # Cytoscape picks up legend SVG from node data
+            "background-image": "data(legend)",
+            # Cytoscape picks up legend SVG from node data
             "background-fit": "contain",
             "background-repeat": "no-repeat",
             "border-width": 1,
@@ -58,11 +61,13 @@ legend_styles = [
 )
 def update_elements(graph_data, selected_edge_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
-                    edge_label_font_size, node_label_font_size, edge_color_toggle,
-                    edge_label_colors, edge_arrow_toggle, edge_scale, node_color_toggle,
-                    node_label_colors, node_color_label_selection, supress_singletons,
+                    edge_label_font_size, node_label_font_size,
+                    edge_color_toggle,
+                    edge_label_colors, edge_arrow_toggle, edge_scale,
+                    node_color_toggle,
+                    node_label_colors, node_color_label_selection,
+                    supress_singletons,
                     is_light_theme, node_annotation_selection):
-
     # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
     edges_scale_factor = 1
@@ -87,7 +92,8 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
     seen_nodes_source = set()
     seen_nodes_target = set()
     for e in edges:
-        if e["data"]["label"] in selected_edge_labels and e["data"].get("posterior", 0) >= threshold:
+        if e["data"]["label"] in selected_edge_labels and e["data"].get(
+                "posterior", 0) >= threshold:
             filtered_edges.append(e)
             seen_nodes_source.add(e["data"]["source"])
             seen_nodes_target.add(e["data"]["target"])
@@ -121,25 +127,26 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
     for edge in filtered_edges:
         label = edge["data"]["label"]
         edge["data"]["color"] = edge_label_colors.get(label, "purple")
-        edge["data"]["weight"] = round(edge["data"]["posterior"] * edges_scale_factor, 2)
+        edge["data"]["weight"] = round(
+            edge["data"]["posterior"] * edges_scale_factor, 2)
 
     elements = filtered_nodes + filtered_edges
     layout = {"name": selected_layout}
 
     stylesheet = [
-        {"selector": "node",
-         "style": get_node_style(node_annotation_selection,
-                                 node_label_font_size,
-                                 node_color_toggle)},
-        {"selector": "edge",
-         "style": get_edge_style(annotation_field,
-                                 label_position,
-                                 scale_edges,
-                                 edge_color_toggle,
-                                 is_light_theme,
-                                 edge_label_font_size,
-                                 edge_arrow_toggle)},
-    ] + legend_styles
+                     {"selector": "node",
+                      "style": get_node_style(node_annotation_selection,
+                                              node_label_font_size,
+                                              node_color_toggle)},
+                     {"selector": "edge",
+                      "style": get_edge_style(annotation_field,
+                                              label_position,
+                                              scale_edges,
+                                              edge_color_toggle,
+                                              is_light_theme,
+                                              edge_label_font_size,
+                                              edge_arrow_toggle)},
+                 ] + legend_styles
 
     return elements, layout, stylesheet
 
@@ -186,7 +193,8 @@ def update_label_filter_options(graph_data, selection):
     edges = graph_data.get("edges", [])
 
     labels = sorted(
-        {edge.get("data", {}).get("label") for edge in edges if "label" in edge["data"]}
+        {edge.get("data", {}).get("label") for edge in edges if
+         "label" in edge["data"]}
     )
 
     options = [{"label": label, "value": label} for label in labels]
@@ -212,7 +220,8 @@ def rename_labels(new_labels, ids, graph_data):
     if not graph_data:
         raise PreventUpdate
 
-    label_map = {id_["index"]: new_label for id_, new_label in zip(ids, new_labels)}
+    label_map = {id_["index"]: new_label for id_, new_label in
+                 zip(ids, new_labels)}
 
     # Validate: check for duplicates in target new labels
     label_counts = Counter(label_map.values())
@@ -252,13 +261,12 @@ def toggle_legend(
         add_clicks,
         remove_clicks,
         elements,
-        node_color_container, node_color_toggle, node_color_title, node_color_options,
+        node_color_container, node_color_toggle, node_color_title,
+        node_color_options,
         edge_color_container, edge_color_toggle
 ):
-    import dash
-
     ctx = dash.callback_context
-    if not ctx.triggered:
+    if not ctx.triggered or not elements:
         return elements
 
     trigger = ctx.triggered[0]["prop_id"].split(".")[0]
@@ -281,8 +289,6 @@ def toggle_legend(
             edge_color_container,
             svg=True
         )
-
-        import urllib.parse
 
         encoded_svg = urllib.parse.quote(legend_svg)
         legend_node = {
