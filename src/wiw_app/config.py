@@ -30,3 +30,15 @@ class EdgeConfig:
             LABEL_FONT_MARK_INTERVAL,
         )
     }
+
+
+class NodeConfig:
+    SIZE_DEFAULT = 50
+    SIZE_MIN = 5
+    SIZE_MAX = 200
+    SIZE_STEP = 1
+    SIZE_MARK_INTERVAL = 25
+    SIZE_MARKS = {
+        i: str(i)
+        for i in range(SIZE_MIN, SIZE_MAX + 1, SIZE_MARK_INTERVAL)
+    }

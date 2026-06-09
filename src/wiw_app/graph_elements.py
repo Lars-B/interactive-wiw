@@ -16,7 +16,7 @@ from networkx.exception import NetworkXException
 
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
-from wiw_app.config import EdgeConfig
+from wiw_app.config import EdgeConfig, NodeConfig
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -276,7 +276,7 @@ def get_cytoscape_style(is_light_theme: bool) -> dict:
     }
 
 
-def get_node_style(annotation_field, font_size, color_by_label) -> dict:
+def get_node_style(annotation_field, font_size, color_by_label, node_size) -> dict:
     return {
         "label": f"data({annotation_field})",
         "text-valign": "center",
@@ -287,6 +287,8 @@ def get_node_style(annotation_field, font_size, color_by_label) -> dict:
         "shape": "data(shape)",
         "color": "#fff",
         "font-size": font_size,
+        "width": node_size,
+        "height": node_size,
     }
 
 

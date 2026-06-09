@@ -57,7 +57,8 @@ legend_styles = [
     Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
     Input(GraphOptions.Nodes.SUPPRESS_SINGLETONS, "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
-    Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value")
+    Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
+    Input(GraphOptions.Nodes.SIZE_SELECTOR, "value")
 )
 def update_elements(graph_data, selected_edge_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
@@ -67,7 +68,7 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                     node_color_toggle,
                     node_label_colors, node_color_label_selection,
                     supress_singletons,
-                    is_light_theme, node_annotation_selection):
+                    is_light_theme, node_annotation_selection, node_size):
     # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
     edges_scale_factor = 1
@@ -137,7 +138,8 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                      {"selector": "node",
                       "style": get_node_style(node_annotation_selection,
                                               node_label_font_size,
-                                              node_color_toggle)},
+                                              node_color_toggle,
+                                              node_size)},
                      {"selector": "edge",
                       "style": get_edge_style(annotation_field,
                                               label_position,

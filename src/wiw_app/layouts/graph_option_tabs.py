@@ -2,8 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 from dash_iconify import DashIconify
 
+from wiw_app.config import EdgeConfig, NodeConfig
 from wiw_app.ids import GraphOptions
-from wiw_app.config import EdgeConfig
 
 graph_option_tabs = dbc.Tabs(
     children=
@@ -297,6 +297,27 @@ graph_option_tabs = dbc.Tabs(
                                         step=1,
                                         value=12,
                                         marks={i: str(i) for i in range(0, 31, 5)},
+                                        tooltip={"placement": "bottom", "always_visible": True},
+                                    )
+                                ], style={"width": "100%", "marginBottom": "1rem"}),
+                                html.Div([
+                                    html.Label(
+                                        "Node size:",
+                                        htmlFor=GraphOptions.Nodes.SIZE_SELECTOR,
+                                        style={
+                                            "display": "block",
+                                            "marginBottom": "0.5rem",
+                                            "fontWeight": "bold",
+                                            "textAlign": "left"
+                                        }
+                                    ),
+                                    dcc.Slider(
+                                        id=GraphOptions.Nodes.SIZE_SELECTOR,
+                                        min=NodeConfig.SIZE_MIN,
+                                        max=NodeConfig.SIZE_MAX,
+                                        step=NodeConfig.SIZE_STEP,
+                                        value=NodeConfig.SIZE_DEFAULT,
+                                        marks=NodeConfig.SIZE_MARKS,
                                         tooltip={"placement": "bottom", "always_visible": True},
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem"}),
