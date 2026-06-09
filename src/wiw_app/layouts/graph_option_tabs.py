@@ -292,11 +292,11 @@ graph_option_tabs = dbc.Tabs(
                                     ),
                                     dcc.Slider(
                                         id=GraphOptions.Nodes.LABEL_FONT_SIZE,
-                                        min=1,
-                                        max=30,
-                                        step=1,
-                                        value=12,
-                                        marks={i: str(i) for i in range(0, 31, 5)},
+                                        min=NodeConfig.LABEL_FONT_MIN,
+                                        max=NodeConfig.LABEL_FONT_MAX,
+                                        step=NodeConfig.LABEL_FONT_STEP,
+                                        value=NodeConfig.LABEL_FONT_DEFAULT,
+                                        marks=NodeConfig.LABEL_FONT_MARKS,
                                         tooltip={"placement": "bottom", "always_visible": True},
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem"}),

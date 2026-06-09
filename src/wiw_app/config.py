@@ -16,12 +16,11 @@ class EdgeConfig:
         for i in range(11)
     }
 
-    LABEL_FONT_DEFAULT = 5
+    LABEL_FONT_DEFAULT = 8
     LABEL_FONT_MIN = 1
-    LABEL_FONT_MAX = 30
+    LABEL_FONT_MAX = 50
     LABEL_FONT_STEP = 1
-    LABEL_FONT_MARK_INTERVAL = 5
-
+    LABEL_FONT_MARK_INTERVAL = 10
     LABEL_FONT_MARKS = {
         i: str(i)
         for i in range(
@@ -41,4 +40,18 @@ class NodeConfig:
     SIZE_MARKS = {
         i: str(i)
         for i in range(SIZE_MIN, SIZE_MAX + 1, SIZE_MARK_INTERVAL)
+    }
+
+    LABEL_FONT_DEFAULT = 15
+    LABEL_FONT_MIN = 1
+    LABEL_FONT_MAX = 50
+    LABEL_FONT_STEP = 1
+    LABEL_FONT_MARK_INTERVAL = 10
+    LABEL_FONT_MARKS = {
+        i: str(i)
+        for i in range(
+            0,
+            LABEL_FONT_MAX + 1,
+            LABEL_FONT_MARK_INTERVAL,
+        )
     }
