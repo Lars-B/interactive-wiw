@@ -101,7 +101,8 @@ def create_edge_color_picker_panel(graph_data, label_colors=None):
                             type="text",
                             value=label,
                             debounce=True,
-                            style={"width": 120, "height": 40, "marginLeft": "10px"}
+                            style={"width": 120, "height": 40,
+                                   "marginLeft": "10px"}
                         ),
                         width="auto"),
                 ],
@@ -179,7 +180,8 @@ def create_nodes_color_picker_panel(graph_data, color_label_selection):
                     dbc.Col(
                         dbc.Label(
                             label,
-                            style={"width": 120, "height": 40, "marginLeft": "10px",
+                            style={"width": 120, "height": 40,
+                                   "marginLeft": "10px",
                                    "lineHeight": "40px"}
                         ),
                         width="auto"
@@ -204,7 +206,8 @@ def update_label_color_store(values, ids):
 
 
 @myapp.callback(
-    Output(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "value", allow_duplicate=True),
+    Output(UploadIDs.metadata.UPLOAD_COLUMN_NAME, "value",
+           allow_duplicate=True),
     Output(UploadIDs.metadata.NODE_ANNOTATIONS_LABEL_WARNING, "children"),
     Output(UploadIDs.metadata.CONFIRM_NODE_ANNOTATIONS_BTN, "disabled"),
     Output(UploadIDs.metadata.UPLOAD_DATA, "disabled"),
@@ -295,10 +298,12 @@ def update_dropdown_metadata_upload(graph_data):
 
 @myapp.callback(
     Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "options"),
+    Output(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
     Output(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
     Input("graph-store", "data"),
+    State(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
 )
-def update_node_label_annotation_dropdown(graph_data):
+def update_node_label_annotation_dropdown(graph_data, current_selection):
     options = [
         {"label": "None", "value": "none"}
     ]
@@ -307,7 +312,7 @@ def update_node_label_annotation_dropdown(graph_data):
     ]
 
     if not graph_data or not graph_data.get("nodes"):
-        return options, col_options
+        return options, 'none', col_options
 
     # dynamically discover annotations
     seen = set(opt["value"] for opt in options)
@@ -319,4 +324,14 @@ def update_node_label_annotation_dropdown(graph_data):
                 col_options.append({"label": key, "value": key})
                 seen.add(key)
 
-    return options, col_options
+    preferred_order = ("taxon", "id")
+
+    if current_selection and current_selection not in ("none", "None"):
+        new_selection = current_selection
+    else:
+        new_selection = next(
+            (p for p in preferred_order if p in seen),
+            next(iter(seen), "None")
+        )
+
+    return options, new_selection, col_options

@@ -260,7 +260,7 @@ graph_option_tabs = dbc.Tabs(
                         options=[
                             # dynamically updated via callback...
                         ],
-                        value="label",
+                        value="id",
                         clearable=False,
                         style={"marginBottom": "15px"}
                     )
