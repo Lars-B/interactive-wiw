@@ -151,12 +151,11 @@ graph_option_tabs = dbc.Tabs(
                                     ),
                                     dcc.Slider(
                                         id=GraphOptions.Edges.DISPLAY_EDGE_THRESHOLD,
-                                        min=0.0,
-                                        max=0.99,
-                                        step=0.01,
-                                        value=0.0,
-                                        marks={i: str(i) for i in
-                                               [i / 10 for i in range(0, 11, 1)]},
+                                        min=EdgeConfig.THRESHOLD_MIN,
+                                        max=EdgeConfig.THRESHOLD_MAX,
+                                        step=EdgeConfig.THRESHOLD_STEP,
+                                        value=EdgeConfig.THRESHOLD_DEFAULT,
+                                        marks=EdgeConfig.THRESHOLD_MARKS,
                                         tooltip={"placement": "bottom", "always_visible": True},
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem",
@@ -175,11 +174,11 @@ graph_option_tabs = dbc.Tabs(
                                     ),
                                     dcc.Slider(
                                         id=GraphOptions.Edges.LABEL_FONT_SIZE,
-                                        min=1,
-                                        max=30,
-                                        step=1,
-                                        value=5,
-                                        marks={i: str(i) for i in range(0, 31, 5)},
+                                        min=EdgeConfig.LABEL_FONT_MIN,
+                                        max=EdgeConfig.LABEL_FONT_MAX,
+                                        step=EdgeConfig.LABEL_FONT_STEP,
+                                        value=EdgeConfig.LABEL_FONT_DEFAULT,
+                                        marks=EdgeConfig.LABEL_FONT_MARKS,
                                         tooltip={"placement": "bottom", "always_visible": True},
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem",
