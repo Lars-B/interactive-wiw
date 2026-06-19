@@ -58,7 +58,8 @@ legend_styles = [
     Input(GraphOptions.Nodes.SUPPRESS_SINGLETONS, "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
-    Input(GraphOptions.Nodes.SIZE_SELECTOR, "value")
+    Input(GraphOptions.Nodes.SIZE_SELECTOR, "value"),
+    Input(GraphOptions.Nodes.SHAPE_SELECTOR, 'value')
 )
 def update_elements(graph_data, selected_edge_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
@@ -68,7 +69,8 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                     node_color_toggle,
                     node_label_colors, node_color_label_selection,
                     supress_singletons,
-                    is_light_theme, node_annotation_selection, node_size):
+                    is_light_theme, node_annotation_selection, node_size,
+                    node_shape):
     # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
     edges_scale_factor = 1
@@ -114,17 +116,26 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
             if n["data"]["id"] in seen_nodes:
                 filtered_nodes.append(n)
 
-    # todo add new option to pick node shapes,
-    #  the current way would be automatic
+    # todo this can probably be done more elegantly...
     for node in filtered_nodes:
         label = node["data"][node_color_label_selection]
         node["data"]["color"] = node_label_colors.get(label, "green")
-        if node["data"]["id"] in terminal_nodes:
-            node["data"]["shape"] = "rectangle"
-        elif node["data"]["id"] not in seen_nodes:
-            node["data"]["shape"] = "triangle"
-        else:
-            node["data"]["shape"] = "ellipse"
+        match node_shape:
+            case 'adaptive':
+                if node["data"]["id"] in terminal_nodes:
+                    node["data"]["shape"] = "rectangle"
+                elif node["data"]["id"] not in seen_nodes:
+                    node["data"]["shape"] = "triangle"
+                else:
+                    node["data"]["shape"] = "ellipse"
+            case 'circles':
+                node["data"]["shape"] = "ellipse"
+            case 'rectangles':
+                node["data"]["shape"] = "rectangle"
+            case 'triangles':
+                node["data"]["shape"] = "triangle"
+            case _:
+                raise NotImplementedError('This is a developer error.')
 
     # this updates to the correct colors
     for edge in filtered_edges:

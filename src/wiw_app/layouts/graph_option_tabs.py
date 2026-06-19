@@ -328,6 +328,36 @@ graph_option_tabs = dbc.Tabs(
                                     )
                                 ], style={"width": "100%", "marginBottom": "1rem"}),
                                 html.Div([
+                                    html.Label("Node Shapes",
+                                               htmlFor=GraphOptions.Nodes.SHAPE_SELECTOR,
+                                               style={"fontWeight": "bold",
+                                                      "marginBottom": "5px"}),
+                                    dcc.Dropdown(
+                                        id=GraphOptions.Nodes.SHAPE_SELECTOR,
+                                        options=[
+                                            {
+                                                "label": "Adaptive",
+                                                "value": "adaptive"
+                                            },
+                                            {
+                                                "label": "Circles",
+                                                "value": "circles"
+                                            },
+                                            {
+                                                "label": "Rectangles",
+                                                "value": "rectangles"
+                                            },
+                                            {
+                                                "label": "Triangles",
+                                                "value": "triangles"
+                                            },
+                                        ],
+                                        value=NodeConfig.DEFAULT_SHAPE_SELECTION,
+                                        clearable=False,
+                                        style={"marginBottom": "15px"}
+                                    )
+                                ]),
+                                html.Div([
                                     dcc.Checklist(
                                         id=GraphOptions.Nodes.SUPPRESS_SINGLETONS,
                                         options=[

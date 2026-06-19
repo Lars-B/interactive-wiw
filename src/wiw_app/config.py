@@ -73,3 +73,5 @@ class NodeConfig:
         LABEL_COLOR = "#fff"
         LABEL_OUTLINE_COLOR = "#888"
         DEFAULT_NODE_COLOR = "#BDB76B"
+
+    DEFAULT_SHAPE_SELECTION = 'adaptive'

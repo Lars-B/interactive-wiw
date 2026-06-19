@@ -70,6 +70,7 @@ class GraphOptions:
         COLOR_STORE = "node-label-color-store"
         SUPPRESS_SINGLETONS = "suppress-singletons"
         SIZE_SELECTOR = "node-label-size-selector"
+        SHAPE_SELECTOR = "node-shape-selector"
 
     class Edges:
         TAB = "tab-edge-options"
