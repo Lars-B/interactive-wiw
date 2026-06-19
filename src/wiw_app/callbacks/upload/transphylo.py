@@ -6,11 +6,12 @@ from dash.exceptions import PreventUpdate
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import build_graph_from_transphylo_rds
-from wiw_app.ids import UploadIDs
+from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
     Output("loading-modal-tp", "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
@@ -22,11 +23,15 @@ from wiw_app.ids import UploadIDs
     State(UploadIDs.transphylo_rds.DATASET_LABEL, "value"),
     State(UploadIDs.transphylo_rds.BURN_IN_SELECTION, "value"),
     State(UploadIDs.transphylo_rds.INPUT_TYPE, "value"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
 def update_graph_with_transphylo_rds_data(
-        n_clicks, contents, filename, label, burnin, input_type, current_graph_data):
+        n_clicks, contents, filename, label,
+        burnin, input_type, current_edge_selection,
+        current_graph_data
+):
     if not contents:
         raise PreventUpdate
 
@@ -42,6 +47,7 @@ def update_graph_with_transphylo_rds_data(
 
         return (
             current_graph_data,
+            current_edge_selection,
             False,
             # Info toast related stuff
             f"The label {effective_label} is already present in the graph!",
@@ -61,6 +67,7 @@ def update_graph_with_transphylo_rds_data(
 
         return (
             current_graph_data,
+            current_edge_selection,
             False,
             # Info toast related stuff
             "No samples in input file. Reduce burnin?",
@@ -78,9 +85,13 @@ def update_graph_with_transphylo_rds_data(
 
     logger.info("Finished updating the graph with the .rds data.")
 
+    new_edge_labels = {e.get('data', {}).get('label', {}) for e in new_edges}
+    new_edge_selection = current_edge_selection + list(new_edge_labels)
+
     return (
         {"nodes": merged_nodes,
          "edges": current_graph_data["edges"] + new_edges},
+        new_edge_selection,
         False,
         # Info toast related stuff
         f"Successfully parsed {num_samples} samples.",

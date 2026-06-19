@@ -114,6 +114,8 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
             if n["data"]["id"] in seen_nodes:
                 filtered_nodes.append(n)
 
+    # todo add new option to pick node shapes,
+    #  the current way would be automatic
     for node in filtered_nodes:
         label = node["data"][node_color_label_selection]
         node["data"]["color"] = node_label_colors.get(label, "green")

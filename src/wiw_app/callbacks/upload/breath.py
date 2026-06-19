@@ -97,7 +97,7 @@ def update_graph_with_breath_trees(
         f'The new uploaded edges are: { new_edge_labels }'
     )
 
-    new_edge_label_selection = current_edge_selection + [e for e in new_edge_labels]
+    new_edge_label_selection = current_edge_selection + list(new_edge_labels)
 
     return (
         {"nodes": merged_nodes,

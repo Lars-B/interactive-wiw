@@ -4,19 +4,21 @@ from dash.exceptions import PreventUpdate
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import build_graph_from_custom_csv_file
-from wiw_app.ids import UploadIDs
+from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
     Input(UploadIDs.custom_csv.CONFIRM_BUTTON, "n_clicks"),
     State(UploadIDs.custom_csv.UPLOAD_DATA, "contents"),
     State(UploadIDs.custom_csv.UPLOAD_DATA, "filename"),
     State(UploadIDs.custom_csv.DATASET_LABEL, "value"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_graph_data):
+def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_edge_selection, current_graph_data):
     if not contents:
         raise PreventUpdate
 
@@ -28,6 +30,7 @@ def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_gr
     new_nodes, new_edges = build_graph_from_custom_csv_file(contents, effective_label)
 
     # todo this is simply copied from the other upload, should probably be refactored/refined
+    # todo should probably store the labels that are uploaded somewhere?
     existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
     true_new_nodes = [
         n for n in new_nodes
@@ -37,9 +40,13 @@ def update_graph_with_custom_csv(n_clicks, contents, filename, label, current_gr
 
     logger.info("Finished updating the graph.")
 
+    new_edge_labels = {e.get('data', {}).get('label', {}) for e in new_edges}
+    new_edge_selection = current_edge_selection + list(new_edge_labels)
+
     return (
         {
             "nodes": merged_nodes,
             "edges": current_graph_data["edges"] + new_edges
-        }
+        },
+        new_edge_selection
     )
