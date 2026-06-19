@@ -188,13 +188,16 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
 
 def generate_mst_edges_from_network(network, label):
     try:
-        mst = maximum_spanning_arborescence(network, attr="posterior", preserve_attrs=True)
+        mst = maximum_spanning_arborescence(network, attr="posterior",
+                                            preserve_attrs=True)
     except NetworkXException:
-        logger.info("Maximum spanning arborescence failed and will be ignored...")
+        logger.info(
+            "Maximum spanning arborescence failed and will be ignored...")
         return []
 
     if mst is None:
-        logger.debug("Maximum spanning tree didn't fail but returned None, will be ignored...")
+        logger.debug(
+            "Maximum spanning tree didn't fail but returned None, will be ignored...")
         return []
 
     mst_edges = []
@@ -276,16 +279,24 @@ def get_cytoscape_style(is_light_theme: bool) -> dict:
     }
 
 
-def get_node_style(annotation_field, font_size, color_by_label, node_size) -> dict:
+def get_node_style(annotation_field, font_size, color_by_label,
+                   node_size, is_light_theme) -> dict:
     return {
         "label": f"data({annotation_field})",
         "text-valign": "center",
         "text-halign": "center",
-        "text-outline-width": 1,
-        "text-outline-color": "#888",
-        "backgroundColor": "data(color)" if color_by_label else "#555",
+        "text-outline-width": NodeConfig.LABEL_OUTLINE_WIDTH,
+        "text-outline-color":
+            NodeConfig.LightMode.LABEL_OUTLINE_COLOR if is_light_theme
+            else NodeConfig.DarkMode.LABEL_OUTLINE_COLOR,
+        "backgroundColor":
+            "data(color)" if color_by_label else
+            (NodeConfig.LightMode.DEFAULT_NODE_COLOR if is_light_theme
+             else NodeConfig.DarkMode.DEFAULT_NODE_COLOR),
         "shape": "data(shape)",
-        "color": "#fff",
+        "color":
+            NodeConfig.LightMode.LABEL_COLOR if is_light_theme
+           else NodeConfig.DarkMode.LABEL_COLOR,
         "font-size": font_size,
         "width": node_size,
         "height": node_size,
@@ -293,13 +304,18 @@ def get_node_style(annotation_field, font_size, color_by_label, node_size) -> di
 
 
 def get_edge_style(annotation_field, label_position, scale_edges,
-                   color_by_label, is_light_theme, font_size, toggle_arrows) -> dict:
+                   color_by_label, is_light_theme, font_size,
+                   toggle_arrows) -> dict:
     edge_style = {
-        "curve-style": "bezier",
+        "curve-style": "bezier",  # todo look into this as a config...
         "control-point-step-size": 20,
-        "color": "#000" if is_light_theme else "#fff",
+        "color":
+            EdgeConfig.LightMode.LABEL_COLOR if is_light_theme
+            else EdgeConfig.DarkMode.LABEL_COLOR,
         "text-outline-width": 0.2,
-        "text-outline-color": "#000" if is_light_theme else "#ccc",
+        "text-outline-color":
+            EdgeConfig.LightMode.LABEL_OUTLINE_COLOR if is_light_theme
+            else EdgeConfig.DarkMode.LABEL_OUTLINE_COLOR,
         "label": f"data({annotation_field})",
         "font-size": font_size,
     }
@@ -425,7 +441,8 @@ def process_node_annotations_file(file_content, taxon_column):
             continue
 
         uploaded_map[taxon] = {
-            col: (row[fieldnames_map.get(col)] if row[fieldnames_map.get(col)] is not None else "")
+            col: (row[fieldnames_map.get(col)] if row[fieldnames_map.get(
+                col)] is not None else "")
             for col in annotation_columns
         }
 
@@ -499,7 +516,8 @@ def build_graph_from_outbreaker_datframe(res, label):
                 "source": str(source),
                 "target": str(target),
                 "label": label,
-                "posterior": round(weight, 2),  # todo think about making this an input value?
+                "posterior": round(weight, 2),
+                # todo think about making this an input value?
                 "weight": round(weight, 2),
                 "color": "black",
                 "id": f"{label}-{edge_id}",
@@ -578,7 +596,8 @@ def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
             obj = load_rds_object2(file_content)
             logger.info(f"Loaded R object type: {type(obj)}")
 
-            wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj, burnin=burnin)
+            wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj,
+                                                                          burnin=burnin)
 
             names = obj[0]["ctree"]["nam"]
             wiw_matrix = pd.DataFrame(

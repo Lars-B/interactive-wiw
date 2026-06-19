@@ -30,6 +30,13 @@ class EdgeConfig:
         )
     }
 
+    class LightMode:
+        LABEL_COLOR = "#000"
+        LABEL_OUTLINE_COLOR = "#000"
+
+    class DarkMode:
+        LABEL_COLOR = "#fff"
+        LABEL_OUTLINE_COLOR = "#ccc"
 
 class NodeConfig:
     SIZE_DEFAULT = 50
@@ -55,3 +62,14 @@ class NodeConfig:
             LABEL_FONT_MARK_INTERVAL,
         )
     }
+
+    LABEL_OUTLINE_WIDTH = 0.2
+    class LightMode:
+        LABEL_COLOR = "#000"
+        LABEL_OUTLINE_COLOR = "#888"
+        DEFAULT_NODE_COLOR = "#FFFACD"
+
+    class DarkMode:
+        LABEL_COLOR = "#fff"
+        LABEL_OUTLINE_COLOR = "#888"
+        DEFAULT_NODE_COLOR = "#BDB76B"

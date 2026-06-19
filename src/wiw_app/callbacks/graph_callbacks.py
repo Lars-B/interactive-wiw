@@ -136,18 +136,23 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
 
     stylesheet = [
                      {"selector": "node",
-                      "style": get_node_style(node_annotation_selection,
-                                              node_label_font_size,
-                                              node_color_toggle,
-                                              node_size)},
+                      "style": get_node_style(
+                          node_annotation_selection,
+                          node_label_font_size,
+                          node_color_toggle,
+                          node_size,
+                          is_light_theme
+                      )},
                      {"selector": "edge",
-                      "style": get_edge_style(annotation_field,
-                                              label_position,
-                                              scale_edges,
-                                              edge_color_toggle,
-                                              is_light_theme,
-                                              edge_label_font_size,
-                                              edge_arrow_toggle)},
+                      "style": get_edge_style(
+                          annotation_field,
+                          label_position,
+                          scale_edges,
+                          edge_color_toggle,
+                          is_light_theme,
+                          edge_label_font_size,
+                          edge_arrow_toggle
+                      )},
                  ] + legend_styles
 
     return elements, layout, stylesheet
