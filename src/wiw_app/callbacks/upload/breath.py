@@ -6,11 +6,12 @@ from dash.exceptions import PreventUpdate
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import build_graph_from_breath_tree_file, NoTreesFoundError
-from wiw_app.ids import UploadIDs
+from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
     Output(UploadIDs.breath_trees.LOADING_MODAL, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
@@ -21,10 +22,18 @@ from wiw_app.ids import UploadIDs
     State(UploadIDs.breath_trees.UPLOAD_DATA, "filename"),
     State(UploadIDs.breath_trees.DATASET_LABEL, "value"),
     State(UploadIDs.breath_trees.BURN_IN_SELECTION, "value"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, current_graph_data):
+def update_graph_with_breath_trees(
+        n_clicks,
+        contents,
+        filename,
+        label,
+        burnin,
+        current_edge_selection,
+        current_graph_data):
     if not contents:
         raise PreventUpdate
 
@@ -39,6 +48,7 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
 
         return (
             current_graph_data,
+            current_edge_selection,
             False,
             # Info toast related stuff
             f"The label {effective_label} is already present in the graph!",
@@ -59,6 +69,7 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
 
         return (
             current_graph_data,
+            current_edge_selection,
             False,
             # Info toast related stuff
             str(e),
@@ -78,9 +89,20 @@ def update_graph_with_breath_trees(n_clicks, contents, filename, label, burnin, 
 
     logger.info("Finished updating the graph.")
 
+    logger.debug(
+        f'This is the current edge label selection: {current_edge_selection}'
+    )
+    new_edge_labels = {e.get('data', {}).get('label', {}) for e in new_edges}
+    logger.debug(
+        f'The new uploaded edges are: { new_edge_labels }'
+    )
+
+    new_edge_label_selection = current_edge_selection + [e for e in new_edge_labels]
+
     return (
         {"nodes": merged_nodes,
          "edges": current_graph_data["edges"] + new_edges},
+        new_edge_label_selection,
         False,
         # Info toast related stuff
         f"Successfully parsed {num_trees} trees.",
