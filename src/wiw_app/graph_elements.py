@@ -305,9 +305,9 @@ def get_node_style(annotation_field, font_size, color_by_label,
 
 def get_edge_style(annotation_field, label_position, scale_edges,
                    color_by_label, is_light_theme, font_size,
-                   toggle_arrows) -> dict:
+                   toggle_arrows, edge_curve_style) -> dict:
     edge_style = {
-        "curve-style": "bezier",  # todo look into this as a config...
+        "curve-style": edge_curve_style,
         "control-point-step-size": 20,
         "color":
             EdgeConfig.LightMode.LABEL_COLOR if is_light_theme

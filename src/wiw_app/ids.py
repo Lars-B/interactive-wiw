@@ -90,3 +90,4 @@ class GraphOptions:
         DISPLAY_EDGE_THRESHOLD = 'weight-threshold'
         TOGGLE_ARROWS = "edge-arrows"
         SCALE_VALUE_INPUT = "edge-scale-input"
+        CURVE_STYLE_SELECTOR = "edge-curve-style-selector"

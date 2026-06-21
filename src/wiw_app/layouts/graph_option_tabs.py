@@ -13,23 +13,31 @@ graph_option_tabs = dbc.Tabs(
             tab_id=GraphOptions.Graph.TAB,
             children=[
                 html.Div([
-                    html.Label("Graph Layout:", htmlFor=GraphOptions.Graph.LAYOUT_SELECTOR,
-                               style={"fontWeight": "bold", "marginBottom": "5px"}),
+                    html.Label("Graph Layout:",
+                               htmlFor=GraphOptions.Graph.LAYOUT_SELECTOR,
+                               style={"fontWeight": "bold",
+                                      "marginBottom": "5px"}),
                     dcc.Dropdown(
                         id=GraphOptions.Graph.LAYOUT_SELECTOR,
                         options=[
-                            {"label": "Dagre (Hierarchical) [best Graphviz alt]", "value":
-                                "dagre"},
+                            {
+                                "label": "Dagre (Hierarchical) [best Graphviz alt]",
+                                "value":
+                                    "dagre"},
                             {"label": "Breadthfirst (Hierarchical)",
                              "value": "breadthfirst"},
                             {"label": "Cose (Spring)", "value": "cose"},
                             {"label": "Cose-Bilkent (improved force)",
                              "value": "cose-bilkent"},
-                            {"label": "Euler (force-directed)", "value": "euler"},
+                            {"label": "Euler (force-directed)",
+                             "value": "euler"},
                             {"label": "Grid (rows/columns)", "value": "grid"},
-                            {"label": "Circle (circular node layout)", "value": "circle"},
-                            {"label": "Cola (constraint-based)", "value": "cola"},
-                            {"label": "Spread (hybrid layout)", "value": "spread"},
+                            {"label": "Circle (circular node layout)",
+                             "value": "circle"},
+                            {"label": "Cola (constraint-based)",
+                             "value": "cola"},
+                            {"label": "Spread (hybrid layout)",
+                             "value": "spread"},
                             {"label": "Klay (layered)", "value": "klay"},
                         ],
                         value="dagre",
@@ -82,7 +90,8 @@ graph_option_tabs = dbc.Tabs(
                 html.Div([
                     html.Label("Edge label sets to display:",
                                htmlFor=GraphOptions.Edges.DISPLAY_FILTER,
-                               style={"fontWeight": "bold", "marginBottom": "5px"}),
+                               style={"fontWeight": "bold",
+                                      "marginBottom": "5px"}),
                     dcc.Dropdown(
                         id=GraphOptions.Edges.DISPLAY_FILTER,
                         options=[],
@@ -92,8 +101,10 @@ graph_option_tabs = dbc.Tabs(
                     )
                 ], style={"marginBottom": "15px"}),
                 html.Div([
-                    html.Label("Edge Annotation:", htmlFor=GraphOptions.Edges.ANNOTATION_SELECTOR,
-                               style={"fontWeight": "bold", "marginBottom": "5px"}),
+                    html.Label("Edge Annotation:",
+                               htmlFor=GraphOptions.Edges.ANNOTATION_SELECTOR,
+                               style={"fontWeight": "bold",
+                                      "marginBottom": "5px"}),
                     dcc.Dropdown(
                         id=GraphOptions.Edges.ANNOTATION_SELECTOR,
                         options=[
@@ -107,8 +118,10 @@ graph_option_tabs = dbc.Tabs(
                     )
                 ]),
                 html.Div([
-                    html.Label("Edge Label Position:", htmlFor=GraphOptions.Edges.LABEL_POSITION,
-                               style={"fontWeight": "bold", "marginBottom": "5px"}),
+                    html.Label("Edge Label Position:",
+                               htmlFor=GraphOptions.Edges.LABEL_POSITION,
+                               style={"fontWeight": "bold",
+                                      "marginBottom": "5px"}),
                     dcc.Dropdown(
                         id=GraphOptions.Edges.LABEL_POSITION,
                         options=[
@@ -156,9 +169,11 @@ graph_option_tabs = dbc.Tabs(
                                         step=EdgeConfig.THRESHOLD_STEP,
                                         value=EdgeConfig.THRESHOLD_DEFAULT,
                                         marks=EdgeConfig.THRESHOLD_MARKS,
-                                        tooltip={"placement": "bottom", "always_visible": True},
+                                        tooltip={"placement": "bottom",
+                                                 "always_visible": True},
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem",
+                                ], style={"width": "100%",
+                                          "marginBottom": "1rem",
                                           "marginTop": "1rem"}),
 
                                 html.Div([
@@ -179,22 +194,65 @@ graph_option_tabs = dbc.Tabs(
                                         step=EdgeConfig.LABEL_FONT_STEP,
                                         value=EdgeConfig.LABEL_FONT_DEFAULT,
                                         marks=EdgeConfig.LABEL_FONT_MARKS,
-                                        tooltip={"placement": "bottom", "always_visible": True},
+                                        tooltip={"placement": "bottom",
+                                                 "always_visible": True},
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem",
+                                ], style={"width": "100%",
+                                          "marginBottom": "1rem",
                                           "marginTop": "1rem"}),
+
+                                html.Div([
+                                    html.Label("Edge Curve Styles",
+                                               htmlFor=GraphOptions.Edges.CURVE_STYLE_SELECTOR,
+                                               style={"fontWeight": "bold",
+                                                      "marginBottom": "5px"}),
+                                    dcc.Dropdown(
+                                        id=GraphOptions.Edges.CURVE_STYLE_SELECTOR,
+                                        options=[
+                                            {
+                                                "label": "Bezier",
+                                                "value": "bezier"
+                                            },
+                                            {
+                                                "label": "Unbundled Bezier",
+                                                "value": "unbundled-bezier"
+                                            },
+                                            {
+                                                "label": "Straight",
+                                                "value": "straight"
+                                            },
+                                            {
+                                                "label": "Straight Triangle",
+                                                "value": "straight-triangle"
+                                            },
+                                            {
+                                                "label": "Segments",
+                                                "value": "segments"
+                                            },
+                                            {
+                                                "label": "Taxi",
+                                                "value": "taxi"
+                                            },
+                                        ],
+                                        value=EdgeConfig.DEFAULT_EDGE_CURVE_STYLE,
+                                        clearable=False,
+                                        style={"marginBottom": "15px"}
+                                    )
+                                ]),
 
                                 html.Div([
                                     dcc.Checklist(
                                         id=GraphOptions.Edges.TOGGLE_ARROWS,
-                                        options=[{"label": "Hide edge arrows", "value": "toggle"}],
+                                        options=[{"label": "Hide edge arrows",
+                                                  "value": "toggle"}],
                                         value=[],
                                         inline=True,
                                         style={"marginBottom": "10px"},
                                         # TODO this color is not nice, but fixes the visibility
                                         labelStyle={'color': 'gray'}
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem"})
+                                ], style={"width": "100%",
+                                          "marginBottom": "1rem"})
                             ]),
                             id=GraphOptions.Edges.ADVANCED_OPTIONS_COLLAPSE,
                             is_open=False
@@ -206,7 +264,8 @@ graph_option_tabs = dbc.Tabs(
                     html.Div([
                         dcc.Checklist(
                             id=GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT,
-                            options=[{"label": "Scale edge width by weight", "value": "scale"}],
+                            options=[{"label": "Scale edge width by weight",
+                                      "value": "scale"}],
                             value=["scale"],
                             inline=True,
                             style={"marginBottom": "10px"},
@@ -228,7 +287,8 @@ graph_option_tabs = dbc.Tabs(
 
                     dcc.Checklist(
                         id=GraphOptions.Edges.COLOR_BY_LABEL,
-                        options=[{"label": "Color edges by label", "value": "color"}],
+                        options=[{"label": "Color edges by label",
+                                  "value": "color"}],
                         value=[],
                         inline=True,
                         style={"marginBottom": "10px"},
@@ -242,9 +302,11 @@ graph_option_tabs = dbc.Tabs(
                     html.Div(
                         [
                             html.Div(id=GraphOptions.Edges.LABEL_RENAME_ERROR,
-                                     style={"color": "red", "marginBottom": "10px"}),
-                            html.Div(id=GraphOptions.Edges.COLOR_PICKER_CONTAINERS,
-                                     style={"marginTop": "10px"})
+                                     style={"color": "red",
+                                            "marginBottom": "10px"}),
+                            html.Div(
+                                id=GraphOptions.Edges.COLOR_PICKER_CONTAINERS,
+                                style={"marginTop": "10px"})
                         ]
                     ),
                     id=GraphOptions.Edges.COLOR_PICKERS_COLLAPSE,
@@ -259,7 +321,8 @@ graph_option_tabs = dbc.Tabs(
                 html.Div([
                     html.Label("Node Annotation:",
                                htmlFor=GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR,
-                               style={"fontWeight": "bold", "marginBottom": "5px"}),
+                               style={"fontWeight": "bold",
+                                      "marginBottom": "5px"}),
                     dcc.Dropdown(
                         id=GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR,
                         options=[
@@ -303,9 +366,11 @@ graph_option_tabs = dbc.Tabs(
                                         step=NodeConfig.LABEL_FONT_STEP,
                                         value=NodeConfig.LABEL_FONT_DEFAULT,
                                         marks=NodeConfig.LABEL_FONT_MARKS,
-                                        tooltip={"placement": "bottom", "always_visible": True},
+                                        tooltip={"placement": "bottom",
+                                                 "always_visible": True},
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem"}),
+                                ], style={"width": "100%",
+                                          "marginBottom": "1rem"}),
                                 html.Div([
                                     html.Label(
                                         "Node size:",
@@ -324,9 +389,11 @@ graph_option_tabs = dbc.Tabs(
                                         step=NodeConfig.SIZE_STEP,
                                         value=NodeConfig.SIZE_DEFAULT,
                                         marks=NodeConfig.SIZE_MARKS,
-                                        tooltip={"placement": "bottom", "always_visible": True},
+                                        tooltip={"placement": "bottom",
+                                                 "always_visible": True},
                                     )
-                                ], style={"width": "100%", "marginBottom": "1rem"}),
+                                ], style={"width": "100%",
+                                          "marginBottom": "1rem"}),
                                 html.Div([
                                     html.Label("Node Shapes",
                                                htmlFor=GraphOptions.Nodes.SHAPE_SELECTOR,
@@ -361,7 +428,8 @@ graph_option_tabs = dbc.Tabs(
                                     dcc.Checklist(
                                         id=GraphOptions.Nodes.SUPPRESS_SINGLETONS,
                                         options=[
-                                            {"label": "Suppress Singletons", "value": "on"}],
+                                            {"label": "Suppress Singletons",
+                                             "value": "on"}],
                                         value=[],
                                         inline=True,
                                         style={"marginBottom": "10px"},
@@ -377,7 +445,8 @@ graph_option_tabs = dbc.Tabs(
                             dcc.Checklist(
                                 id=GraphOptions.Nodes.COLOR_BY_LABEL,
                                 options=[
-                                    {"label": "Color nodes by label", "value": "color"}
+                                    {"label": "Color nodes by label",
+                                     "value": "color"}
                                 ],
                                 value=[],
                                 inline=True,
@@ -399,15 +468,17 @@ graph_option_tabs = dbc.Tabs(
                                             dcc.Dropdown(
                                                 id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
                                                 options=[
-                                                    {"label": "Label", "value": "label"}
+                                                    {"label": "Label",
+                                                     "value": "label"}
                                                 ],
                                                 value="label",
                                                 clearable=False,
                                                 style={"marginBottom": "15px"}
                                             )
                                         ]),
-                                        html.Div(id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
-                                                 style={"marginTop": "10px"})
+                                        html.Div(
+                                            id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
+                                            style={"marginTop": "10px"})
                                     ]
                                 ),
                                 id=GraphOptions.Nodes.COLOR_PICKERS_COLLAPSE,

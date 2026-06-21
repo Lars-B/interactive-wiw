@@ -1,4 +1,6 @@
 class EdgeConfig:
+    DEFAULT_EDGE_CURVE_STYLE = "bezier"
+
     SCALE_DEFAULT = 10
     SCALE_MIN = 1
     SCALE_MAX = 100

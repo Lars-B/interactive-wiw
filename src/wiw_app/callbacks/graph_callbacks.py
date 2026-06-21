@@ -35,19 +35,19 @@ legend_styles = [
 
 
 @myapp.callback(
-    Output('cytoscape', 'elements'),
-    Output('cytoscape', 'layout'),
-    Output('cytoscape', 'stylesheet'),
+    Output("cytoscape", "elements"),
+    Output("cytoscape", "layout"),
+    Output("cytoscape", "stylesheet"),
     # Inputs below
     Input("graph-store", "data"),
-    Input(GraphOptions.Edges.DISPLAY_FILTER, 'value'),
-    Input(GraphOptions.Graph.LAYOUT_SELECTOR, 'value'),
-    Input(GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT, 'value'),
-    Input(GraphOptions.Edges.ANNOTATION_SELECTOR, 'value'),
+    Input(GraphOptions.Edges.DISPLAY_FILTER, "value"),
+    Input(GraphOptions.Graph.LAYOUT_SELECTOR, "value"),
+    Input(GraphOptions.Edges.SCALE_WIDTH_BY_WEIGHT, "value"),
+    Input(GraphOptions.Edges.ANNOTATION_SELECTOR, "value"),
     Input(GraphOptions.Edges.LABEL_POSITION, "value"),
-    Input(GraphOptions.Edges.DISPLAY_EDGE_THRESHOLD, 'value'),
-    Input(GraphOptions.Edges.LABEL_FONT_SIZE, 'value'),
-    Input(GraphOptions.Nodes.LABEL_FONT_SIZE, 'value'),
+    Input(GraphOptions.Edges.DISPLAY_EDGE_THRESHOLD, "value"),
+    Input(GraphOptions.Edges.LABEL_FONT_SIZE, "value"),
+    Input(GraphOptions.Nodes.LABEL_FONT_SIZE, "value"),
     Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
     Input(GraphOptions.Edges.COLOR_STORE, "data"),
     Input(GraphOptions.Edges.TOGGLE_ARROWS, "value"),
@@ -59,7 +59,8 @@ legend_styles = [
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
     Input(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
     Input(GraphOptions.Nodes.SIZE_SELECTOR, "value"),
-    Input(GraphOptions.Nodes.SHAPE_SELECTOR, 'value')
+    Input(GraphOptions.Nodes.SHAPE_SELECTOR, "value"),
+    Input(GraphOptions.Edges.CURVE_STYLE_SELECTOR, "value")
 )
 def update_elements(graph_data, selected_edge_labels, selected_layout,
                     scale_toggle, annotation_field, label_position, threshold,
@@ -70,7 +71,7 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                     node_label_colors, node_color_label_selection,
                     supress_singletons,
                     is_light_theme, node_annotation_selection, node_size,
-                    node_shape):
+                    node_shape, edge_curve_style):
     # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
     edges_scale_factor = 1
@@ -121,6 +122,7 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
         label = node["data"][node_color_label_selection]
         node["data"]["color"] = node_label_colors.get(label, "green")
         match node_shape:
+
             case 'adaptive':
                 if node["data"]["id"] in terminal_nodes:
                     node["data"]["shape"] = "rectangle"
@@ -128,12 +130,16 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                     node["data"]["shape"] = "triangle"
                 else:
                     node["data"]["shape"] = "ellipse"
+
             case 'circles':
                 node["data"]["shape"] = "ellipse"
+
             case 'rectangles':
                 node["data"]["shape"] = "rectangle"
+
             case 'triangles':
                 node["data"]["shape"] = "triangle"
+
             case _:
                 raise NotImplementedError('This is a developer error.')
 
@@ -164,7 +170,8 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                           edge_color_toggle,
                           is_light_theme,
                           edge_label_font_size,
-                          edge_arrow_toggle
+                          edge_arrow_toggle,
+                          edge_curve_style
                       )},
                  ] + legend_styles
 
