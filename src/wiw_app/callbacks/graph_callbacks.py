@@ -151,7 +151,10 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
             edge["data"]["posterior"] * edges_scale_factor, 2)
 
     elements = filtered_nodes + filtered_edges
-    layout = {"name": selected_layout}
+    layout = {
+        "name": selected_layout,
+        "animate": True,
+    }
 
     stylesheet = [
                      {"selector": "node",

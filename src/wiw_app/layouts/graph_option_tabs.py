@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 from dash_iconify import DashIconify
 
-from wiw_app.config import EdgeConfig, NodeConfig
+from wiw_app.config import EdgeConfig, NodeConfig, GraphConfig
 from wiw_app.ids import GraphOptions
 
 graph_option_tabs = dbc.Tabs(
@@ -22,8 +22,8 @@ graph_option_tabs = dbc.Tabs(
                         options=[
                             {
                                 "label": "Dagre (Hierarchical) [best Graphviz alt]",
-                                "value":
-                                    "dagre"},
+                                "value": "dagre"
+                            },
                             {"label": "Breadthfirst (Hierarchical)",
                              "value": "breadthfirst"},
                             {"label": "Cose (Spring)", "value": "cose"},
@@ -40,7 +40,7 @@ graph_option_tabs = dbc.Tabs(
                              "value": "spread"},
                             {"label": "Klay (layered)", "value": "klay"},
                         ],
-                        value="dagre",
+                        value=GraphConfig.DEFAULT_LAYOUT,
                         clearable=False,
                         style={"marginBottom": "15px"}
                     )

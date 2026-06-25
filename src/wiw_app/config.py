@@ -77,3 +77,7 @@ class NodeConfig:
         DEFAULT_NODE_COLOR = "#BDB76B"
 
     DEFAULT_SHAPE_SELECTION = 'adaptive'
+
+
+class GraphConfig:
+    DEFAULT_LAYOUT = "dagre"
