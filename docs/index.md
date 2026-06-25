@@ -2,7 +2,7 @@
 
 Interactive browser-based visualization tool for exploring who-infected-whom (WIW) transmission networks.
 Supports input from BREATH MCMC runs, Outbreaker2, and Transphylo.
-Furthermore, you can uplaod a custom `csv` file to generate a graph, more detail can be found in documentation.
+Furthermore, you can upload a custom `csv` file to generate a graph, more detail can be found in documentation.
 
 ## Features
 
@@ -18,6 +18,10 @@ Furthermore, you can uplaod a custom `csv` file to generate a graph, more detail
 
 New users should start with:
 
-1. Installation
-2. Quick Start
-3. Interface Overview
+1. [Installation](installation.md)
+2. [Interface Overview](interface-overview.md)
+3. [Any of the Tutorials](tutorials/BREATH.md)
+
+## [FAQ](faq.md)
+
+Common questions and troubleshooting information can be found in the FAQ.
