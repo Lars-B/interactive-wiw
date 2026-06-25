@@ -303,6 +303,45 @@ def get_node_style(annotation_field, font_size, color_by_label,
     }
 
 
+def apply_node_styles(
+    nodes,
+    node_shape_mode,
+    node_color_label_selection,
+    node_label_colors,
+    terminal_nodes,
+    seen_nodes,
+):
+    for node in nodes:
+        label = node["data"][node_color_label_selection]
+
+        node["data"]["color"] = node_label_colors.get(label, "green")
+
+        node["data"]["shape"] = resolve_node_shape(
+            node=node,
+            mode=node_shape_mode,
+            terminal_nodes=terminal_nodes,
+            seen_nodes=seen_nodes,
+        )
+
+
+def resolve_node_shape(node, mode, terminal_nodes, seen_nodes):
+    node_id = node["data"]["id"]
+
+    # special case: adaptive logic
+    if mode == "adaptive":
+        if node_id in terminal_nodes:
+            return "rectangle"
+        if node_id not in seen_nodes:
+            return "triangle"
+        return "ellipse"
+
+    # direct mapping for everything else
+    try:
+        return mode
+    except KeyError:
+        raise NotImplementedError(f"Unknown node shape mode: {mode}")
+
+
 def get_edge_style(annotation_field, label_position, scale_edges,
                    color_by_label, is_light_theme, font_size,
                    toggle_arrows, edge_curve_style) -> dict:

@@ -40,6 +40,7 @@ class EdgeConfig:
         LABEL_COLOR = "#fff"
         LABEL_OUTLINE_COLOR = "#ccc"
 
+
 class NodeConfig:
     SIZE_DEFAULT = 50
     SIZE_MIN = 5
@@ -66,6 +67,7 @@ class NodeConfig:
     }
 
     LABEL_OUTLINE_WIDTH = 0.2
+
     class LightMode:
         LABEL_COLOR = "#000"
         LABEL_OUTLINE_COLOR = "#888"
@@ -77,6 +79,32 @@ class NodeConfig:
         DEFAULT_NODE_COLOR = "#BDB76B"
 
     DEFAULT_SHAPE_SELECTION = 'adaptive'
+
+    # This is used for node shape dropdown and node style functions
+    NODE_SHAPE_MODES = {
+        # Special strategy
+        "Adaptive": "adaptive",
+        # Regular Shapes
+        "Circles": "ellipse",
+        "Rectangles": "rectangle",
+        "Triangles": "triangle",
+        "Round-rectangle": "round-rectangle",
+        "Round-triangle": "round-triangle",
+        "Barrel": "barrel",
+        "Diamond": "diamond",
+        "Round-diamond": "round-diamond",
+        "Pentagon": "pentagon",
+        "Round-pentagon": "round-pentagon",
+        "Hexagon": "hexagon",
+        "Concave-hexagon": "concave-hexagon",
+        "Round-hexagon": "round-hexagon",
+        "Heptagon": "heptagon",
+        "Octagon": "octagon",
+        "Star": "star",
+        "Tag": "tag",
+        "Round-tag": "round-tag",
+        "Vee": "vee",
+    }
 
 
 class GraphConfig:

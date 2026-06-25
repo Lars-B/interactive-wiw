@@ -402,22 +402,8 @@ graph_option_tabs = dbc.Tabs(
                                     dcc.Dropdown(
                                         id=GraphOptions.Nodes.SHAPE_SELECTOR,
                                         options=[
-                                            {
-                                                "label": "Adaptive",
-                                                "value": "adaptive"
-                                            },
-                                            {
-                                                "label": "Circles",
-                                                "value": "circles"
-                                            },
-                                            {
-                                                "label": "Rectangles",
-                                                "value": "rectangles"
-                                            },
-                                            {
-                                                "label": "Triangles",
-                                                "value": "triangles"
-                                            },
+                                            {"label": k, "value": v}
+                                            for k, v in NodeConfig.NODE_SHAPE_MODES.items()
                                         ],
                                         value=NodeConfig.DEFAULT_SHAPE_SELECTION,
                                         clearable=False,

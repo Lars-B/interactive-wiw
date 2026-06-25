@@ -9,7 +9,7 @@ from wiw_app.app import app as myapp
 from wiw_app.config import EdgeConfig
 from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import get_node_style, get_edge_style, \
-    get_cytoscape_style
+    get_cytoscape_style, apply_node_styles
 from wiw_app.ids import GraphOptions
 from wiw_app.plotting_utils import draw_legend
 from wiw_app.validators import validate_int
@@ -117,31 +117,14 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
             if n["data"]["id"] in seen_nodes:
                 filtered_nodes.append(n)
 
-    # todo this can probably be done more elegantly...
-    for node in filtered_nodes:
-        label = node["data"][node_color_label_selection]
-        node["data"]["color"] = node_label_colors.get(label, "green")
-        match node_shape:
-
-            case 'adaptive':
-                if node["data"]["id"] in terminal_nodes:
-                    node["data"]["shape"] = "rectangle"
-                elif node["data"]["id"] not in seen_nodes:
-                    node["data"]["shape"] = "triangle"
-                else:
-                    node["data"]["shape"] = "ellipse"
-
-            case 'circles':
-                node["data"]["shape"] = "ellipse"
-
-            case 'rectangles':
-                node["data"]["shape"] = "rectangle"
-
-            case 'triangles':
-                node["data"]["shape"] = "triangle"
-
-            case _:
-                raise NotImplementedError('This is a developer error.')
+    apply_node_styles(
+        filtered_nodes,
+        node_shape,
+        node_color_label_selection,
+        node_label_colors,
+        terminal_nodes,
+        seen_nodes
+    )
 
     # this updates to the correct colors
     for edge in filtered_edges:
