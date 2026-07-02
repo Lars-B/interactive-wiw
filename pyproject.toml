@@ -9,6 +9,7 @@ version = "1.2.0"
 description = "WIW Visualization Dash application"
 readme = "README.md"
 requires-python = ">=3.12"
+license = { file = "LICENSE" }
 
 dependencies = [
     "dash",
