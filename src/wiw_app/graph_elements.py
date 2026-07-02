@@ -17,6 +17,10 @@ from wiw_app.utils import log_time
 from wiw_app.graph_builder.utils import generate_mst_edges_from_network
 
 
+class AnnotationFileError(Exception):
+    """Base class for annotation file errors."""
+
+
 def decode_base64_content(base64_content: str) -> bytes:
     content_type, content_string = base64_content.split(",", 1)
     decoded_content = base64.b64decode(content_string)
@@ -411,7 +415,7 @@ def process_node_annotations_file(file_content, taxon_column):
     reader = csv.DictReader(io.StringIO(decoded_content), delimiter=delimiter)
 
     if not reader.fieldnames:
-        raise ValueError("No header found in annotation file.")
+        raise AnnotationFileError("No header found in annotation file.")
 
         # Normalize header names
     normalized_fieldnames = [
@@ -421,8 +425,7 @@ def process_node_annotations_file(file_content, taxon_column):
     taxon_column_normalized = _normalize_column_name(taxon_column)
 
     if taxon_column_normalized not in fieldnames_map:
-        # todo make this an info toast popup...
-        raise ValueError(
+        raise AnnotationFileError(
             f"Taxon column '{taxon_column}' not found.\n"
             f"Available columns: {normalized_fieldnames}"
         )
@@ -433,7 +436,7 @@ def process_node_annotations_file(file_content, taxon_column):
     ]
 
     if not annotation_columns:
-        raise ValueError("No annotation columns found in file.")
+        raise AnnotationFileError("No annotation columns found in file.")
 
     uploaded_map = {}
 
