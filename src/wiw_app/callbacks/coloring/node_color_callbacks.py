@@ -4,7 +4,6 @@ from dash import html
 from dash.dependencies import ALL
 
 from wiw_app.app import app as myapp
-from wiw_app.dash_logger import logger
 from wiw_app.ids import GraphOptions
 from wiw_app.callbacks.coloring.palettes import assign_default_colors, natural_sort_key
 

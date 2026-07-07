@@ -444,32 +444,88 @@ graph_option_tabs = dbc.Tabs(
                             dbc.Collapse(
                                 html.Div(
                                     [
-                                        html.Div([
-                                            html.Label(
-                                                "Color Nodes:",
-                                                htmlFor=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
-                                                style={"fontWeight": "bold",
-                                                       "marginBottom": "5px"}
+                                        dbc.RadioItems(
+                                            id=GraphOptions.Nodes.COLOR_MODE,
+                                            options=[
+                                                {
+                                                    "label": "Categorical",
+                                                    "value": "categorical"
+                                                },
+                                                {
+                                                    "label": "Heatmap",
+                                                    "value": "continuous"
+                                                },
+                                            ],
+                                            value="categorical",
+                                            inline=True,
+                                        ),
+
+                                        # shared node color attribute selector
+                                        html.Label(
+                                            "Color Nodes by:",
+                                            htmlFor=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
+                                            style={
+                                                "fontWeight": "bold",
+                                                "marginBottom": "5px"
+                                            }
+                                        ),
+                                        dcc.Dropdown(
+                                            id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
+                                            options=[
+                                                {
+                                                    "label": "Label",
+                                                    "value": "label"
+                                                }
+                                            ],
+                                            value="label",
+                                            clearable=False,
+                                        ),
+
+                                        # categorical options
+                                        dbc.Collapse(
+                                            html.Div(
+                                                [
+                                                    html.Div(
+                                                        id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
+                                                        style={"marginTop": "10px"}
+                                                    )
+                                                ]
                                             ),
-                                            dcc.Dropdown(
-                                                id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
-                                                options=[
-                                                    {"label": "Label",
-                                                     "value": "label"}
-                                                ],
-                                                value="label",
-                                                clearable=False,
-                                                style={"marginBottom": "15px"}
-                                            )
-                                        ]),
-                                        html.Div(
-                                            id=GraphOptions.Nodes.COLOR_PICKER_CONTAINERS,
-                                            style={"marginTop": "10px"})
+                                            id=GraphOptions.Nodes.CATEGORICAL_COLOR_OPTIONS,
+                                            is_open=True,
+                                        ),
+
+                                        # heatmap options
+                                        dbc.Collapse(
+                                            html.Div(
+                                                [
+                                                    html.Label(
+                                                        "Colormap:",
+                                                        style={"fontWeight": "bold"}
+                                                    ),
+                                                    dcc.Dropdown(
+                                                        id=GraphOptions.Nodes.COLORMAP_SELECTOR,
+                                                        options=[
+                                                            {
+                                                                "label": str.capitalize(cmap),
+                                                                "value": cmap
+                                                            }
+                                                            for cmap in
+                                                            NodeConfig.AVAILABLE_HEATMAP_COLORMAPS
+                                                        ],
+                                                        value="viridis",
+                                                        clearable=False,
+                                                    )
+                                                ]
+                                            ),
+                                            id=GraphOptions.Nodes.HEATMAP_OPTIONS_COLLAPSE,
+                                            is_open=False,
+                                        ),
                                     ]
                                 ),
                                 id=GraphOptions.Nodes.COLOR_PICKERS_COLLAPSE,
-                                is_open=False
-                            ),
+                                is_open=False,
+                            )
                         ])
                     ]
                 ),

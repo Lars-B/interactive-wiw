@@ -58,16 +58,27 @@ class GraphOptions:
 
     class Nodes:
         TAB = "tab-node-options"
+
         ADVANCED_OPTIONS_ICON = "advanced-node-options-button-icon"
         ADVANCED_OPTIONS_COLLAPSE = "advanced-node-options-collapse"
         ADVANCED_OPTION_TOGGLE_BTN = "advanced-node-option-toggle-btn"
+
         LABEL_ANNOTATION_SELECTOR = "node-annotation-selector"
         LABEL_FONT_SIZE = "node-label-font-size"
+
         COLOR_BY_LABEL = "node-color-by-label"
+        COLOR_MODE = "node-color-mode"
+
         COLOR_LABEL_SELECTOR = "node-color-label-selector"
         COLOR_PICKER_CONTAINERS = "node-color-pickers-container"
         COLOR_PICKERS_COLLAPSE = "node-color-pickers-collapse"
+        HEATMAP_OPTIONS_COLLAPSE = "node-heatmap-options-collapse"
+        CATEGORICAL_COLOR_OPTIONS = "nodes-categorical-color-options-collapse"
+        HEATMAP_SELECTOR = "nodes-heatmap-selector"
+        COLORMAP_SELECTOR = "nodes-heatmap-colormap-selector"
+
         COLOR_STORE = "node-label-color-store"
+
         SUPPRESS_SINGLETONS = "suppress-singletons"
         SIZE_SELECTOR = "node-label-size-selector"
         SHAPE_SELECTOR = "node-shape-selector"

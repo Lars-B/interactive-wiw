@@ -106,6 +106,15 @@ class NodeConfig:
         "Vee": "vee",
     }
 
+    AVAILABLE_HEATMAP_COLORMAPS = [
+        "viridis",
+        "plasma",
+        "inferno",
+        "magma",
+        "cividis",
+        "coolwarm",
+    ]
+
 
 class GraphConfig:
     DEFAULT_LAYOUT = "dagre"

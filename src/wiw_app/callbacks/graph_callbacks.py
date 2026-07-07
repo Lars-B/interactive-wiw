@@ -72,6 +72,10 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                     supress_singletons,
                     is_light_theme, node_annotation_selection, node_size,
                     node_shape, edge_curve_style):
+
+    logger.debug(f"This is what we are working with. node-label-colors: {node_label_colors}"
+                 f"and also node-color-label-selection: {node_color_label_selection}")
+
     # Validating edge scale input:
     scale_edges = "scale" in scale_toggle
     edges_scale_factor = 1

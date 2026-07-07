@@ -48,6 +48,18 @@ def toggle_node_color_pickers(toggle_values):
 
 
 @myapp.callback(
+    Output(GraphOptions.Nodes.CATEGORICAL_COLOR_OPTIONS, "is_open"),
+    Output(GraphOptions.Nodes.HEATMAP_OPTIONS_COLLAPSE, "is_open"),
+    Input(GraphOptions.Nodes.COLOR_MODE, "value"),
+)
+def toggle_node_color_mode(mode):
+    return (
+        mode == "categorical",
+        mode == "continuous",
+    )
+
+
+@myapp.callback(
     Output(GraphOptions.Edges.COLOR_PICKERS_COLLAPSE, "is_open"),
     Input(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
 )
