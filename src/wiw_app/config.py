@@ -66,16 +66,16 @@ class NodeConfig:
         )
     }
 
-    LABEL_OUTLINE_WIDTH = 0.2
+    LABEL_OUTLINE_WIDTH = 0.5
 
     class LightMode:
-        LABEL_COLOR = "#000"
-        LABEL_OUTLINE_COLOR = "#888"
+        LABEL_COLOR = "#FFF"
+        LABEL_OUTLINE_COLOR = "#000"
         DEFAULT_NODE_COLOR = "#FFFACD"
 
     class DarkMode:
-        LABEL_COLOR = "#fff"
-        LABEL_OUTLINE_COLOR = "#888"
+        LABEL_COLOR = "#FFF"
+        LABEL_OUTLINE_COLOR = "#000"
         DEFAULT_NODE_COLOR = "#BDB76B"
 
     DEFAULT_SHAPE_SELECTION = 'adaptive'
