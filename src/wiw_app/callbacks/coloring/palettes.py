@@ -1,8 +1,13 @@
+from datetime import datetime
 import re
 import colorsys
 
+from matplotlib import colormaps
+from matplotlib.colors import to_hex
 
-# Good small categorical palettes
+from wiw_app.dash_logger import logger
+
+# hard coded color palettes to use
 PLOTLY_10 = [
     "#636EFA",
     "#EF553B",
@@ -16,7 +21,6 @@ PLOTLY_10 = [
     "#FECB52",
 ]
 
-# Expand later if needed
 D3_20 = [
     "#1F77B4",
     "#FF7F0E",
@@ -102,3 +106,72 @@ def natural_sort_key(value):
         int(part) if part.isdigit() else part.lower()
         for part in re.split(r"(\d+)", str(value))
     ]
+
+
+def assign_heatmap_colors(labels, colormap):
+    values, strategy = interpret_labels(labels)
+
+    logger.info(f"Selected heatmap strategy: {strategy}")
+
+    cmap = colormaps[colormap]
+
+    min_value = min(values)
+    max_value = max(values)
+
+    if min_value == max_value:
+        normalized = [0.5] * len(values)
+    else:
+        normalized = [
+            (value - min_value) / (max_value - min_value)
+            for value in values
+        ]
+
+    return {
+        label: to_hex(cmap(value))
+        for label, value in zip(labels, normalized)
+    }
+
+
+def interpret_labels(labels):
+    try:
+        values = [float(label) for label in labels]
+        return values, "numeric"
+    except ValueError:
+        pass
+
+    try:
+        values = parse_dates(labels)
+        return values, "date"
+    except ValueError:
+        pass
+
+    return list(range(len(labels))), "ordinal"
+
+
+def parse_dates(labels):
+    """
+    Parse labels as dates and return Unix timestamps.
+    """
+    timestamps = []
+
+    date_formats = [
+        "%Y-%m-%d",
+        "%d-%m-%Y",
+        "%d.%m.%Y",
+        "%m/%d/%Y",
+        "%d/%m/%Y",
+        "%Y/%m/%d",
+    ]
+
+    for label in labels:
+        for fmt in date_formats:
+            try:
+                dt = datetime.strptime(str(label), fmt)
+                timestamps.append(dt.timestamp())
+                break
+            except ValueError:
+                continue
+        else:
+            raise ValueError(f"Could not parse '{label}' as a supported date.")
+
+    return timestamps

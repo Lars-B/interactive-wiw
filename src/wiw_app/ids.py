@@ -74,7 +74,6 @@ class GraphOptions:
         COLOR_PICKERS_COLLAPSE = "node-color-pickers-collapse"
         HEATMAP_OPTIONS_COLLAPSE = "node-heatmap-options-collapse"
         CATEGORICAL_COLOR_OPTIONS = "nodes-categorical-color-options-collapse"
-        HEATMAP_SELECTOR = "nodes-heatmap-selector"
         COLORMAP_SELECTOR = "nodes-heatmap-colormap-selector"
 
         COLOR_STORE = "node-label-color-store"

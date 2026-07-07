@@ -4,29 +4,44 @@ from dash import html
 from dash.dependencies import ALL
 
 from wiw_app.app import app as myapp
+from wiw_app.callbacks.coloring.palettes import (assign_default_colors,
+                                                 natural_sort_key,
+                                                 assign_heatmap_colors)
 from wiw_app.ids import GraphOptions
-from wiw_app.callbacks.coloring.palettes import assign_default_colors, natural_sort_key
 
 
 @myapp.callback(
     Output(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     Input("graph-store", "data"),
     Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
+    Input(GraphOptions.Nodes.COLOR_MODE, "value"),
+    Input(GraphOptions.Nodes.COLORMAP_SELECTOR, "value"),
 )
-def create_nodes_color_picker_panel(graph_data, color_label_selection):
+def create_nodes_color_picker_panel(
+        graph_data,
+        color_label_selection,
+        color_mode,
+        colormap,
+):
     if not graph_data:
         return html.Div("No node data loaded.")
 
     nodes = graph_data.get("nodes", [])
 
     labels = sorted(
-        set(node["data"][color_label_selection] for node in nodes),
+        set(
+            node["data"][color_label_selection]
+            for node in nodes
+            if color_label_selection in node["data"]
+        ),
         key=natural_sort_key
     )
 
-    # Get dynamic default colors
-    # todo this redundant can just do the default colors here?...
-    default_colors = assign_default_colors(labels)
+    if color_mode == "categorical":
+        default_colors = assign_default_colors(labels)
+
+    else:
+        default_colors = assign_heatmap_colors(labels, colormap)
 
     def color_dropdown(label):
         return dbc.Input(
@@ -58,9 +73,12 @@ def create_nodes_color_picker_panel(graph_data, color_label_selection):
                     dbc.Col(
                         dbc.Label(
                             label,
-                            style={"width": 120, "height": 40,
-                                   "marginLeft": "10px",
-                                   "lineHeight": "40px"}
+                            style={
+                                "width": 120,
+                                "height": 40,
+                                "marginLeft": "10px",
+                                "lineHeight": "40px"
+                            }
                         ),
                         width="auto"
                     )
