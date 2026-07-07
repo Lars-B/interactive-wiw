@@ -1,0 +1,36 @@
+---
+title: "Interactive who-infected-whom visualization software"
+---
+
+## Authors
+
+## Affiliations
+
+## Corresponding Author
+
+
+# Introduction
+
+this is the introduction to this amazing paper.
+results
+[@smith2020]. Reproducible software workflows are also increasingly
+important for computational research [@berling2021].
+
+# Methods
+
+athis is a test of a figure @fig-test and we see.
+
+![Overview figure for testing](figures/test.png){#fig-test width=80%}
+
+This is where we describe the methods for unknonw infections and os on...
+
+## Data
+
+# Results
+
+# Discussion
+
+
+# Acknowledgements
+
+# References

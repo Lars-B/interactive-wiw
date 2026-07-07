@@ -1,0 +1,12 @@
+project:
+  type: default
+  output-dir: build
+
+bibliography: references.bib
+
+format:
+  docx:
+    toc: false
+    fig-cap-location: bottom
+    reference-doc: journal-template.docx
+  pdf: default
