@@ -4,7 +4,7 @@ from dash import html
 
 from wiw_app.app import app as myapp
 from wiw_app.ids import GraphOptions
-from wiw_app.utils import assign_default_colors
+from wiw_app.callbacks.coloring.palettes import assign_default_colors
 
 
 @myapp.callback(
