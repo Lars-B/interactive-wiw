@@ -7,7 +7,7 @@ from .upload import *
 from .filename_display_upload import register_filename_display_callback
 from ..ids import UploadIDs
 from .modal_callback_factory import make_loading_modal_callback
-from .coloring.callbacks import *
+from .coloring import *
 
 
 def register_callbacks(app):

@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State
+from dash import Input, Output
 from dash import html
-from dash.dependencies import ALL
 
 from wiw_app.app import app as myapp
 from wiw_app.ids import GraphOptions
@@ -9,30 +8,23 @@ from wiw_app.utils import assign_default_colors
 
 
 @myapp.callback(
-    Output(GraphOptions.Nodes.COLOR_PICKERS_COLLAPSE, "is_open"),
-    Input(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
+    Output(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
+    Input("graph-store", "data")
 )
-def toggle_node_color_pickers(toggle_values):
-    # Show if 'color' is in checklist values, else hide
-    return "color" in toggle_values
-
-
-@myapp.callback(
-    Output(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
-    Input("graph-store", "data"),
-    Input(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
-)
-def create_nodes_color_picker_panel(graph_data, color_label_selection):
+def create_edge_color_picker_panel(graph_data, label_colors=None):
     if not graph_data:
-        return html.Div("No node data loaded.")
+        return html.Div("No graph data loaded.")
 
-    nodes = graph_data.get("nodes", [])
-
-    labels = sorted(set(node["data"][color_label_selection] for node in nodes))
+    edges = graph_data.get("edges", [])
+    labels = sorted(set(edge["data"]["label"] for edge in edges))
 
     # Get dynamic default colors
     # todo this redundant can just do the default colors here?...
     default_colors = assign_default_colors(labels)
+
+    # Override with edge_label_colors if given
+    if label_colors:
+        default_colors.update(label_colors)
 
     def color_dropdown(label):
         return dbc.Input(
@@ -62,14 +54,15 @@ def create_nodes_color_picker_panel(graph_data, color_label_selection):
                 [
                     dbc.Col(color_dropdown(label), width="auto"),
                     dbc.Col(
-                        dbc.Label(
-                            label,
+                        dbc.Input(
+                            id={"type": "label-rename-input", "index": label},
+                            type="text",
+                            value=label,
+                            debounce=True,
                             style={"width": 120, "height": 40,
-                                   "marginLeft": "10px",
-                                   "lineHeight": "40px"}
+                                   "marginLeft": "10px"}
                         ),
-                        width="auto"
-                    )
+                        width="auto"),
                 ],
                 align="center",
                 style={"marginBottom": "8px"},
@@ -78,12 +71,3 @@ def create_nodes_color_picker_panel(graph_data, color_label_selection):
             for label in labels
         ]
     )
-
-
-@myapp.callback(
-    Output(GraphOptions.Nodes.COLOR_STORE, "data"),
-    Input({"type": "color-input", "index": ALL}, "value"),
-    State({"type": "color-input", "index": ALL}, "id")
-)
-def update_node_label_color_store(values, ids):
-    return {id["index"]: val for id, val in zip(ids, values)}
