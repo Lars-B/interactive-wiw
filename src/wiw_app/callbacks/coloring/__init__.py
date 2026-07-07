@@ -1,2 +1,2 @@
-from .edge_callbacks import *
-from .node_callbacks import *
+from .edge_color_callbacks import *
+from .node_color_callbacks import *

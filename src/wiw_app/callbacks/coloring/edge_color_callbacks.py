@@ -4,7 +4,7 @@ from dash import html
 
 from wiw_app.app import app as myapp
 from wiw_app.ids import GraphOptions
-from wiw_app.callbacks.coloring.palettes import assign_default_colors
+from wiw_app.callbacks.coloring.palettes import assign_default_colors, natural_sort_key
 
 
 @myapp.callback(
@@ -16,7 +16,10 @@ def create_edge_color_picker_panel(graph_data, label_colors=None):
         return html.Div("No graph data loaded.")
 
     edges = graph_data.get("edges", [])
-    labels = sorted(set(edge["data"]["label"] for edge in edges))
+    labels = sorted(
+        set(edge["data"]["label"] for edge in edges),
+        key=natural_sort_key
+    )
 
     # Get dynamic default colors
     # todo this redundant can just do the default colors here?...

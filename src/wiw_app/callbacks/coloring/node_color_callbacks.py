@@ -4,8 +4,9 @@ from dash import html
 from dash.dependencies import ALL
 
 from wiw_app.app import app as myapp
+from wiw_app.dash_logger import logger
 from wiw_app.ids import GraphOptions
-from wiw_app.callbacks.coloring.palettes import assign_default_colors
+from wiw_app.callbacks.coloring.palettes import assign_default_colors, natural_sort_key
 
 
 @myapp.callback(
@@ -19,7 +20,10 @@ def create_nodes_color_picker_panel(graph_data, color_label_selection):
 
     nodes = graph_data.get("nodes", [])
 
-    labels = sorted(set(node["data"][color_label_selection] for node in nodes))
+    labels = sorted(
+        set(node["data"][color_label_selection] for node in nodes),
+        key=natural_sort_key
+    )
 
     # Get dynamic default colors
     # todo this redundant can just do the default colors here?...
