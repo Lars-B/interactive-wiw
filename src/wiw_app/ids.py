@@ -47,7 +47,6 @@ class GraphOptions:
 
     class Legend:
         DOWNLOAD = "download-legend"
-        GET_SVG_BUTTON = "btn-get-legend-svg"
         ADD_LEG_NODE = "btn-add-legend-node"
         REMOVE_LEG_NODE = "btn-remove-legend-node"
 
@@ -101,3 +100,13 @@ class GraphOptions:
         TOGGLE_ARROWS = "edge-arrows"
         SCALE_VALUE_INPUT = "edge-scale-input"
         CURVE_STYLE_SELECTOR = "edge-curve-style-selector"
+
+
+class DOWNLOAD:
+    GET_DOT_BUTTON = "btn-get-dot"
+    GET_SVG_BUTTON = "btn-get-svg"
+    GET_PNG_BUTTON = "btn-get-png"
+    GET_JPG_BUTTON = "btn-get-jpg"
+    GET_LEGEND_SVG_BUTTON = "btn-get-legend-svg"
+    GET_PNG_WITH_LEGEND = "btn-get-pngplus"
+    FILENAME_INPUT = "filename-input"

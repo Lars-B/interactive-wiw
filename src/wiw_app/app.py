@@ -90,7 +90,7 @@ app.layout = html.Div([
 
                             html.Hr(),
                             html.H2(
-                                "Export Graph",
+                                "Download Network Image",
                                 style={"marginBottom": "15px"}
                             ),
                             html.Hr(),

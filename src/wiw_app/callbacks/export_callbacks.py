@@ -6,14 +6,14 @@ from networkx.drawing.nx_pydot import to_pydot
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.ids import GraphOptions
+from wiw_app.ids import GraphOptions, DOWNLOAD
 from wiw_app.plotting_utils import make_image_with_legend_png, draw_legend
 
 
 @myapp.callback(
     Output("download-dot", 'data'),
-    Input("btn-get-dot", "n_clicks"),
-    State("image-filename-input", "value"),
+    Input(DOWNLOAD.GET_DOT_BUTTON, "n_clicks"),
+    State(DOWNLOAD.FILENAME_INPUT, "value"),
     State("cytoscape", "elements"),
     prevent_initial_call=True
 )
@@ -35,10 +35,10 @@ def export_to_dot(n_clicks, filename, elements):
 @myapp.callback(
     Output("cytoscape", "generateImage"),
     [
-        Input("btn-get-jpg", "n_clicks"),
-        Input("btn-get-png", "n_clicks"),
-        Input("btn-get-svg", "n_clicks"),
-        State("image-filename-input", "value")
+        Input(DOWNLOAD.GET_JPG_BUTTON, "n_clicks"),
+        Input(DOWNLOAD.GET_PNG_BUTTON, "n_clicks"),
+        Input(DOWNLOAD.GET_SVG_BUTTON, "n_clicks"),
+        State(DOWNLOAD.FILENAME_INPUT, "value")
     ]
 )
 def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
@@ -63,7 +63,7 @@ def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
 @myapp.callback(
     Output("cytoscape", "generateImage", allow_duplicate=True),
     Output("pngplus-requested", "data"),
-    Input("btn-get-pngplus", "n_clicks"),
+    Input(DOWNLOAD.GET_PNG_WITH_LEGEND, "n_clicks"),
     prevent_initial_call=True
 )
 def trigger_pngplus(n):
@@ -78,7 +78,7 @@ def trigger_pngplus(n):
     Output("pngplus-requested", "data", allow_duplicate=True),
     State("pngplus-requested", "data"),
     Input("cytoscape", "imageData"),
-    State("image-filename-input", "value"),
+    State(DOWNLOAD.FILENAME_INPUT, "value"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
@@ -128,7 +128,7 @@ def export_pngplus(requested,
 
 @myapp.callback(
     Output(GraphOptions.Legend.DOWNLOAD, "data"),
-    Input(GraphOptions.Legend.GET_SVG_BUTTON, "n_clicks"),
+    Input(DOWNLOAD.GET_LEGEND_SVG_BUTTON, "n_clicks"),
     State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
