@@ -57,30 +57,76 @@ graph_option_tabs = dbc.Tabs(
                         color="primary",
                         outline=True,
                         style={"marginRight": "10px"}
-                    )
-                ], style={"marginBottom": "15px"}),
-
-                # todo this should be within a collapse DANGER ZONE...
-                html.Div([
-                    html.Div([
-                        dcc.ConfirmDialog(
-                            id="confirm-reset",
-                            message="Do you really want to reset the graph to be empty?"
+                    ),
+                    dbc.ButtonGroup([
+                        dbc.Button([
+                            DashIconify(icon="mdi:eye-plus",
+                                        width=16),
+                            " Legend"
+                        ],
+                            id=GraphOptions.Legend.ADD_LEG_NODE,
+                            n_clicks=0,
+                            color="primary", outline=True
                         ),
                         dbc.Button(
                             [
-                                DashIconify(icon="mdi:restart-alert", width=16,
-                                            style={"marginRight": "6px"}),
-                                "Reset Graph"
+                                DashIconify(
+                                    icon="mdi:eye-minus",
+                                    width=16),
+                                " Legend"
                             ],
-                            id="reset-graph-btn",
+                            id=GraphOptions.Legend.REMOVE_LEG_NODE,
                             n_clicks=0,
-                            color="danger",
-                            outline=True,
-                            style={"marginRight": "10px"}
+                            color="primary",
+                            outline=True
                         )
                     ]),
-                ], style={"display": "flex", "marginBottom": "10px"}),
+                ], style={"marginBottom": "15px"}),
+
+                html.Div([
+                    dbc.Button(
+                        [
+                            DashIconify(icon="mdi:alert-octagon-outline", width=16,
+                                        style={"marginRight": "6px"}),
+                            "Danger Zone"
+                        ],
+                        id="danger-zone-toggle",
+                        n_clicks=0,
+                        color="danger",
+                        outline=True,
+                        size="sm",
+                        style={"marginBottom": "8px"}
+                    ),
+                    dbc.Collapse(
+                        html.Div([
+                            dcc.ConfirmDialog(
+                                id="confirm-reset",
+                                message="Do you really want to reset the graph to be empty?"
+                            ),
+                            dbc.Button(
+                                [
+                                    DashIconify(icon="mdi:restart-alert", width=16,
+                                                style={"marginRight": "6px"}),
+                                    "Reset Graph"
+                                ],
+                                id="reset-graph-btn",
+                                n_clicks=0,
+                                color="danger",
+                                outline=True,
+                                style={"marginRight": "10px"}
+                            )
+                        ], style={
+                            "border": "1px solid #dc3545",
+                            "borderRadius": "6px",
+                            "padding": "10px",
+                            "display": "flex"
+                        }),
+                        id="danger-zone-collapse",
+                        is_open=False,
+                    ),
+                ],
+                    style={"marginBottom": "10px"}
+                )
             ]
         ),
         dbc.Tab(

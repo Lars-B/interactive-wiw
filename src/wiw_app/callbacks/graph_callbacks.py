@@ -324,3 +324,13 @@ def toggle_legend(
         return elements + [legend_node]
 
     return elements
+
+
+@myapp.callback(
+    Output("danger-zone-collapse", "is_open"),
+    Input("danger-zone-toggle", "n_clicks"),
+    State("danger-zone-collapse", "is_open"),
+    prevent_initial_call=True,
+)
+def toggle_danger_zone(n_clicks, is_open):
+    return not is_open

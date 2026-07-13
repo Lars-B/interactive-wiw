@@ -51,8 +51,11 @@ def get_image(get_jpg_clicks, get_png_clicks, get_svg_clicks, filename):
         ftype = ctx.triggered_id.split("-")[-1]
 
     return {
-        'type': ftype,
-        'action': action,
+        "type": ftype,
+        "action": action,
+        # this enables to download the full graph instead of just viewed part
+        # could be future input option/ new button
+        # "options": {"full": True},
         "filename": filename
     }
 

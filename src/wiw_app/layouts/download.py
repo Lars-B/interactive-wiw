@@ -84,22 +84,6 @@ download_layout = html.Div(
                             ], id=GraphOptions.Legend.GET_SVG_BUTTON,
                             n_clicks=0,
                             color="secondary", outline=True),
-                        dbc.Button([
-                            DashIconify(icon="mdi:eye-plus",
-                                        width=16),
-                            " "
-                        ], id=GraphOptions.Legend.ADD_LEG_NODE,
-                            n_clicks=0,
-                            color="secondary", outline=True),
-                        dbc.Button(
-                            [
-                                DashIconify(
-                                    icon="mdi:eye-minus",
-                                    width=16),
-                                " "
-                            ], id=GraphOptions.Legend.REMOVE_LEG_NODE,
-                            n_clicks=0,
-                            color="secondary", outline=True),
                     ]
                 )
 
