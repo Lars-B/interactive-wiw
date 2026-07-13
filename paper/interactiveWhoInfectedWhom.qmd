@@ -4,25 +4,40 @@ title: "Interactive who-infected-whom visualization software"
 
 ## Authors
 
+Lars Berling
+
+Jennifer McNichol
+
+Jessica Stockdale
+
+Caroline Colijn
+
 ## Affiliations
+
+Simon Fraser University, Burnaby, BC, Canada
 
 ## Corresponding Author
 
+Lars Berling, lars_berling@sfu.ca
 
 # Introduction
 
-this is the introduction to this amazing paper.
-results
-[@smith2020]. Reproducible software workflows are also increasingly
-important for computational research [@berling2021].
+There are lots of methods to reconstruct outbreaks and networks of person to person transmission:
+
+- [@demaio2016scotti]
+- [@demaio2018badtrip]
+- [@skums2022sophie]
+- [@waddel2025scitree]
+
+Currently missing are breath, transphylo, outbreaker2, others?
 
 # Methods
 
-athis is a test of a figure @fig-test and we see.
+This is a test of a figure @fig-test and we see.
 
 ![Overview figure for testing](figures/test.png){#fig-test width=80%}
 
-This is where we describe the methods for unknonw infections and os on...
+This is where we describe the methods for unknown infections and so on...
 
 ## Data
 
@@ -30,6 +45,10 @@ This is where we describe the methods for unknonw infections and os on...
 
 # Discussion
 
+We do not support every software but our software makes it easy to add more options to upload different methods and their networks.
+This allows a pracitioner to compare the output of different methods if they are interested in such a thing.
+
+We also provide the first tool that allows to investigate indirect transmission, which are modelled in both breath and transphylo implicitly in the tranmission tree embedding.
 
 # Acknowledgements
 
