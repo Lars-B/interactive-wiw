@@ -7,7 +7,6 @@ from collections import defaultdict, Counter
 from io import StringIO
 
 import networkx as nx
-import numpy as np
 import pandas as pd
 from brokilon.ccd.domain.transmission import read_breath_nexus
 from brokilon.ccd.domain.transmission.find_infectors import find_infector
@@ -17,6 +16,7 @@ from networkx.exception import NetworkXException
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
 from wiw_app.config import EdgeConfig, NodeConfig
+from wiw_app.graph_builder.utils import load_rds_object_pyreadr
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -489,33 +489,9 @@ def process_node_annotations_file(file_content, taxon_column):
 
 
 def build_graph_from_outbreaker_rds(file_content, label):
-    obj = load_rds_object(file_content)
+    obj = load_rds_object_pyreadr(file_content)
     new_nodes, new_edges = build_graph_from_outbreaker_datframe(obj, label)
     return new_nodes, new_edges
-
-
-def load_rds_object(base64_content):
-    import pyreadr
-
-    if "," in base64_content:
-        base64_content = base64_content.split(",", 1)[1]
-
-    file_bytes = base64.b64decode(base64_content)
-
-    with tempfile.NamedTemporaryFile(suffix=".rds", delete=False) as tmp:
-        tmp.write(file_bytes)
-        tmp_path = tmp.name
-
-    try:
-        result = pyreadr.read_r(tmp_path)
-
-        if not result:
-            raise ValueError("No objects found in RDS file")
-
-        return next(iter(result.values()))
-
-    finally:
-        os.remove(tmp_path)
 
 
 def build_graph_from_outbreaker_datframe(res, label):
@@ -586,241 +562,6 @@ def build_graph_from_outbreaker_datframe(res, label):
             "data": {
                 "id": str(node_id),
                 "label": str(node_id),
-            }
-        })
-
-    return nodes, edges
-
-
-def load_rds_object2(base64_content):
-    # todo this should be an alternative version to the load_rds_object function...
-
-    # import pyreadr
-    import rdata
-
-    if "," in base64_content:
-        base64_content = base64_content.split(",", 1)[1]
-
-    file_bytes = base64.b64decode(base64_content)
-
-    with tempfile.NamedTemporaryFile(suffix=".rds", delete=False) as tmp:
-        tmp.write(file_bytes)
-        tmp_path = tmp.name
-
-    try:
-        # result = pyreadr.read_r(tmp_path)
-        logger.info("Parsing the rdata")
-        parsed = rdata.parser.parse_file(tmp_path)
-        logger.info("Successfully parsed the rdata.")
-
-        logger.info("Converting the Rdata to a python object")
-        # Convert the parsed data into native Python objects
-        converted = rdata.conversion.convert(parsed)
-        logger.info("Successfully converted the Rdata to a python object.")
-
-        if not converted:
-            raise ValueError("No objects found in RDS file")
-
-        return converted
-
-    finally:
-        os.remove(tmp_path)
-
-
-def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
-    logger.info(f"We are using this input_type: {input_type}")
-
-    match input_type:
-        case "mcmc":
-            obj = load_rds_object2(file_content)
-            logger.info(f"Loaded R object type: {type(obj)}")
-
-            wiw_matrix, num_samples = compute_mat_wiw_transphylo_mcmc_rds(obj,
-                                                                          burnin=burnin)
-
-            names = obj[0]["ctree"]["nam"]
-            wiw_matrix = pd.DataFrame(
-                wiw_matrix,
-                index=names,
-                columns=names,
-            )
-
-        case "wiw_matrix":
-            wiw_matrix = load_rds_object(file_content)
-            logger.debug(f"Loaded R object type: {type(wiw_matrix)}")
-
-            num_samples = 1
-        case _:
-            raise ValueError(
-                f"Unsupported TransPhylo input type: {input_type!r}. "
-                "Expected 'mcmc' or 'wiw_matrix'."
-            )
-
-    # This should happen if no samples left after burnin...
-    if wiw_matrix is None:
-        return [], [], num_samples
-
-    new_nodes, new_edges = build_graph_from_wiw_matrix(wiw_matrix, label)
-
-    return new_nodes, new_edges, num_samples
-
-
-def compute_mat_wiw_transphylo_mcmc_rds(record, burnin):
-    logger.info("Computing WIW matrix from transphylo MCMC output...")
-
-    if burnin > 0:
-        start = round(len(record) * burnin)
-        record = record[start:]
-
-    m = len(record)
-
-    if m == 0:
-        logger.info("No samples left after burnin, please reduce!")
-        return None, m
-    logger.info(f"{m} samples found after burnin")
-
-    first_ctree = record[0]["ctree"]["ctree"]
-
-    sampled_mask = (
-            (first_ctree[:, 1] == 0) &
-            (first_ctree[:, 2] == 0)
-    )
-
-    n = int(sampled_mask.sum())
-
-    mat = np.zeros((n, n), dtype=float)
-
-    for sample in record:
-
-        ctree = sample["ctree"]["ctree"]
-
-        host = ctree[:, 3].astype(int)
-
-        # ----------------------------
-        # build parent pointer (0-based)
-        # parent[child] = parent node
-        # ----------------------------
-        n_nodes = ctree.shape[0]
-        parent = np.full(n_nodes, -1, dtype=int)
-
-        for p in range(n_nodes):
-            left = int(ctree[p, 1])
-            right = int(ctree[p, 2])
-
-            if left > 0:
-                parent[left - 1] = p
-            if right > 0:
-                parent[right - 1] = p
-
-        # ----------------------------
-        # host → index map
-        # ----------------------------
-        maxs = np.zeros(n, dtype=int) - 1
-
-        for i, h in enumerate(host):
-            h = int(h)
-            if 1 <= h <= n:
-                maxs[h - 1] = i
-
-        # ----------------------------
-        # ttree equivalent (only what we need: infectors)
-        # ----------------------------
-        infectors = np.zeros(n, dtype=int)
-
-        for i in range(n):
-            j = maxs[i]
-            if j < 0:
-                continue
-
-            p = parent[j]
-            if p < 0:
-                continue
-
-            infector = host[p]
-            infectors[i] = infector
-
-        infecteds = np.arange(1, n + 1)
-
-        keep = (infectors > 0) & (infectors <= n)
-
-        mat[infectors[keep] - 1, infecteds[keep] - 1] += 1.0 / m
-
-    return mat, m
-
-
-def build_graph_from_wiw_matrix(mat, label):
-    logger.info("Building WIW network graph from matrix data...")
-
-    # -------------------------
-    # handle DataFrame or ndarray
-    # -------------------------
-    if isinstance(mat, pd.DataFrame):
-        node_ids = list(mat.index)
-        mat = mat.values
-    else:
-        node_ids = list(range(1, mat.shape[0] + 1))
-
-    n = mat.shape[0]
-
-    # -------------------------
-    # edges
-    # -------------------------
-    edges = []
-    node_strength = Counter()
-    edge_id = 0
-    net = nx.DiGraph()
-
-    for i in range(n):  # infector
-        for j in range(n):  # infectee
-            weight = mat[i, j]
-
-            if weight == 0:
-                continue
-
-            source = i + 1
-            target = j + 1
-
-            edges.append({
-                "data": {
-                    "source": str(source),
-                    "target": str(target),
-                    "label": label,
-                    "posterior": round(float(weight), 4),
-                    "weight": round(float(weight), 4),
-                    "color": "black",
-                    "id": f"{label}-{edge_id}",
-                }
-            })
-
-            net.add_edge(
-                str(source),
-                str(target),
-                weight=round(float(weight), 4),
-                posterior=round(float(weight), 4),
-            )
-            node_strength[source] += float(weight)
-            edge_id += 1
-
-    # Construct MST if possible
-    if net.number_of_nodes() > 0:
-        mst_edges = generate_mst_edges_from_network(net, label)
-        edges.extend(mst_edges)
-
-    # -------------------------
-    # nodes
-    # -------------------------
-    nodes = []
-
-    for i in range(n):
-        node_id = i + 1
-
-        nodes.append({
-            "data": {
-                "id": str(node_id),
-                "label": str(node_id),
-                "taxon": str(node_id) if node_ids is None else str(node_ids[i])
-                # todo this could possibly be used to size the nodes
-                # "strength": round(node_strength[node_id], 6),
             }
         })
 
