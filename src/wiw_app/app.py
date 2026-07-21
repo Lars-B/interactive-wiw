@@ -27,7 +27,6 @@ dbc_css = (
 app = Dash(
     __name__,
     external_stylesheets=[url_theme1, dbc_css],
-    assets_folder="../assets",
     suppress_callback_exceptions=True
 )
 
@@ -130,9 +129,22 @@ app.layout = html.Div([
                         style=get_cytoscape_style(False),
                         zoom=1,
                         pan={"x": 0, "y": 0},
+                        clearOnUnhover=True,
+                        responsive=True
                     )
                 ]
             ),
         ]
-    )
+    ),
+
+    html.Div(
+        id="node-tooltip",
+        style={
+            "display": "none",
+            "position": "absolute",
+            "padding": "10px",
+            "zIndex": 1000,
+        },
+    ),
+
 ], style={"height": "100vh"})

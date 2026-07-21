@@ -2,9 +2,10 @@ import urllib.parse
 from collections import Counter
 
 import dash
-from dash import Input, Output, State, ALL, no_update, callback
+from dash import Input, Output, State, ALL, no_update, callback, html
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
+
 from wiw_app.app import app as myapp
 from wiw_app.config import EdgeConfig
 from wiw_app.dash_logger import logger
@@ -334,3 +335,29 @@ def toggle_legend(
 )
 def toggle_danger_zone(n_clicks, is_open):
     return not is_open
+
+
+@myapp.callback(
+    Output("node-tooltip", "children"),
+    Output("node-tooltip", "style"),
+    Input("cytoscape", "mouseoverNodeData"),
+)
+def display_hover_data(data):
+    if data is None:
+        return "", {"display": "none"}
+
+    # todo make some rules on which data to display in the pop up...
+
+    tooltip_content = [
+        html.Div(f"{key}: {value}")
+        for key, value in data.items()
+    ]
+
+    style = {
+        "display": "block",
+        "position": "fixed",
+        "padding": "10px",
+        "zIndex": 1000,
+    }
+
+    return tooltip_content, style

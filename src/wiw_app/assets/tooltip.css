@@ -1,0 +1,15 @@
+#node-tooltip {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--bs-primary);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 0.875rem;
+    transition: opacity 0.15s ease;
+}
+
+#node-tooltip div + div {
+    border-top: 1px solid var(--bs-secondary);
+    margin-top: 4px;
+    padding-top: 4px;
+}
