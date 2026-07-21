@@ -3,7 +3,7 @@ import csv
 import io
 import os
 import tempfile
-from collections import defaultdict, Counter
+from collections import defaultdict
 from io import StringIO
 
 import networkx as nx
@@ -13,10 +13,9 @@ from brokilon.ccd.domain.transmission.find_infectors import find_infector
 from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
 from networkx.exception import NetworkXException
 
+from wiw_app.config import EdgeConfig, NodeConfig
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
-from wiw_app.config import EdgeConfig, NodeConfig
-from wiw_app.graph_builder.utils import load_rds_object_pyreadr
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -296,7 +295,7 @@ def get_node_style(annotation_field, font_size, color_by_label,
         "shape": "data(shape)",
         "color":
             NodeConfig.LightMode.LABEL_COLOR if is_light_theme
-           else NodeConfig.DarkMode.LABEL_COLOR,
+            else NodeConfig.DarkMode.LABEL_COLOR,
         "font-size": font_size,
         "width": node_size,
         "height": node_size,
@@ -304,12 +303,12 @@ def get_node_style(annotation_field, font_size, color_by_label,
 
 
 def apply_node_styles(
-    nodes,
-    node_shape_mode,
-    node_color_label_selection,
-    node_label_colors,
-    terminal_nodes,
-    seen_nodes,
+        nodes,
+        node_shape_mode,
+        node_color_label_selection,
+        node_label_colors,
+        terminal_nodes,
+        seen_nodes,
 ):
     for node in nodes:
         label = node["data"][node_color_label_selection]
@@ -486,83 +485,3 @@ def process_node_annotations_file(file_content, taxon_column):
         }
 
     return uploaded_map
-
-
-def build_graph_from_outbreaker_rds(file_content, label):
-    obj = load_rds_object_pyreadr(file_content)
-    new_nodes, new_edges = build_graph_from_outbreaker_datframe(obj, label)
-    return new_nodes, new_edges
-
-
-def build_graph_from_outbreaker_datframe(res, label):
-    alpha_prefix = "alpha"  # outbreaker2 specific...
-
-    alpha_cols = [c for c in res.columns if c.startswith(alpha_prefix)]
-
-    alpha_mat = res[alpha_cols]
-
-    n_states = len(alpha_cols)
-    n_samples = len(alpha_mat)
-
-    # -------------------------
-    # edges
-    # -------------------------
-    edge_counter = Counter()
-
-    for state_idx, col in enumerate(alpha_cols, start=1):
-        for source in alpha_mat[col]:
-            if pd.isna(source):
-                continue
-
-            source = int(source)
-            target = state_idx
-
-            edge_counter[(source, target)] += 1
-
-    edges = []
-    node_strength = Counter()
-    net = nx.DiGraph()
-
-    for edge_id, ((source, target), count) in enumerate(edge_counter.items()):
-        weight = count / n_samples
-
-        edges.append({
-            "data": {
-                "source": str(source),
-                "target": str(target),
-                "label": label,
-                "posterior": round(weight, 2),
-                # todo think about making this an input value?
-                "weight": round(weight, 2),
-                "color": "black",
-                "id": f"{label}-{edge_id}",
-            }
-        })
-
-        net.add_edge(
-            str(source),
-            str(target),
-            weight=round(weight, 2),
-            posterior=round(weight, 2)
-        )
-        node_strength[source] += weight
-
-    # Construct MST if possible:
-    if net.number_of_nodes() > 1:
-        mst_edges = generate_mst_edges_from_network(net, label)
-        edges.extend(mst_edges)
-
-    # -------------------------
-    # nodes
-    # -------------------------
-    nodes = []
-
-    for node_id in range(1, n_states + 1):
-        nodes.append({
-            "data": {
-                "id": str(node_id),
-                "label": str(node_id),
-            }
-        })
-
-    return nodes, edges

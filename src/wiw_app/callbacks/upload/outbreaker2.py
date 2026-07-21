@@ -3,7 +3,7 @@ from dash.exceptions import PreventUpdate
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import build_graph_from_outbreaker_rds
+from wiw_app.graph_builder.outbreaker2 import build_graph_from_outbreaker_rds
 from wiw_app.ids import UploadIDs, GraphOptions
 
 
