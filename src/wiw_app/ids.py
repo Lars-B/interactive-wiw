@@ -119,3 +119,9 @@ class DOWNLOAD:
     GET_LEGEND_SVG_BUTTON = "btn-get-legend-svg"
     GET_PNG_WITH_LEGEND = "btn-get-pngplus"
     FILENAME_INPUT = "filename-input"
+
+
+class GraphStatistics:
+    SHOW_STATS_PANEL_BUTTON = "open-stats-panel"
+    PANEL = "stats-panel"
+    PANEL_CONTENT = "stats-content"

@@ -4,3 +4,4 @@ from .modal import data_loading_modal, data_loading_modal_tp, data_loading_modal
     data_loading_modal_scotti
 from .upload import *
 from .upload_mode_selector import upload_mode_selector
+from .statistics_panel import create_statistics_panel

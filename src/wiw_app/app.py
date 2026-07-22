@@ -1,15 +1,15 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 
-from .ids import UploadIDs
+from .ids import UploadIDs, GraphStatistics
 
 cyto.load_extra_layouts()
 
 from dash import html, dcc, Dash
 from dash_bootstrap_templates import ThemeSwitchAIO
 
-from .graph_elements import get_cytoscape_style
-from .layouts import *
+from wiw_app.graph_elements import get_cytoscape_style
+from wiw_app.layouts import *
 
 from dash_resizable_panels import PanelGroup, Panel, PanelResizeHandle
 
@@ -88,6 +88,21 @@ app.layout = html.Div([
 
                             html.Div([graph_option_tabs]),
 
+                            html.Hr(),
+                            html.H2(
+                                "Network Statistics",
+                                style={"marginBottom": "15px"}
+                            ),
+                            html.Hr(),
+                            html.Div([
+                                dbc.Button(
+                                    "Show Statistics",
+                                    id=GraphStatistics.SHOW_STATS_PANEL_BUTTON,
+                                    color="primary",
+                                    outline=True,
+                                ),
+                                create_statistics_panel(),
+                            ]),
                             html.Hr(),
                             html.H2(
                                 "Download Network Image",
