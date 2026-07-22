@@ -294,8 +294,7 @@ graph_option_tabs = dbc.Tabs(
                                         value=[],
                                         inline=True,
                                         style={"marginBottom": "10px"},
-                                        # TODO this color is not nice, but fixes the visibility
-                                        labelStyle={'color': 'gray'}
+                                        labelStyle={"color": "var(--bs-body-color)"}
                                     )
                                 ], style={"width": "100%",
                                           "marginBottom": "1rem"})
@@ -315,8 +314,7 @@ graph_option_tabs = dbc.Tabs(
                             value=["scale"],
                             inline=True,
                             style={"marginBottom": "10px"},
-                            # TODO this color is not nice, but fixes the visibility
-                            labelStyle={'color': 'gray'}
+                            labelStyle={"color": "var(--bs-body-color)"}
                         ),
 
                         dcc.Input(
@@ -338,8 +336,7 @@ graph_option_tabs = dbc.Tabs(
                         value=[],
                         inline=True,
                         style={"marginBottom": "10px"},
-                        # TODO this color is not nice, but fixes the visibility
-                        labelStyle={'color': 'gray'}
+                        labelStyle={"color": "var(--bs-body-color)"}
                     ),
                 ]),
 
@@ -465,8 +462,7 @@ graph_option_tabs = dbc.Tabs(
                                         value=[],
                                         inline=True,
                                         style={"marginBottom": "10px"},
-                                        # TODO this color is not nice, but fixes the visibility
-                                        labelStyle={'color': 'gray'}
+                                        labelStyle={"color": "var(--bs-body-color)"}
                                     ),
                                 ])
                             ]),
@@ -483,8 +479,7 @@ graph_option_tabs = dbc.Tabs(
                                 value=[],
                                 inline=True,
                                 style={"marginBottom": "10px"},
-                                # TODO this color is not nice, but fixes the visibility
-                                labelStyle={'color': 'gray'}
+                                labelStyle={"color": "var(--bs-body-color)"}
                             ),
                             dcc.Store(id=GraphOptions.Nodes.COLOR_STORE),
                             dbc.Collapse(

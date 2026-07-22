@@ -1,0 +1,7 @@
+.dash-slider-mark {
+    color: var(--bs-body-color);
+}
+
+.dash-slider-track {
+    background-color: var(--bs-body-color);
+}
