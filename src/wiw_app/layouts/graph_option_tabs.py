@@ -580,4 +580,8 @@ graph_option_tabs = dbc.Tabs(
     ],
     id=GraphOptions.TABS,
     active_tab=GraphOptions.Graph.TAB,
+    style={
+        "width": "fit-content",
+        "display": "flex"
+    }
 )
