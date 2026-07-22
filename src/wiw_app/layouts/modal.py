@@ -44,3 +44,8 @@ data_loading_modal_outbreaker = make_loading_modal(
     UploadIDs.outbreaker_rds.LOADING_MODAL,
     title="Processing outbreaker2 Dataset"
 )
+
+data_loading_modal_scotti = make_loading_modal(
+    UploadIDs.scotti_trees.LOADING_MODAL,
+    title="Processing SCOTTI Dataset"
+)

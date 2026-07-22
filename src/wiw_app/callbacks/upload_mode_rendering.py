@@ -22,6 +22,12 @@ def render_upload_ui(mode):
                 accepted_files=".trees, .tree, .tre",
                 include_burnin_slider=True
             )
+        case "scotti":
+            return build_upload_panel(
+                UploadIDs.scotti_trees,
+                accepted_files=".trees, .tree, .tre",
+                include_burnin_slider=True
+            )
         case "transphylo":
             return build_upload_panel(
                 UploadIDs.transphylo_rds,

@@ -10,6 +10,15 @@ class UploadIDs:
         BURN_IN_CONTAINER = "BREATH-burn-in-container"
         LOADING_MODAL = "loading-modal-breath"
 
+    class scotti_trees:
+        UPLOAD_DATA = "scotti-upload-trees-data"
+        SELECTED_FILENAME = "scotti-selected-trees-filename"
+        BURN_IN_SELECTION = "scotti-burn-in-selection"
+        DATASET_LABEL = "scotti-trees-dataset-label"
+        CONFIRM_BUTTON = "scotti-confirm-dataset-btn"
+        BURN_IN_CONTAINER = "scotti-burn-in-container"
+        LOADING_MODAL = "loading-modal-scotti"
+
     class metadata:
         UPLOAD_DATA = "upload-node-annotations"
         SELECTED_FILENAME = "selected-node-annotations-file"

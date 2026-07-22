@@ -5,28 +5,29 @@ from dash.exceptions import PreventUpdate
 
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
-from wiw_app.graph_elements import build_graph_from_breath_tree_file, NoTreesFoundError
+from wiw_app.graph_elements import NoTreesFoundError
+from wiw_app.graph_builder.scotti import build_graph_from_scotti_tree_file
 from wiw_app.ids import UploadIDs, GraphOptions
 
 
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
-    Output(UploadIDs.breath_trees.LOADING_MODAL, "is_open", allow_duplicate=True),
+    Output(UploadIDs.scotti_trees.LOADING_MODAL, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "duration", allow_duplicate=True),
     Output(UploadIDs.INFO_TOAST, "icon", allow_duplicate=True),
-    Input(UploadIDs.breath_trees.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.breath_trees.UPLOAD_DATA, "contents"),
-    State(UploadIDs.breath_trees.UPLOAD_DATA, "filename"),
-    State(UploadIDs.breath_trees.DATASET_LABEL, "value"),
-    State(UploadIDs.breath_trees.BURN_IN_SELECTION, "value"),
+    Input(UploadIDs.scotti_trees.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.scotti_trees.UPLOAD_DATA, "contents"),
+    State(UploadIDs.scotti_trees.UPLOAD_DATA, "filename"),
+    State(UploadIDs.scotti_trees.DATASET_LABEL, "value"),
+    State(UploadIDs.scotti_trees.BURN_IN_SELECTION, "value"),
     State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True
 )
-def update_graph_with_breath_trees(
+def update_graph_with_scotti_trees(
         n_clicks,
         contents,
         filename,
@@ -36,6 +37,8 @@ def update_graph_with_breath_trees(
         current_graph_data):
     if not contents:
         raise PreventUpdate
+
+    logger.debug("We are in the scotti uplaod stuff...")
 
     effective_label = label or filename
     current_graph_data = current_graph_data or {"nodes": [], "edges": []}
@@ -58,11 +61,12 @@ def update_graph_with_breath_trees(
         )
 
     try:
-        new_nodes, new_edges, num_trees = build_graph_from_breath_tree_file(
+        new_nodes, new_edges, num_trees = build_graph_from_scotti_tree_file(
             contents,
             effective_label,
             burnin
         )
+
     except NoTreesFoundError as e:
         # delay for loading modal to close... dash scheduling/ race condition problem.
         time.sleep(0.1)

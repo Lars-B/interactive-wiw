@@ -35,6 +35,7 @@ app.layout = html.Div([
     data_loading_modal,
     data_loading_modal_tp,
     data_loading_modal_outbreaker,
+    data_loading_modal_scotti,
 
     PanelGroup(
         id="panel-group",
