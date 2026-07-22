@@ -115,6 +115,12 @@ class NodeConfig:
         "coolwarm",
     ]
 
+    class HoverInformation:
+        EXCLUDED_FROM_DISPLAY = {
+            "color",
+            "shape",
+            "timeStamp"
+        }
 
 class GraphConfig:
     DEFAULT_LAYOUT = "dagre"

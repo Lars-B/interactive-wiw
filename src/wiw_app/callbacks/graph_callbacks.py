@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
 from wiw_app.app import app as myapp
-from wiw_app.config import EdgeConfig
+from wiw_app.config import EdgeConfig, NodeConfig
 from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import get_node_style, get_edge_style, \
     get_cytoscape_style, apply_node_styles
@@ -346,11 +346,10 @@ def display_hover_data(data):
     if data is None:
         return "", {"display": "none"}
 
-    # todo make some rules on which data to display in the pop up...
-
     tooltip_content = [
         html.Div(f"{key}: {value}")
         for key, value in data.items()
+        if key not in NodeConfig.HoverInformation.EXCLUDED_FROM_DISPLAY
     ]
 
     style = {
