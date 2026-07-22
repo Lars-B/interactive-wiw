@@ -10,3 +10,10 @@ def log_time(label="Operation"):
     yield
     duration = time.time() - start
     logger.info(f"{label} took {duration:.2f} seconds")
+
+
+def humanize_label(key):
+    """
+    Function to make labels/ids for dropdowns nice
+    """
+    return key.replace("_", " ").replace("-", " ").capitalize()

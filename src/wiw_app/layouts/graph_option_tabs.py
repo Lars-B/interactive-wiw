@@ -519,11 +519,11 @@ graph_option_tabs = dbc.Tabs(
                                             id=GraphOptions.Nodes.COLOR_LABEL_SELECTOR,
                                             options=[
                                                 {
-                                                    "label": "Label",
-                                                    "value": "label"
+                                                    "label": "Id",
+                                                    "value": "id"
                                                 }
                                             ],
-                                            value="label",
+                                            value="id",
                                             clearable=False,
                                         ),
 

@@ -80,7 +80,6 @@ def build_graph_from_outbreaker_datframe(res, label):
         nodes.append({
             "data": {
                 "id": str(node_id),
-                "label": str(node_id),
             }
         })
 

@@ -243,7 +243,6 @@ def build_graph_from_scotti_tree_file(file_content, label, burn_in):
         nodes.append({
             "data": {
                 "id": host_taxon_map[h],
-                "label": host_taxon_map[h],
                 "taxon": taxon_map[int(host_taxon_map[h])],
                 "host": h,
             }

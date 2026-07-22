@@ -13,6 +13,7 @@ from wiw_app.graph_elements import get_node_style, get_edge_style, \
     get_cytoscape_style, apply_node_styles
 from wiw_app.ids import GraphOptions
 from wiw_app.plotting_utils import draw_legend
+from wiw_app.utils import humanize_label
 from wiw_app.validators import validate_int
 
 # Stylesheet fixed for the legend that can be added now
@@ -347,7 +348,7 @@ def display_hover_data(data):
         return "", {"display": "none"}
 
     tooltip_content = [
-        html.Div(f"{key}: {value}")
+        html.Div(f"{humanize_label(key)}: {value}")
         for key, value in data.items()
         if key not in NodeConfig.HoverInformation.EXCLUDED_FROM_DISPLAY
     ]

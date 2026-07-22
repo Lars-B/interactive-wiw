@@ -76,7 +76,6 @@ def build_graph_from_wiw_matrix(mat, label):
         nodes.append({
             "data": {
                 "id": str(node_id),
-                "label": str(node_id),
                 "taxon": str(node_id) if node_ids is None else str(node_ids[i])
                 # todo this could possibly be used to size the nodes
                 # "strength": round(node_strength[node_id], 6),

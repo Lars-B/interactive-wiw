@@ -6,6 +6,7 @@ from dash.exceptions import PreventUpdate
 from wiw_app.app import app as myapp
 from wiw_app.dash_logger import logger
 from wiw_app.ids import UploadIDs, GraphOptions
+from wiw_app.utils import humanize_label
 
 
 @myapp.callback(
@@ -176,34 +177,39 @@ def update_dropdown_metadata_upload(graph_data):
     State(GraphOptions.Nodes.LABEL_ANNOTATION_SELECTOR, "value"),
 )
 def update_node_label_annotation_dropdown(graph_data, current_selection):
-    options = [
-        {"label": "None", "value": "none"}
-    ]
-    col_options = [
-        {"label": "Label", "value": "label"}
-    ]
+    options = [{"label": "None", "value": "none"}]
+    col_options = [{"label": "Id", "value": "id"}]
 
     if not graph_data or not graph_data.get("nodes"):
-        return options, 'none', col_options
+        return options, "none", col_options
 
-    # dynamically discover annotations
-    seen = set(opt["value"] for opt in options)
+    # collect unique annotation keys
+    keys = {
+        key
+        for n in graph_data["nodes"]
+        for key in n.get("data", {})
+    }
 
-    for n in graph_data["nodes"]:
-        for key in n.get("data", {}).keys():
-            if key not in seen:
-                options.append({"label": key, "value": key})
-                col_options.append({"label": key, "value": key})
-                seen.add(key)
+    # build dropdown options
+    options.extend(
+        {"label": humanize_label(key), "value": key}
+        for key in sorted(keys)
+    )
+
+    col_options.extend(
+        {"label": humanize_label(key), "value": key}
+        for key in sorted(keys)
+        if key != "id"  # avoid duplicate ID option
+    )
 
     preferred_order = ("taxon", "id")
 
-    if current_selection and current_selection not in ("none", "None"):
+    if current_selection and current_selection != "none":
         new_selection = current_selection
     else:
         new_selection = next(
-            (p for p in preferred_order if p in seen),
-            next(iter(seen), "None")
+            (p for p in preferred_order if p in keys or p == "id"),
+            "none"
         )
 
     return options, new_selection, col_options

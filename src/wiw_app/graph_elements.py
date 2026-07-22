@@ -81,7 +81,6 @@ def parse_custom_csv_dataframe(df, label):
         nodes.append({
             "data": {
                 "id": str(row["id"]),
-                "label": str(row["id"]),
                 "strength": row["strength"]
             }
         })
@@ -149,7 +148,6 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
     for leaf in trees[0].get_leaves():
         nodes.append({"data": {
             "id": leaf.name,
-            "label": leaf.name,
             "taxon": taxon_map[int(leaf.name)]
         }})
 
@@ -277,7 +275,7 @@ def apply_node_styles(
         seen_nodes,
 ):
     for node in nodes:
-        label = node["data"][node_color_label_selection]
+        label = node["data"].get(node_color_label_selection, None)
 
         node["data"]["color"] = node_label_colors.get(label, "green")
 
