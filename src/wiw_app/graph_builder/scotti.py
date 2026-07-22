@@ -9,7 +9,7 @@ import networkx as nx
 from wiw_app.dash_logger import logger
 from brokilon.core.taxon_map_utils import get_mapping_dict
 
-from wiw_app.graph_elements import generate_mst_edges_from_network
+from wiw_app.graph_builder.utils import generate_mst_edges_from_network
 
 
 def build_graph_from_scotti_tree_file(file_content, label, burn_in):

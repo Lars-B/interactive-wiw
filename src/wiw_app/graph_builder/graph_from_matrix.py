@@ -4,7 +4,7 @@ from wiw_app.dash_logger import logger
 import pandas as pd
 import networkx as nx
 
-from wiw_app.graph_elements import generate_mst_edges_from_network
+from wiw_app.graph_builder.utils import generate_mst_edges_from_network
 
 
 def build_graph_from_wiw_matrix(mat, label):

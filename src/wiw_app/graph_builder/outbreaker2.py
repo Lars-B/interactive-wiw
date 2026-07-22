@@ -4,7 +4,7 @@ import networkx as nx
 import pandas as pd
 
 from wiw_app.graph_builder.utils import load_rds_object_pyreadr
-from wiw_app.graph_elements import generate_mst_edges_from_network
+from wiw_app.graph_builder.utils import generate_mst_edges_from_network
 
 
 def build_graph_from_outbreaker_rds(file_content, label):

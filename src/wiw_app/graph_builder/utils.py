@@ -3,6 +3,8 @@ import os
 import tempfile
 
 import rdata
+from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
+from networkx.exception import NetworkXException
 
 from wiw_app.dash_logger import logger
 
@@ -57,3 +59,36 @@ def load_rds_object_rdata(base64_content):
 
     finally:
         os.remove(tmp_path)
+
+
+def generate_mst_edges_from_network(network, label):
+    try:
+        mst = maximum_spanning_arborescence(network, attr="posterior",
+                                            preserve_attrs=True)
+    except NetworkXException:
+        logger.info(
+            "Maximum spanning arborescence failed and will be ignored...")
+        return []
+
+    if mst is None:
+        logger.debug(
+            "Maximum spanning tree didn't fail but returned None, will be ignored...")
+        return []
+
+    mst_edges = []
+    edge_count = 1
+    for u, v, data in mst.edges(data=True):
+        mst_edges.append({
+            "data": {
+                "source": u,
+                "target": v,
+                "label": f"MST-{label}",
+                "posterior": round(data["posterior"], 2),
+                "weight": data["weight"],
+                "penwidth": 1,
+                "color": "black",
+                "id": f'MST-{label}-{edge_count}'
+            }
+        })
+        edge_count += 1
+    return mst_edges

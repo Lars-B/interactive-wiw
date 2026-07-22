@@ -10,12 +10,11 @@ import networkx as nx
 import pandas as pd
 from brokilon.ccd.domain.transmission import read_breath_nexus
 from brokilon.ccd.domain.transmission.find_infectors import find_infector
-from networkx.algorithms.tree.branchings import maximum_spanning_arborescence
-from networkx.exception import NetworkXException
 
 from wiw_app.config import EdgeConfig, NodeConfig
 from wiw_app.dash_logger import logger
 from wiw_app.utils import log_time
+from wiw_app.graph_builder.utils import generate_mst_edges_from_network
 
 
 def decode_base64_content(base64_content: str) -> bytes:
@@ -183,39 +182,6 @@ def build_graph_from_breath_tree_file(file_content, label, burn_in):
         edges.extend(mst_edges)
 
     return nodes, edges, num_trees
-
-
-def generate_mst_edges_from_network(network, label):
-    try:
-        mst = maximum_spanning_arborescence(network, attr="posterior",
-                                            preserve_attrs=True)
-    except NetworkXException:
-        logger.info(
-            "Maximum spanning arborescence failed and will be ignored...")
-        return []
-
-    if mst is None:
-        logger.debug(
-            "Maximum spanning tree didn't fail but returned None, will be ignored...")
-        return []
-
-    mst_edges = []
-    edge_count = 1
-    for u, v, data in mst.edges(data=True):
-        mst_edges.append({
-            "data": {
-                "source": u,
-                "target": v,
-                "label": f"MST-{label}",
-                "posterior": round(data["posterior"], 2),
-                "weight": data["weight"],
-                "penwidth": 1,
-                "color": "black",
-                "id": f'MST-{label}-{edge_count}'
-            }
-        })
-        edge_count += 1
-    return mst_edges
 
 
 def add_posterior_edges(
