@@ -1,8 +1,6 @@
-import urllib.parse
 from collections import Counter
 
-import dash
-from dash import Input, Output, State, ALL, no_update, callback, html
+from dash import Input, Output, State, ALL, no_update, html
 from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 
@@ -12,28 +10,8 @@ from wiw_app.dash_logger import logger
 from wiw_app.graph_elements import get_node_style, get_edge_style, \
     get_cytoscape_style, apply_node_styles
 from wiw_app.ids import GraphOptions
-from wiw_app.plotting_utils import draw_legend
 from wiw_app.utils import humanize_label
 from wiw_app.validators import validate_int
-
-# Stylesheet fixed for the legend that can be added now
-LEGEND_NODE_ID = "__legend__"
-legend_styles = [
-    {
-        "selector": f"#{LEGEND_NODE_ID}",
-        "style": {
-            "shape": "rectangle",
-            "width": "150px",
-            "height": "150px",
-            "background-image": "data(legend)",
-            # Cytoscape picks up legend SVG from node data
-            "background-fit": "contain",
-            "background-repeat": "no-repeat",
-            "border-width": 1,
-            "border-color": "#999",
-        }
-    }
-]
 
 
 @myapp.callback(
@@ -161,7 +139,7 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
                           edge_arrow_toggle,
                           edge_curve_style
                       )},
-                 ] + legend_styles
+                 ]
 
     return elements, layout, stylesheet
 
@@ -257,75 +235,6 @@ def rename_labels(new_labels, ids, graph_data):
         "nodes": graph_data["nodes"],
         "edges": updated_edges
     }, ""
-
-
-@callback(
-    Output("cytoscape", "elements", allow_duplicate=True),
-    Input(GraphOptions.Legend.ADD_LEG_NODE, "n_clicks"),
-    Input(GraphOptions.Legend.REMOVE_LEG_NODE, "n_clicks"),
-    Input(GraphOptions.Nodes.SIZE_SELECTOR, "value"),
-    State("cytoscape", "elements"),
-    State(GraphOptions.Nodes.COLOR_PICKER_CONTAINERS, "children"),
-    State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
-    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
-    State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
-    State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
-    State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
-    prevent_initial_call=True,
-)
-def toggle_legend(
-        add_clicks,
-        remove_clicks,
-        node_size,
-        elements,
-        node_color_container, node_color_toggle, node_color_title,
-        node_color_options,
-        edge_color_container, edge_color_toggle
-):
-    ctx = dash.callback_context
-    if not ctx.triggered or not elements:
-        return elements
-
-    trigger = ctx.triggered[0]["prop_id"].split(".")[0]
-
-    # Remove legend
-    if trigger == GraphOptions.Legend.REMOVE_LEG_NODE:
-        return [el for el in elements if el["data"]["id"] != LEGEND_NODE_ID]
-
-    # Add legend
-    if trigger == GraphOptions.Legend.ADD_LEG_NODE:
-        if any(el["data"]["id"] == LEGEND_NODE_ID for el in elements):
-            return elements  # already exists
-
-        legend_svg = draw_legend(
-            node_color_options,
-            node_color_title,
-            node_color_toggle,
-            node_color_container,
-            edge_color_toggle,
-            edge_color_container,
-            svg=True
-        )
-
-        encoded_svg = urllib.parse.quote(legend_svg)
-        legend_node_size = node_size * 4
-
-        legend_node = {
-            "data": {
-                "id": LEGEND_NODE_ID,
-                "legend": f"data:image/svg+xml;utf8,{encoded_svg}",
-            },
-            "position": {"x": 1000, "y": 100},
-            "grabbable": True,
-            "style": {
-                "width": legend_node_size,
-                "height": legend_node_size,
-            }
-        }
-
-        return elements + [legend_node]
-
-    return elements
 
 
 @myapp.callback(
