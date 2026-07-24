@@ -19,9 +19,13 @@ def toggle_statistics_panel(n_clicks, is_open):
 
 @myapp.callback(
     Output(GraphStatistics.PANEL_CONTENT, "children"),
-    Input("cytoscape", "elements"),
+    Input(GraphStatistics.PANEL, "is_open"),
+    State("cytoscape", "elements"),
 )
-def update_statistics(elements):
+def update_statistics(is_open, elements):
+    if not is_open:
+        return []
+
     nodes = [
         e for e in elements
         if "source" not in e["data"]
