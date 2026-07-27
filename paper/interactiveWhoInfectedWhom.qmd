@@ -62,6 +62,18 @@ Here we bring this together by providing a nicely packaged version that aims to 
 point out that we can interactively change different settings such as an edge threshold, colors of nodes/edges etc.
 and we also provide an easy way to add metadata into the network that can help understand certain transmission pathways better
 
+Understanding transmission dynamics during infectious disease outbreaks often requires analyzing complex contact structures.
+Who-infected-whom (WIW) networks provide a representation of transmission histories in which nodes correspond to individuals and directed edges represent inferred transmission events.
+These networks allow researchers to investigate properties of the outbreak such as super spreading, transmission or contact chains, outbreak structure, and temporal spread of disease.
+However, exploring these WIW networks can be challenging when many individuals are present in the analysis or large amount of additional metadata is required.
+Traditional static visualizations are often insufficient for investigating these structures and fixed to a specific application.
+This motivates the development of tools that allow users to interactively explore and interrogate transmission networks from multiple inference software tools.
+
+
+Beyond the visualizations we support the construction of MST, we have indirect transmission edges for several tools that allow this.
+WE also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
+
+
 
 # Theory and Implementation
 
@@ -71,6 +83,20 @@ This is a test of a figure @fig-test and we see.
 
 This is where we describe the methods for unknown infections and so on...
 
+
+At the time of writing our app supports the following tools:
+
+- Scotti
+- outbreaker2
+- transphylo
+- Breath
+- custom csv graphs
+- ...
+
+## Implementation details
+
+Our app is written in python using Dash in combination with Cytoscape.js.
+Some paragraph about the architecture of the app...
 
 ## Data application example 1
 
@@ -86,6 +112,9 @@ This allows a practitioner to compare the output of different methods if they ar
 
 We also provide the first tool that allows to investigate indirect transmission, which are modeled in both breath and transphylo implicitly in the transmission tree embedding.
 
+Interactive visualization approaches provide an important complement to computational methods for analyzing infectious disease transmission reconstruction.
+While statistical and phylogenetic approaches can infer the transmission relationships, visual exploration remains valuable for understanding the resulting structures and communicate findings.
+Our application CONTAGION bridges this gap by providing an input agnostic interface to examine and explore inferred WIW networks interactively.
 
 # Author Statements
 
