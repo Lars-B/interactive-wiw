@@ -1,5 +1,5 @@
 ---
-title: "Interactive who-infected-whom visualization software"
+title: "CONTAGION: CONtact and TrAnsmission Graphical Interactive Outbreak Network"
 ---
 
 ## Authors
@@ -20,8 +20,34 @@ Simon Fraser University, Burnaby, BC, Canada
 
 Lars Berling, lars_berling@sfu.ca
 
+# Abstract
+
+The reconstruction of person to person transmission is a widely studied subject and there are
+a plethora of methods that infer and reconstruct outbreaks from various kinds of different data.
+
+Our program provides a locally running web based interface that is easy to use,
+provides interactive visualizations which can easily be extended with metadata information
+and supports a wide variety of input formats.
+Our software is user friendly, easily extendible and freely available online.
+
+# Impact Statement
+
+When reconstructing the transmission history of an outbreak it is important to easily investigate the inferred transmission pathways.
+Having an easy to use and interactive dashboard to investigate the results of an inference method
+in combination with metadata about individuals can significantly improve the understanding of transmission pathways.
+Our program, CONTAGION, is easy to use and run and makes the visualization of a who-infected-whom network
+easy and available to a wide audience of users such as public health laboratories or medical researchers.
+
+# Data Summary
+
+The code for this software is freely available at https://github.com/Lars-B/.
+The example datasets used within this publications are all available here...
+
 # Introduction
 
+background transmission tree reconstruction
+
+overview of methods that have been developed over time
 There are lots of methods to reconstruct outbreaks and networks of person to person transmission:
 
 - [@demaio2016scotti]
@@ -31,7 +57,13 @@ There are lots of methods to reconstruct outbreaks and networks of person to per
 
 Currently missing are breath, transphylo, outbreaker2, others?
 
-# Methods
+Point out that most methods infer a WIW network and that each program has its own way of visualizing it
+Here we bring this together by providing a nicely packaged version that aims to support several methods at once
+point out that we can interactively change different settings such as an edge threshold, colors of nodes/edges etc.
+and we also provide an easy way to add metadata into the network that can help understand certain transmission pathways better
+
+
+# Theory and Implementation
 
 This is a test of a figure @fig-test and we see.
 
@@ -39,17 +71,32 @@ This is a test of a figure @fig-test and we see.
 
 This is where we describe the methods for unknown infections and so on...
 
-## Data
 
-# Results
+## Data application example 1
+
+Use the TB outbreak and investigate some of the questions we asked for the sis-mid workshop
+
+
+## Data application example 2
 
 # Discussion
 
 We do not support every software but our software makes it easy to add more options to upload different methods and their networks.
-This allows a pracitioner to compare the output of different methods if they are interested in such a thing.
+This allows a practitioner to compare the output of different methods if they are interested in such a thing.
 
-We also provide the first tool that allows to investigate indirect transmission, which are modelled in both breath and transphylo implicitly in the tranmission tree embedding.
+We also provide the first tool that allows to investigate indirect transmission, which are modeled in both breath and transphylo implicitly in the transmission tree embedding.
 
-# Acknowledgements
+
+# Author Statements
+
+## Author contribution
+
+## Conflicts of interest
+
+## Funding information
+
+## Acknowledgements
+
+We would like to thank the participants of the 2026 SISMID workshop for providing valuable feedback on this application.
 
 # References
