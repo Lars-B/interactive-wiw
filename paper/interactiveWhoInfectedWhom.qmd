@@ -22,6 +22,8 @@ Lars Berling, lars_berling@sfu.ca
 
 # Abstract
 
+In this paper we present an interactive framework for exploratory analyssi of inferred transmission networks.
+
 The reconstruction of person to person transmission is a widely studied subject and there are
 a plethora of methods that infer and reconstruct outbreaks from various kinds of different data.
 
@@ -84,19 +86,31 @@ This is a test of a figure @fig-test and we see.
 This is where we describe the methods for unknown infections and so on...
 
 
-At the time of writing our app supports the following tools:
+At the time of writing our app supports the output of the followinag software tools:
 
-- Scotti
-- outbreaker2
-- transphylo
-- Breath
+- Scotti: a beast nexus tree file
+- outbreaker2: rdata files with either a contact matrix or MCMC output
+- transphylo: a rdata file with package specific format
+- Breath: a beast nexus tree file
 - custom csv graphs
 - ...
 
 ## Implementation details
 
-Our app is written in python using Dash in combination with Cytoscape.js.
-Some paragraph about the architecture of the app...
+Our application is implemented in Python using the Dash framework [@parmer2025dash] for the web interface and
+Cytoscape.js [@franz2016cytoscapejs], through the dash-cytoscape component, for interactive graph visualization.
+The application runs locally or can be deployed as a web service, allowing users to explore the networks
+directly within a browser.
+
+Internally, the software has a modular architecture separating data handling, visualization, and user interface logic.
+Each upload parser converts the inferred transmission data into a standard graph representation of nodes and edges.
+Metadata is added to the node data and this representation is then shared between visualization and analytical components.
+Interactive components such as filtering, coloring, metadata inspection, and network statistics
+(e.g. node degree distributions or metadata-specific graph connectivity) are implemented through Dash callback functions that reactively update only the affected interface elements.
+
+The application is open source (under a todo license) and easily extendable to new input types, since each upload format has its own parser but all parsers use the same graph representation format.
+All code and a tutorial website with associated data is available on github [https://github.com/Lars-B/interactive-wiw].
+The application is also packaged, via a GitHub Actions build pipeline, into a single executable for each major platform, available for download from the repository releases.
 
 ## Data application example 1
 
