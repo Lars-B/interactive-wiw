@@ -76,14 +76,45 @@ Beyond the visualizations we support the construction of MST, we have indirect t
 WE also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
 
 
+We could have a graphical abstract figure here:
+some tool like TP/outbreaker2/breath --> wiw network file/ trees file --> upload to app --> all the app possibilities of color, thresholds, interactive stuff, metadata etc
 
-# Theory and Implementation
+# to be deleted
 
 This is a test of a figure @fig-test and we see.
 
 ![Overview figure for testing](figures/test.png){#fig-test width=80%}
 
 This is where we describe the methods for unknown infections and so on...
+
+# Theory and Implementation
+
+## Who infected whom networks
+
+directed graphs
+nodes are individuals
+edges transmision events
+edge weights often are posterior support (as most methods seem to be bayesian?)
+metadata is more information about individuals such as age, sex, household, etc.
+
+Example figure with illustration here?
+
+## Why look at these networks
+
+id transmission chains
+detect spreading events/super spreader/ household infections etc
+investigate clusters of self contained outbreaks, in particular if the tool allows for indirect/unsampled transmissions
+inspect the support of inferred transmission histories, compare to known transmission events
+
+## The power of interactive visualization?
+
+static graph images are constraint, in particular mention the threshold of posteriro support on edges
+difficult to add metadata or compare multiple different metadata categories
+impossible to recolor or change the layout or just position of selected nodes
+Todo if i implement a search function then we could point out that its hard to search these static images too
+Layout changes and manual rearrangement is particularly useful for large networks (lots of edges)
+
+
 
 
 At the time of writing our app supports the output of the followinag software tools:
@@ -112,6 +143,10 @@ The application is open source (under a todo license) and easily extendable to n
 All code and a tutorial website with associated data is available on github [https://github.com/Lars-B/interactive-wiw].
 The application is also packaged, via a GitHub Actions build pipeline, into a single executable for each major platform, available for download from the repository releases.
 
+## The plain user interface
+
+Should we have a panel describing the main interface of the app here? might be good, but as it could also change this might not be the best idea...
+
 ## Data application example 1
 
 Use the TB outbreak and investigate some of the questions we asked for the sis-mid workshop
@@ -121,6 +156,15 @@ Use the TB outbreak and investigate some of the questions we asked for the sis-m
 
 # Discussion
 
+Strenghts of our app:
+interactive
+browser based easy and intuitive interface
+single executable no package installation or running code necessary
+extensible to many different tools
+reproducible and consistent visualizations across different tools/input formats
+configurable application
+
+
 We do not support every software but our software makes it easy to add more options to upload different methods and their networks.
 This allows a practitioner to compare the output of different methods if they are interested in such a thing.
 
@@ -129,6 +173,15 @@ We also provide the first tool that allows to investigate indirect transmission,
 Interactive visualization approaches provide an important complement to computational methods for analyzing infectious disease transmission reconstruction.
 While statistical and phylogenetic approaches can infer the transmission relationships, visual exploration remains valuable for understanding the resulting structures and communicate findings.
 Our application CONTAGION bridges this gap by providing an input agnostic interface to examine and explore inferred WIW networks interactively.
+
+
+One problem is that we are limited by browser upload (its local but we need to load the file into it) speed and file size limits,
+trees files are sometimes super large and it takes a while to parse them.
+
+Only support a small fraction of available tools, but an external framework would be good to bring the field together maybe to support some standard output options?
+also easily extendible so people could add support for their method instead of making their own figures.
+
+Future work could focus on some more statistics that can be derived from these networks, metrics (such as the ones in juniper) to compare networks could be added.
 
 # Author Statements
 
