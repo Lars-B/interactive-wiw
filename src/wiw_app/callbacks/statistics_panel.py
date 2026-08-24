@@ -1,7 +1,9 @@
-from dash import Output, Input, State, html
+from dash import Output, Input, State
+from dash import html
 
 from wiw_app.app import app as myapp
-from wiw_app.dash_logger import logger
+from wiw_app.graph_statistics import build_graph, calculate_graph_statistics, \
+    calculate_metadata_statistics, graph_statistics_component, metadata_statistics_components
 from wiw_app.ids import GraphStatistics
 
 
@@ -26,23 +28,17 @@ def update_statistics(is_open, elements):
     if not is_open:
         return []
 
-    nodes = [
-        e for e in elements
-        if "source" not in e["data"]
-    ]
+    graph = build_graph(elements)
 
-    edges = [
-        e for e in elements
-        if "source" in e["data"]
-    ]
-
-    # todo this is where we need to compute the relevant stats for all nodes/edges and metadata...
-    logger.debug(f"This is where we need to compute stuff...")
-
-    n_nodes = len(nodes)
-    n_edges = len(edges)
+    graph_stats = calculate_graph_statistics(graph)
+    metadata_stats = calculate_metadata_statistics(graph)
 
     return [
-        html.P(f"Nodes: {n_nodes}"),
-        html.P(f"Edges: {n_edges}")
+        html.H3("Graph Statistics"),
+        graph_statistics_component(graph_stats),
+
+        html.Br(),
+        html.Hr(),
+        html.H3("Metadata"),
+        *metadata_statistics_components(metadata_stats),
     ]

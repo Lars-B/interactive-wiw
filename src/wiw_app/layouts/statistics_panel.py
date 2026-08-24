@@ -6,7 +6,6 @@ from wiw_app.ids import GraphStatistics
 def create_statistics_panel():
     return dbc.Offcanvas(
         id=GraphStatistics.PANEL,
-        title="Graph Statistics",
         is_open=False,
         placement="end",
         children=[
