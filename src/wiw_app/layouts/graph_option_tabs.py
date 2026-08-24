@@ -156,7 +156,7 @@ graph_option_tabs = dbc.Tabs(
                         options=[
                             {"label": "None", "value": "none"},
                             {"label": "Label", "value": "label"},
-                            {"label": "Posterior", "value": "posterior"}
+                            {"label": "Posterior", "value": "posterior_rounded"}
                         ],
                         value="label",
                         clearable=False,

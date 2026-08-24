@@ -92,5 +92,4 @@ def toggle_legend(
         }
         logger.debug(f"Adding legend node to graph.")
         return elements + [legend_node], stylesheet + legend_styles
-    logger.debug(f"This should not happen???....")
     return elements, stylesheet

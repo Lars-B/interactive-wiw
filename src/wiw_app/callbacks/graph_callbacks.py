@@ -112,6 +112,7 @@ def update_elements(graph_data, selected_edge_labels, selected_layout,
         edge["data"]["color"] = edge_label_colors.get(label, "purple")
         edge["data"]["weight"] = round(
             edge["data"]["posterior"] * edges_scale_factor, 2)
+        edge["data"]["posterior_rounded"] = round(edge["data"]["posterior"], 3)
 
     elements = filtered_nodes + filtered_edges
     layout = {
