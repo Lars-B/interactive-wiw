@@ -22,7 +22,7 @@ Lars Berling, lars_berling@sfu.ca
 
 # Abstract
 
-In this paper we present an interactive framework for exploratory analyssi of inferred transmission networks.
+In this paper we present an interactive framework for exploratory analysis of inferred transmission networks.
 
 The reconstruction of person to person transmission is a widely studied subject and there are
 a plethora of methods that infer and reconstruct outbreaks from various kinds of different data.
