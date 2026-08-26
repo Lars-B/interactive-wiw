@@ -76,16 +76,16 @@ Beyond the visualizations we support the construction of MST, we have indirect t
 WE also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
 
 
+<!--
 We could have a graphical abstract figure here:
-some tool like TP/outbreaker2/breath --> wiw network file/ trees file --> upload to app --> all the app possibilities of color, thresholds, interactive stuff, metadata etc
+some tool like TP/outbreaker2/breath -- wiw network file/ trees file -- upload to app -- all the app possibilities of color, thresholds, interactive stuff, metadata etc
+-->
 
-# to be deleted
 
-This is a test of a figure @fig-test and we see.
+In @fig-problem we illustrate the current workflows for three example tools and the resulting network visualization.
+These disjoint steps are unified within our application that does not require to run command line tools or specific lines of code.
 
-![Overview figure for testing](figures/test.png){#fig-test width=80%}
-
-This is where we describe the methods for unknown infections and so on...
+![Overview figure for testing](figures/problem.pdf){#fig-problem width=80%}
 
 # Theory and Implementation
 
