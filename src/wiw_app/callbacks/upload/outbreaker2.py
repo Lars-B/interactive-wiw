@@ -56,11 +56,20 @@ def update_graph_with_outbreaker_rds_data(
         effective_label
     )
 
+    # todo merging nodes properly...
+    #  refactor the merging into a function, there should be a merging option
+    #  merge using taxon, if not possible, use label as index, else new nodes?
+
     existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
     true_new_nodes = [
         n for n in new_nodes
         if n["data"]["id"] not in existing_ids
     ]
+
+    logger.debug(f'Current nodes: {current_graph_data["nodes"]}')
+    logger.debug(f'New nodes: {new_nodes}')
+    logger.debug(f'True new nodes: {true_new_nodes}')
+
     merged_nodes = current_graph_data["nodes"] + true_new_nodes
 
     logger.info("Finished updating the graph with the .rds data.")
