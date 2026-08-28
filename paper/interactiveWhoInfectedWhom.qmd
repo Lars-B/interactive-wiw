@@ -47,7 +47,14 @@ The example datasets used within this publications are all available here...
 
 # Introduction
 
-background transmission tree reconstruction
+<!-- Why do we do WIW inference, motivational paragraph -->
+Understanding transmission dynamics during infectious disease outbreaks often requires analyzing complex contact and transmission structures.
+Who-infected-whom (WIW) networks provide a representation of transmission histories in which nodes correspond to individuals and directed edges represent inferred transmission events.
+These networks allow researchers to investigate properties of the outbreak such as super spreading, transmission or contact chains, outbreak structure, and temporal spread of disease.
+However, exploring these WIW networks can be challenging when many individuals are present in the analysis or large amount of additional metadata is required for a better understanding of transmission dynamics.
+This motivates the development of our app, CONTAGION, which allows users to interactively explore and interrogate transmission networks from multiple inference software tools.
+
+<!-- Existing large number of methods that infer wiw networks and other transmission stuff -->
 
 overview of methods that have been developed over time
 There are lots of methods to reconstruct outbreaks and networks of person to person transmission:
@@ -59,28 +66,47 @@ There are lots of methods to reconstruct outbreaks and networks of person to per
 
 Currently missing are breath, transphylo, outbreaker2, others?
 
-Point out that most methods infer a WIW network and that each program has its own way of visualizing it
-Here we bring this together by providing a nicely packaged version that aims to support several methods at once
+
+<!--Currently exisitng gap -->
+
+Many of the mentioned methods infer or reconstruct the transmission outbreak but converged on a shared output, the WIW network.
+Depending on the tool that is definitely not the only output since different tools have very different input data, differnt models, and different assumptions, but it will be the focus in this paper.
+
+maybe something about the divergence, even though each method has this a shared output functionality, its directly baked into the tool and specific to the tool
+
+This divergence costs both practicioners and methods developers equally.
+For practicioners it is hard to understand or compare the output of several methods when each is tailored to one method with different annotations, that are static and hard to change.
+For software and methods developers there is no shared interface that allows an easy comparison for how methods reconstruct or represent ouput.
+
+Curerntly, there is not a singel tool that provides an interactive, unified interface across different inference methods that is useful to both practitioners and methods developers.
+
+<!-- Contribution of our app -->
+
+Traditional static visualizations are often insufficient for investigating these structures and typically linked to a single specific inference method.
+
+Current workflows focus on the inference and the resulting output to generate a wiw network from is generally build for the methods developer, not for the praticioner.
+The results are images of the wiw network that are often static with dense and often fixed type of annotatitions and colors, no easy way for filitering, zooming or querying the network.
+Furthermore, these tools typically do not allow the user to also annotate the network with metadata that was not inferred by the method.
+In our application, CONTAGION, we aim to fix these shortcoming by providing a tool that unifies the workflow of visulaizing the output of severeal different methods into a single application.
+Within our app we provide an interactive visualization of the network that the user can zoom through and rearrange freely.
+Furthermore, we provide a seemless way of adding metadata annotations to the individual nodes of the network (typically individuals) which can then be used by our dynamic interface to color, annotate, or otherwise investigate the network.
+
+By providing an easy to use tool across a range of different inference methods we also improve the comparibility for exploratory research for applying different tools or for developers that try to investigate differences in networks arising from new or different methods.
+
+We can also change the threshold of edges interactively, and you can see how that changes the network, typically a specifically set fraction that requires rerunning a script to get a different network...
+
 point out that we can interactively change different settings such as an edge threshold, colors of nodes/edges etc.
 and we also provide an easy way to add metadata into the network that can help understand certain transmission pathways better
 
-Understanding transmission dynamics during infectious disease outbreaks often requires analyzing complex contact structures.
-Who-infected-whom (WIW) networks provide a representation of transmission histories in which nodes correspond to individuals and directed edges represent inferred transmission events.
-These networks allow researchers to investigate properties of the outbreak such as super spreading, transmission or contact chains, outbreak structure, and temporal spread of disease.
-However, exploring these WIW networks can be challenging when many individuals are present in the analysis or large amount of additional metadata is required.
-Traditional static visualizations are often insufficient for investigating these structures and fixed to a specific application.
-This motivates the development of tools that allow users to interactively explore and interrogate transmission networks from multiple inference software tools.
 
-
+<!-- Outline of the paper and possible other ideas that it provides? almost like conclusion....todo -->
 Beyond the visualizations we support the construction of MST, we have indirect transmission edges for several tools that allow this.
-WE also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
+With a unified visualizer and analysis tool such as ours it would also be easier if someone want to study these networks and do more work on summary stats from them to make these available to a wide range of tools, not jsut a single applications.
+This would also be true for comparison metrics such as the juniper paper presents, they could now be made available in one applicaiton and used for the comparion between different methods.
+We also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
 
 
-<!--
-We could have a graphical abstract figure here:
-some tool like TP/outbreaker2/breath -- wiw network file/ trees file -- upload to app -- all the app possibilities of color, thresholds, interactive stuff, metadata etc
--->
-
+## some form of graphical abstract
 
 In @fig-problem we illustrate the current workflows for three example tools and the resulting network visualization.
 These disjoint steps are unified within our application that does not require to run command line tools or specific lines of code.
