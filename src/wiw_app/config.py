@@ -119,7 +119,8 @@ class NodeConfig:
         EXCLUDED_FROM_DISPLAY = {
             "color",
             "shape",
-            "timeStamp"
+            "timeStamp",
+            "legend"
         }
 
 class GraphConfig:
