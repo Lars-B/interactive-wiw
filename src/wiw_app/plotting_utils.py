@@ -212,8 +212,8 @@ def make_image_with_legend_png(
         (graph_img.width + legend.width, combined_height),
         (255, 255, 255, 255)
     )
-    combined.paste(graph_img, (0, 0))
-    combined.paste(legend, (graph_img.width, 0))
+    combined.paste(graph_img, (0, 0), graph_img)
+    combined.paste(legend, (graph_img.width, 0), legend)
 
     return combined.convert("RGB")
 
