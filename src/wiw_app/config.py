@@ -123,5 +123,11 @@ class NodeConfig:
             "legend"
         }
 
+
 class GraphConfig:
     DEFAULT_LAYOUT = "dagre"
+
+
+class StatsPanelConfig:
+    MIN_CATEGORIES = 2
+    MAX_CATEGORIES = 10

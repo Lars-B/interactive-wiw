@@ -4,6 +4,8 @@ import networkx as nx
 import numpy as np
 from dash import dash_table, html
 
+from wiw_app.config import StatsPanelConfig
+
 
 def build_graph(elements):
     """Build a directed NetworkX graph from Cytoscape elements."""
@@ -303,7 +305,7 @@ def calculate_metadata_statistics(graph):
 
         # Only calculate connectivity for annotations
         # with a small number of unique values
-        if len(categories) <= 5:
+        if StatsPanelConfig.MIN_CATEGORIES <= len(categories) <= StatsPanelConfig.MAX_CATEGORIES:
 
             connectivity = Counter()
 
