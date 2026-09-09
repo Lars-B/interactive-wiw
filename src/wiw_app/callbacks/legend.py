@@ -16,6 +16,7 @@ legend_styles = [
             "shape": "rectangle",
             "width": "150px",
             "height": "150px",
+            "background-color": "#9e9e9e",
             "background-image": "data(legend)",
             # Cytoscape picks up legend SVG from node data
             "background-fit": "contain",
