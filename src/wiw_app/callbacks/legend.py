@@ -1,3 +1,4 @@
+import re
 import urllib.parse
 
 from dash import Input, Output, State, callback, ctx
@@ -85,7 +86,8 @@ def toggle_legend(
             return elements, stylesheet
 
         encoded_svg = urllib.parse.quote(legend_svg)
-        legend_node_size = node_size * 4
+        width = int(re.search(r'width="(\d+)"', legend_svg).group(1))
+        height = int(re.search(r'height="(\d+)"', legend_svg).group(1))
 
         legend_node = {
             "data": {
@@ -95,8 +97,8 @@ def toggle_legend(
             "position": {"x": 1000, "y": 100},
             "grabbable": True,
             "style": {
-                "width": legend_node_size,
-                "height": legend_node_size,
+                "width": width,
+                "height": height,
             }
         }
         logger.debug(f"Adding legend node to graph.")
