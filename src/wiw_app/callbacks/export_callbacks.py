@@ -83,6 +83,7 @@ def trigger_pngplus(n):
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    State(GraphOptions.Nodes.SHAPE_SELECTOR, "value"),
     State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
     prevent_initial_call=True
@@ -91,7 +92,7 @@ def export_pngplus(requested,
                    image_data,
                    filename,
                    node_color_container, node_color_toggle, node_color_title, node_color_options,
-                   edge_color_container, edge_color_toggle
+                   node_shape_selector, edge_color_container, edge_color_toggle
                    ):
     if not requested:
         return dash.no_update, False
@@ -108,13 +109,16 @@ def export_pngplus(requested,
     # if edge_color_toggle:
     #     edge_colors = extract_color_map_from_pallete(edge_color_container)
 
-    full_img = make_image_with_legend_png(image_data,
-                                          node_color_options,
-                                          node_color_title,
-                                          node_color_toggle,
-                                          node_color_container,
-                                          edge_color_toggle,
-                                          edge_color_container)
+    full_img = make_image_with_legend_png(
+        image_data,
+        node_color_options,
+        node_color_title,
+        node_color_toggle,
+        node_color_container,
+        node_shape_selector,
+        edge_color_toggle,
+        edge_color_container
+    )
 
     buffer = io.BytesIO()
     full_img.save(buffer, format="PNG")
@@ -133,6 +137,7 @@ def export_pngplus(requested,
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    State(GraphOptions.Nodes.SHAPE_SELECTOR, "value"),
     State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
     prevent_initial_call=True
@@ -140,7 +145,7 @@ def export_pngplus(requested,
 def export_legend(
         n_clicks,
         node_color_container, node_color_toggle, node_color_title, node_color_options,
-        edge_color_container, edge_color_toggle
+        node_shape_selector, edge_color_container, edge_color_toggle
 ):
     logger.info("Exporting legend...")
 
@@ -149,10 +154,15 @@ def export_legend(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
         svg=True
     )
+
+    if legend == "":
+        logger.info("Legend is empty, do nothing")
+        return dash.no_update
 
     logger.info("Generated legend...")
 

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from PIL import Image, ImageDraw, ImageFont
 
+from wiw_app.dash_logger import logger
+
 
 @dataclass
 class LegendItem:
@@ -13,13 +15,19 @@ class LegendItem:
 
 
 def build_legend_items(legend_spec):
-    items = []
 
     # Node shapes
-    items.append(LegendItem("title", "Node Shapes"))
-    items.append(LegendItem("rect", "Terminal (in or out)"))
-    items.append(LegendItem("triangle", "Isolated"))
-    items.append(LegendItem("ellipse", "Regular"))
+    node_shape_selection = legend_spec.get("node_shape_selection")
+    if node_shape_selection == "adaptive":
+        items = [
+            LegendItem("title", "Node Shapes"),
+            LegendItem("rect", "Terminal (in or out)"),
+            LegendItem("triangle", "Isolated"),
+            LegendItem("ellipse", "Regular")
+        ]
+    else:
+        # We only need node shape in legend if we have different shapes
+        items = []
 
     # Node colors
     node_colors = legend_spec.get("node_colors")
@@ -131,6 +139,7 @@ def compute_legend_spec(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
 ):
@@ -151,6 +160,7 @@ def compute_legend_spec(
 
     # Return a simple dictionary describing everything
     return {
+        "node_shape_selection": node_shape_selector,
         "node_color_title": proper_title,
         "node_colors": node_colors,
         "edge_colors": edge_colors,
@@ -162,6 +172,7 @@ def draw_legend(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
         svg=False
@@ -171,10 +182,15 @@ def draw_legend(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
     )
+
     items = build_legend_items(spec)
+    if not items:
+        return ""
+
     if svg:
         return render_legend_svg(items)
     else:
@@ -187,6 +203,7 @@ def make_image_with_legend_png(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
 ):
@@ -201,11 +218,17 @@ def make_image_with_legend_png(
         node_color_title,
         node_color_toggle,
         node_color_container,
+        node_shape_selector,
         edge_color_toggle,
         edge_color_container,
         svg=False
     )
 
+    if legend == "":
+        logger.info("Empty legend, will export just the graph...")
+        return graph_img
+
+    # todo soemthing below changes the background to white, but not the edge label colors etc...
     combined_height = max(graph_img.height, legend.height)
     combined = Image.new(
         "RGBA",
