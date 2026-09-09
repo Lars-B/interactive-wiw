@@ -142,6 +142,7 @@ def compute_legend_spec(
         node_shape_selector,
         edge_color_toggle,
         edge_color_container,
+        edge_display_filter
 ):
     """Compute the node/edge legend info as a neutral object."""
 
@@ -155,8 +156,9 @@ def compute_legend_spec(
         node_colors = extract_color_map_from_pallete(node_color_container)
 
     edge_colors = None
-    if edge_color_toggle:
+    if edge_color_toggle and edge_display_filter:
         edge_colors = extract_color_map_from_pallete(edge_color_container)
+        edge_colors = {k: v for k, v in edge_colors.items() if k in edge_display_filter}
 
     # Return a simple dictionary describing everything
     return {
@@ -175,6 +177,7 @@ def draw_legend(
         node_shape_selector,
         edge_color_toggle,
         edge_color_container,
+        edge_display_filter,
         svg=False
 ):
     spec = compute_legend_spec(
@@ -185,6 +188,7 @@ def draw_legend(
         node_shape_selector,
         edge_color_toggle,
         edge_color_container,
+        edge_display_filter,
     )
 
     items = build_legend_items(spec)
@@ -206,6 +210,7 @@ def make_image_with_legend_png(
         node_shape_selector,
         edge_color_toggle,
         edge_color_container,
+        edge_display_filter
 ):
     header, encoded = image_data.split(",")
     img_bytes = base64.b64decode(encoded)
@@ -221,6 +226,7 @@ def make_image_with_legend_png(
         node_shape_selector,
         edge_color_toggle,
         edge_color_container,
+        edge_display_filter,
         svg=False
     )
 
@@ -228,7 +234,7 @@ def make_image_with_legend_png(
         logger.info("Empty legend, will export just the graph...")
         return graph_img
 
-    # todo soemthing below changes the background to white, but not the edge label colors etc...
+    # todo something below changes the background to white, but not the edge label colors etc...
     combined_height = max(graph_img.height, legend.height)
     combined = Image.new(
         "RGBA",

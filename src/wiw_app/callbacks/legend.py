@@ -38,9 +38,10 @@ legend_styles = [
     State(GraphOptions.Nodes.COLOR_BY_LABEL, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "value"),
     State(GraphOptions.Nodes.COLOR_LABEL_SELECTOR, "options"),
+    State(GraphOptions.Nodes.SHAPE_SELECTOR, "value"),
     State(GraphOptions.Edges.COLOR_PICKER_CONTAINERS, "children"),
     State(GraphOptions.Edges.COLOR_BY_LABEL, "value"),
-    State(GraphOptions.Nodes.SHAPE_SELECTOR, "value"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     prevent_initial_call=True,
 )
 def toggle_legend(
@@ -49,9 +50,8 @@ def toggle_legend(
         node_size,
         elements, stylesheet,
         node_color_container, node_color_toggle, node_color_title,
-        node_color_options,
-        edge_color_container, edge_color_toggle,
-        node_shape_selector
+        node_color_options, node_shape_selector,
+        edge_color_container, edge_color_toggle, edge_display_filter
 ):
     if not elements and not stylesheet:
         logger.debug(f"No elements in the graph yet, returning nothing")
@@ -67,14 +67,6 @@ def toggle_legend(
             logger.debug(f"Legend node already exists, doing nothing.")
             return elements, stylesheet
 
-        logger.debug("node_color_options: %s", node_color_options)
-        logger.debug("node_color_title: %s", node_color_title)
-        logger.debug("node_color_toggle: %s", node_color_toggle)
-        logger.debug("node_color_container: %s", node_color_container)
-        logger.debug("edge_color_toggle: %s", edge_color_toggle)
-        logger.debug("edge_color_container: %s", edge_color_container)
-        logger.debug("shape selector: %s", node_shape_selector)
-
         legend_svg = draw_legend(
             node_color_options,
             node_color_title,
@@ -83,6 +75,7 @@ def toggle_legend(
             node_shape_selector,
             edge_color_toggle,
             edge_color_container,
+            edge_display_filter,
             svg=True
         )
 
