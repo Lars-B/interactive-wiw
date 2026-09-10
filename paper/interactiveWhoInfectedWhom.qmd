@@ -42,74 +42,46 @@ easy and available to a wide audience of users such as public health laboratorie
 
 # Data Summary
 
-The code for this software is freely available at https://github.com/Lars-B/.
-The example datasets used within this publications are all available here...
+The code for this software is freely available at https://github.com/Lars-B/TODO.
+The example datasets used within this publications are all available here...TODO
 
 # Introduction
 
-<!-- Why do we do WIW inference, motivational paragraph -->
-Understanding transmission dynamics during infectious disease outbreaks often requires analyzing complex contact and transmission structures.
-Who-infected-whom (WIW) networks provide a representation of transmission histories in which nodes correspond to individuals and directed edges represent inferred transmission events.
-These networks allow researchers to investigate properties of the outbreak such as super spreading, transmission or contact chains, outbreak structure, and temporal spread of disease.
-However, exploring these WIW networks can be challenging when many individuals are present in the analysis or large amount of additional metadata is required for a better understanding of transmission dynamics.
-This motivates the development of our app, CONTAGION, which allows users to interactively explore and interrogate transmission networks from multiple inference software tools.
+Understanding and reconstruction tranmission dynamics is an important component of infectious disease outbreak analysis.
+A wide range of computational methods have therefore been developed to reconstruct transmission histories from epidemiological, genomic and contact-tracing data (TODO citations too all, maybe add, for a recent but already outdated overview see duault et al.).
+These methods have been developed for and applied to outbreaks across a variety of infectious diseases (both human and animal borne) and differ substantially in their input data, underlying models, and assumptions about the tranmission process(citations maybe describe the different diseases applications here).
 
-<!-- Existing large number of methods that infer wiw networks and other transmission stuff -->
+Although these appraoches differ in how transmission is inferred, most try to reconstruct who-infected-whom as a representation of the transmission history.
+This provides a common object through which transmission histories can be inspected, despite the substantial methodological differences between inference approaches.
+In practice, however, the visualization and explortion of these networks is often closely coupled to the software used for their inference.
+Different tools use different output formats and visualization approaches, making it difficult to explore or compare inferred transmission histories across methods using a consistent workflow.
 
-overview of methods that have been developed over time
-There are lots of methods to reconstruct outbreaks and networks of person to person transmission:
+This lack of a common visualization layer presents challenges for both exploratory analysis and comparison of tranmission-infernce methods.
+Researchers may need to use different tools or construct separate visualisations depending on the software used to generate a network.
+Moreover, visalizations are often presented as static images, requiring descisions about which transmission events, annotations, and other network properties should be displayed before the figure is generated.
+Exploring alternative representations from the same analysis output can consequently require rerunning a whole workflow from scratch and resutling in the need to compare and investigate several images.
+This is particularly limiting when investigating large networks or when the inferred transmission history is associated with substantial uncertainty and additonal epidemiological metadata.
 
-- [@demaio2016scotti]
-- [@demaio2018badtrip]
-- [@skums2022sophie]
-- [@waddel2025scitree]
+Interactive visualization provides an opportunity to address these limitations by separating the exploration of a transmisson network from the software used to infer it.
+Rather than committing to a single static representation, users can interactively explore different aspects of the same inferred network and adapt its visualization to questions being investigated which in term might generate new questions to investigate.
+A common visualization interface layer can furthermore provide a consistent way to explore outputs from different inference approaches, facilitating their comparison without requiring method-specific visualization workflows.
+Another potential benefit of a detached layer for downstream visualization is the development of tool agnostic statistics that can be integrated and made available for collection of tools from their common output rather than having to provide them individually to each inference tool.
 
-Currently missing are breath, transphylo, outbreaker2, others?
+Here, we present CONTAGION, an interactive visualization application for exploring who-infected-whom networks produced by multiple tranmission-inference software tools.
+CONTAGION provides a common visualization layer between tranmssion-inference methods and the subsequent exploration of their results up to the generation of publication ready figures.
+Outputs from different software packages can be translated into a comon network representation and explored through a unified interface.
 
+The application provides interactive control over network visualization, including filtering tranmission events, changing edge-support thresholds, modifying node and edge annotations and shapes, and rearranging the networks layout.
+Additional individual-level metadata can be incorporated into the visualization and used to explore the network and the inferred dynamics.
+By bringing these capabilities together in a single application, CONTAGION allows users to interactively investigate tranmission networks without having to construct separate visualizations for each inference method or paramter threshold setting.
 
-<!--Currently exisitng gap -->
+At the time of writing, CONTAGION supports outputs from several tranmission-inference approaches, including Scotti, outbreaker2, TransPhylo, and BREATH, as well as custom network representations (TODO might have to add more, thinking about phybreak for example, also want to support general dot files).
 
-Many of the mentioned methods infer or reconstruct the transmission outbreak but converged on a shared output, the WIW network.
-Depending on the tool that is definitely not the only output since different tools have very different input data, differnt models, and different assumptions, but it will be the focus in this paper.
-
-maybe something about the divergence, even though each method has this a shared output functionality, its directly baked into the tool and specific to the tool
-
-This divergence costs both practicioners and methods developers equally.
-For practicioners it is hard to understand or compare the output of several methods when each is tailored to one method with different annotations, that are static and hard to change.
-For software and methods developers there is no shared interface that allows an easy comparison for how methods reconstruct or represent ouput.
-
-Curerntly, there is not a singel tool that provides an interactive, unified interface across different inference methods that is useful to both practitioners and methods developers.
-
-<!-- Contribution of our app -->
-
-Traditional static visualizations are often insufficient for investigating these structures and typically linked to a single specific inference method.
-
-Current workflows focus on the inference and the resulting output to generate a wiw network from is generally build for the methods developer, not for the praticioner.
-The results are images of the wiw network that are often static with dense and often fixed type of annotatitions and colors, no easy way for filitering, zooming or querying the network.
-Furthermore, these tools typically do not allow the user to also annotate the network with metadata that was not inferred by the method.
-In our application, CONTAGION, we aim to fix these shortcoming by providing a tool that unifies the workflow of visulaizing the output of severeal different methods into a single application.
-Within our app we provide an interactive visualization of the network that the user can zoom through and rearrange freely.
-Furthermore, we provide a seemless way of adding metadata annotations to the individual nodes of the network (typically individuals) which can then be used by our dynamic interface to color, annotate, or otherwise investigate the network.
-
-By providing an easy to use tool across a range of different inference methods we also improve the comparibility for exploratory research for applying different tools or for developers that try to investigate differences in networks arising from new or different methods.
-
-We can also change the threshold of edges interactively, and you can see how that changes the network, typically a specifically set fraction that requires rerunning a script to get a different network...
-
-point out that we can interactively change different settings such as an edge threshold, colors of nodes/edges etc.
-and we also provide an easy way to add metadata into the network that can help understand certain transmission pathways better
-
-
-<!-- Outline of the paper and possible other ideas that it provides? almost like conclusion....todo -->
-Beyond the visualizations we support the construction of MST, we have indirect transmission edges for several tools that allow this.
-With a unified visualizer and analysis tool such as ours it would also be easier if someone want to study these networks and do more work on summary stats from them to make these available to a wide range of tools, not jsut a single applications.
-This would also be true for comparison metrics such as the juniper paper presents, they could now be made available in one applicaiton and used for the comparion between different methods.
-We also have a statistic panel and download of it to get more information of the network with the metadata inside of it.
-
-
-## some form of graphical abstract
+## Graphical idea of this application
 
 In @fig-problem we illustrate the current workflows for three example tools and the resulting network visualization.
 These disjoint steps are unified within our application that does not require to run command line tools or specific lines of code.
+todo could add the threshold input parameter to the beast applauncher call...
 
 ![Overview figure for testing](figures/problem.pdf){#fig-problem width=80%}
 
@@ -117,43 +89,42 @@ These disjoint steps are unified within our application that does not require to
 
 ## Who-infected-whom networks
 
-directed graphs
-nodes are individuals
-edges transmision events
-edge weights often are posterior support (as most methods seem to be bayesian?)
-metadata is more information about individuals such as age, sex, household, etc.
+To understand transmission dynamics, studies infer transmission trees and aim to reconstruct who-infected-whom relationships, providing information that can help characterize outbreaks and target control and preventative measures.
+These reconstructions can be represented as a directed graph, where nodes correspond to individuals and edges represent tranmission events from an infector to the individual they infected.
+Such networks can be used to investigate transmission routes, characterize heterogeneous infectiousness and likely superspreading events, and identify important transmission contexts such as households or facilties.
+At the population level, the network may also reveal clusters and larger structures within an outbreak.
 
-Example figure with illustration here?
+For their reconstruction, different combinations of epidemiological and genomic information, including sampling dates, contact-tracing information, geographical information, and pathogen sequence data, are used.
+Existing inference methods differ in how these sources of information are incorporated and in the assumptions made about the transmission process.
+A recent review article of such methods groups them into three families: sequential phylogenetic, simulatenous phylogenetic, and non-phylogenetic approaches (TODO cite duault).
 
-## Why look at these networks
+Inference typically involves uncertainty and therefore results in a multitude of possible transmission histories rather than a single definitive reconstruction.
+These possible histories can be summarized as a transmission network that captures the uncertainty in the inferred relationships.
+For example, outbreaker2 uses MCMC to sample transmission chains, while TransPhylo and BREATH can account for unsampled individuals in the reconstructed transmission tree.
+The resulting transmission relationships should therefore be interpreted in the context of this uncertainty associated with the inference method.
 
-id transmission chains
-detect spreading events/super spreader/ household infections etc
-investigate clusters of self contained outbreaks, in particular if the tool allows for indirect/unsampled transmissions
-inspect the support of inferred transmission histories, compare to known transmission events
+Visualizing the inferred transmission networks alongside additonal information allows a comparison between the inferred and known or independently established information.
+This can be useful for assessing whether particular tranmission relationships are compatible with known contact patterns, sampling dates, locations, or toher outbreak information.
+Individual samples are also commonly associated with metadata describing the individuals involved, such as age, sex, geographical location, household, or sampling date.
+Such information provides additional context for interpreting the inferred transmission history and can reveal patterns that are not apparent from the network structure alone.
 
-## The power of interactive visualization?
+(TODO: Example figure of wiw network with metadata here?)
 
-static graph images are constraint, in particular mention the threshold of posteriro support on edges
-difficult to add metadata or compare multiple different metadata categories
-impossible to recolor or change the layout or just position of selected nodes
-Todo if i implement a search function then we could point out that its hard to search these static images too
-Layout changes and manual rearrangement is particularly useful for large networks (lots of edges)
+## Our proposed layer of visualization
 
+While inference methods focus primarily on reconstructing complex tranmission networks, researchers must subsequently explore and iterpret the resulting networks.
+This exploration is often performed using static visualizations or separate, method-specific workflows.
 
+Static network visualization require many aspects of the network to be fixed in advance.
+For example, an edge posterior-support threshold may determine which transmission relationships are displayed, while node colours, metadata attributes, and network layouts are fixed for a particular figure.
+Exploring a different combination of settings such as different thresholds, comapring different metadata, or rearranging a densly connected network therefore requires generating a new image from the beginning.
+These limitations become particularly relevant for large networks, where changing the layout, manually repositioning nodes, or changing edge threshold values may help reveal individual transmission relationships and larger network structures.
 
+We present CONTAGION as an interactive visualization layer for tranmission-inference methods.
+It provides a common interface through which users can explore the inferred network, its uncertainty, and associated metadata without constructing separate visualizations for each analysis.
+Inference-specific output formats are converted into a common representation, allowing the same visualization and exploration functionality to be applied across different inference approaches.
 
-At the time of writing our app supports the output of the followinag software tools:
-
-- Scotti: a beast nexus tree file
-- outbreaker2: rdata files with either a contact matrix or MCMC output
-- transphylo: a rdata file with package specific format
-- Breath: a beast nexus tree file
-- custom csv graphs
-- ...
-
-Figure about what our approach provides, unify the part of the pipelines that deals with visualizing the output and provide one style of figure?
-This could also go right after the introduction?
+(TODO: Our proposed visualization layer as a concept image here?)
 
 ## Implementation details
 
@@ -168,15 +139,26 @@ Metadata is added to the node data and this representation is then shared betwee
 Interactive components such as filtering, coloring, metadata inspection, and network statistics
 (e.g. node degree distributions or metadata-specific graph connectivity) are implemented through Dash callback functions that reactively update only the affected interface elements.
 
-The application is open source (under a todo license) and easily extendable to new input types, since each upload format has its own parser but all parsers use the same graph representation format.
+The application is open source (under a TODO license) and easily extendable to new input types, since each upload format has its own parser but all parsers use the same graph representation format.
 All code and a tutorial website with associated data is available on github [https://github.com/Lars-B/interactive-wiw].
-The application is also packaged, via a GitHub Actions build pipeline, into a single executable for each major platform, available for download from the repository releases.
+The application is also packaged, via a GitHub Actions build pipeline, into a single executable for each major platform, available for download from the repository releases [https://github.com/Lars-B/interactive-wiw/releases/latest].
+
+### todos
+might have to add parts about statsitics panel here
+
+might talk about mst construction here
+
+indirect infections can be put here?
+
+there could be a figure showcasing our visualization layer, complementing the visual abstract or maybe all in one, all the tools infernce and then a combined thing for our tool with all its features resulting in a wiw network image.
 
 ## Data application example 1
 
 Use the TB outbreak and investigate some of the questions we asked for the sis-mid workshop
 
 ## Data application example 2
+
+maybe use foot and mouth outbreak that was published for at least two tools, then we can compare the resutls of both in one network?
 
 # Discussion
 
@@ -185,7 +167,7 @@ Inference methods for the reconstruction of infectious disease outbreaks are inc
 Interactive visualization approaches provide an important complement to these computational methods for analyzing the inferred transmission reconstruction together with additional metadata.
 While statistical and phylogenetic approaches can infer the transmission relationships, visual exploration remains valuable for understanding the resulting structures and communicate findings.
 Our application CONTAGION bridges this gap by providing an input agnostic interface to examine and explore inferred who-infected-whom networks interactively.
-The strenght of a common interface is not limited to someone using these methods, but also for communication of findings to others is significantly easier in a unified framework.
+A common interface for these different methods in a valuable way to analyses and investigate findings for users but also an important tool when sharing findings with others in a unified way.
 
 <!-- Where does it fit in and who is this for -->
 Our tool, CONTAGION, separates the visulaization of a transmission network from the software tool used to infer the network.
@@ -202,7 +184,7 @@ CONTAGION combines the strenght of both in focusing specifically on inferred who
 An additional advantage of a shared visualization framework is that it can make aspects of a reconstruction that are implicit in the underlying model more accessible to users.
 In particular, CONTAGION provides a means of investigating indirect transmission relationships represented in the transmission trees produced by transphylo and BREATH.
 These relationships might not be immediately apparent when examining the underlying output alone.
-Using the same visualization framewrok also promotes consistency in how transmission reconstructions are presented,
+Using the same visualization framework also promotes consistency in how transmission reconstructions are presented,
 reducing ambiguous or unclear differences in visual representation that arise solely from the different software used to generate it.
 
 <!-- Limitations of our app -->
@@ -224,7 +206,17 @@ common interface through which their outputs can be explored, interpreted, compa
 
 ## Author contribution
 
+LB: Implemented Software, Manuscript first draft, writing, editing
+
+CC:
+
+JMN:
+
+JS:
+
 ## Conflicts of interest
+
+None.
 
 ## Funding information
 
