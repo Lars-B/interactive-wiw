@@ -150,15 +150,47 @@ might talk about mst construction here
 
 indirect infections can be put here?
 
-there could be a figure showcasing our visualization layer, complementing the visual abstract or maybe all in one, all the tools infernce and then a combined thing for our tool with all its features resulting in a wiw network image.
+there could be a figure showcasing our visualization layer, complementing the visual abstract or maybe all in one, all the tools inference and then a combined thing for our tool with all its features resulting in a wiw network image.
 
-## Data application example 1
+## Application to a tuberculosis outbreak
 
-Use the TB outbreak and investigate some of the questions we asked for the sis-mid workshop
+To demonstrate how the interactive visualization can be used to explore inferred transmission histories,
+we applied it to a tuberculosis outbreak data set analyzed with the BREATH package (todo cite).
+Rather than attempting to establish a single definitive reconstruction of this particular outbreak, we use this example to illustrate how inferred transmission relationships, their associated uncertainty, and individual-level metadata can be explored and compared within a common visualization framework.
+
+We focus on several representative questions that commonly arise when interpreting reconstructed transmission networks:
+identifying likely sources of individual infections, examining cases for which no sampled source is strongly supported, tracing transmission involving individuals of particular interest, and exploring associations between epidemiological metadata and transmission patterns.
+<!-- could also compare different inference methods here, not sure if i want to? -->
+
+(todo show the whole network here?)
+
+### Individual transmission histories
+
+showcase case 51 and the 3 year old case
+include screenshots one for each with zoomed in of the network
+
+(todo highlighting nodes/ searching for them could be a good feature that we might want to add)
+
+### Exploring indirect infections
+
+Since we now can have these as edges, explore that network individually and in context of the rest
+
+### Exploring different metadata
+
+In addition to examining individual transmission relationships, the inferred networks can be explored in the context of associated epidemiological metadata.
+Nodes can be colored according to variables such as sampling date, smear positivity, residence status, or reported alcohol and drug use, allowing potential patterns to be examined without constructing separate visualizations for each variable.
+This makes it possible to visually assess, for example, whether particular characteristics are concentrated among individuals with multiple inferred downstream infections.
+Such visual associations are intended primarily for exploratory analysis and should not, by themselves, be interpreted as evidence of causal relationships.
+
+(todo some screenshots of the same network or maybe zoomed in part in different colors, point out that this only requires a couple of mouse clicks and nothing else)
+
+
+<!-- (todo if we include more than breath for this we could include a section specifically comparing the different methods here...) -->
+
 
 ## Data application example 2
 
-maybe use foot and mouth outbreak that was published for at least two tools, then we can compare the resutls of both in one network?
+maybe use foot and mouth outbreak that was published for at least two tools, then we can compare the results of both in one network?
 
 # Discussion
 
