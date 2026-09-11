@@ -22,23 +22,22 @@ Lars Berling, lars_berling@sfu.ca
 
 # Abstract
 
-In this paper we present an interactive framework for exploratory analysis of inferred transmission networks.
+The reconstruction of who-infected-whom is an important component of infectious disease outbreak analysis, and numerous methods have been developed to infer transmission histories from epidemiological and genomic data.
+However, exploring the resulting transmission networks remains challenging, particularly when considering uncertainty, associated metadata, and results from different inference methods.
 
-The reconstruction of person to person transmission is a widely studied subject and there are
-a plethora of methods that infer and reconstruct outbreaks from various kinds of different data.
-
-Our program provides a locally running web based interface that is easy to use,
-provides interactive visualizations which can easily be extended with metadata information
-and supports a wide variety of input formats.
-Our software is user friendly, easily extendible and freely available online.
+Here, we present CONTAGION, an interactive framework for the visualization and exploratory analysis of inferred who-infected-whom networks.
+CONTAGION provides a locally running, browser-based interface for interactively exploring transmission relationships, uncertainty, and associated metadata.
+It supports output from several commonly used transmission-inference methods as well as general network formats, providing a consistent visualization environment across different approaches.
+By separating visualization from the underlying inference method, CONTAGION provides a flexible and extensible framework for investigating, comparing, and communicating inferred transmission networks.
 
 # Impact Statement
 
-When reconstructing the transmission history of an outbreak it is important to easily investigate the inferred transmission pathways.
-Having an easy to use and interactive dashboard to explore the results of an inference method
-in combination with metadata about individuals can significantly improve the understanding of transmission pathways.
-Our program, CONTAGION, is easy to use and run and makes the visualization of a who-infected-whom network
-easy and available to a wide audience of users such as public health laboratories or medical researchers.
+To better control and prevent infectious diseases it is important to understand the underlying transmission dynamics.
+There are many different methods to reconstruct and model  these dynamics, however, at the end of many is the reconstruction of a likely who-infected-whom scenario.
+Having an easy to use interactive dashboard to explore the results of an inference method with different parameter settings in combination with additional metadata for individuals can significantly improve the understanding of transmission pathways.
+
+We present CONTAGION as a complementary layer of visualization among the ever growing collection of transmission inference methods and software.
+It provides consistent visualization among methods, is easy to extend, and unifies the sharing, comparing, or interpreting of who-infected-whom networks.
 
 # Data Summary
 
