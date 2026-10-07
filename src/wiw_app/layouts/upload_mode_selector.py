@@ -8,6 +8,7 @@ upload_mode_selector = dbc.Select(
         {"label": "TransPhylo", "value": "transphylo"},
         {"label": "Outbreaker2", "value": "outbreaker2"},
         {"label": "Metadata", "value": "metadata"},
+        {"label": "DOT file", "value": "dot-file"},
         {"label": "Custom .csv graph", "value": "custom-csv"},
     ],
     value="breath",

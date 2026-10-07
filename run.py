@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
         threading.Timer(1.5, lambda: open_browser(PORT)).start()
 
-    logger.info("Starting wiw_app (packaged=%s)", PACKAGED)
+    logger.info("Starting CONTAGION (packaged=%s)", PACKAGED)
 
     my_app.run(
         debug=not PACKAGED,

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "wiw_app"
+name = "CONTAGION"
 version = "1.2.0"
 description = "WIW Visualization Dash application"
 readme = "README.md"

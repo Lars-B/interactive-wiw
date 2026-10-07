@@ -107,6 +107,10 @@ def parse_custom_csv_dataframe(df, label):
     return nodes, edges
 
 
+def build_graph_from_dot_file(file_content, label):
+    raise NotImplementedError("This is WIP")
+
+
 class NoTreesFoundError(Exception):
     pass
 

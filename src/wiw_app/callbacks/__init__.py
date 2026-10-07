@@ -16,6 +16,7 @@ def register_callbacks(app):
     register_filename_display_callback(app, UploadIDs.outbreaker_rds)
     register_filename_display_callback(app, UploadIDs.transphylo_rds)
     register_filename_display_callback(app, UploadIDs.custom_csv)
+    register_filename_display_callback(app, UploadIDs.dot_file)
     register_filename_display_callback(app, UploadIDs.breath_trees)
     register_filename_display_callback(app, UploadIDs.scotti_trees)
     make_loading_modal_callback(UploadIDs.breath_trees)

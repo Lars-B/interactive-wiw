@@ -30,6 +30,8 @@ app = Dash(
     suppress_callback_exceptions=True
 )
 
+app.title = "CONTAGION"
+
 app.layout = html.Div([
     dcc.Store(id="graph-store"),
     data_loading_modal,

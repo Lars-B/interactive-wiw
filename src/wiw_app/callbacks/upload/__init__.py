@@ -4,3 +4,4 @@ from .metadata import *
 from .outbreaker2 import *
 from .transphylo import *
 from .scotti import *
+from .dot import *

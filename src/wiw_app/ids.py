@@ -33,6 +33,12 @@ class UploadIDs:
         DATASET_LABEL = "outbreaker2-dataset-label"
         CONFIRM_BUTTON = "outbreaker2-dataset-button"
 
+    class dot_file:
+        UPLOAD_DATA = "dot-graph-data"
+        SELECTED_FILENAME = "dot-graph-filename"
+        DATASET_LABEL = "dot-dataset-label"
+        CONFIRM_BUTTON = "dot-dataset-button"
+
     class outbreaker_rds:
         UPLOAD_DATA = "outbreaker_rds-graph-data"
         SELECTED_FILENAME = "outbreaker_rds-graph-filename"
