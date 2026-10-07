@@ -10,10 +10,10 @@ from contagion.ids import UploadIDs, GraphOptions
 @myapp.callback(
     Output("graph-store", "data", allow_duplicate=True),
     Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
-    Input(UploadIDs.custom_csv.CONFIRM_BUTTON, "n_clicks"),
-    State(UploadIDs.custom_csv.UPLOAD_DATA, "contents"),
-    State(UploadIDs.custom_csv.UPLOAD_DATA, "filename"),
-    State(UploadIDs.custom_csv.DATASET_LABEL, "value"),
+    Input(UploadIDs.dot_file.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.dot_file.UPLOAD_DATA, "contents"),
+    State(UploadIDs.dot_file.UPLOAD_DATA, "filename"),
+    State(UploadIDs.dot_file.DATASET_LABEL, "value"),
     State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
     State("graph-store", "data"),
     prevent_initial_call=True

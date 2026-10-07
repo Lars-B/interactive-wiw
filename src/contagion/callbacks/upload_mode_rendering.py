@@ -50,5 +50,10 @@ def render_upload_ui(mode):
                 UploadIDs.custom_csv,
                 accepted_files=".csv"
             )
+        case "dot-file":
+            return build_upload_panel(
+                UploadIDs.dot_file,
+                accepted_files=".dot, .gv"
+            )
         case _:
             return wip
