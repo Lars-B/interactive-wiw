@@ -1,0 +1,92 @@
+from dash import Input, Output, State
+from dash.exceptions import PreventUpdate
+
+from contagion.app import app as myapp
+from contagion.dash_logger import logger
+from contagion.graph_builder.outbreaker2 import build_graph_from_outbreaker_rds
+from contagion.ids import UploadIDs, GraphOptions
+
+
+@myapp.callback(
+    Output("graph-store", "data", allow_duplicate=True),
+    Output(GraphOptions.Edges.DISPLAY_FILTER, "value", allow_duplicate=True),
+    Output(UploadIDs.outbreaker_rds.LOADING_MODAL, "is_open",
+           allow_duplicate=True),
+    Output(UploadIDs.INFO_TOAST, "children", allow_duplicate=True),
+    Output(UploadIDs.INFO_TOAST, "is_open", allow_duplicate=True),
+    Output(UploadIDs.INFO_TOAST, "duration", allow_duplicate=True),
+    Output(UploadIDs.INFO_TOAST, "icon", allow_duplicate=True),
+    Input(UploadIDs.outbreaker_rds.CONFIRM_BUTTON, "n_clicks"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "contents"),
+    State(UploadIDs.outbreaker_rds.UPLOAD_DATA, "filename"),
+    State(UploadIDs.outbreaker_rds.DATASET_LABEL, "value"),
+    State(GraphOptions.Edges.DISPLAY_FILTER, "value"),
+    State("graph-store", "data"),
+    prevent_initial_call=True
+)
+def update_graph_with_outbreaker_rds_data(
+        n_clicks, contents, filename, label,
+        current_edge_selection, current_graph_data
+):
+    if not contents:
+        raise PreventUpdate
+
+    current_graph_data = current_graph_data or {"nodes": [], "edges": []}
+
+    effective_label = label or filename
+    current_edges = current_graph_data.get("edges", [])
+    current_labels = {e["data"]["label"] for e in current_edges}
+
+    if effective_label in current_labels:
+        logger.info(f"{effective_label} is already present in the graph.")
+
+        return (
+            current_graph_data,
+            current_edge_selection,
+            False,
+            # Info toast related stuff
+            f"The label {effective_label} is already present in the graph!",
+            True,
+            7000,
+            "danger"
+        )
+
+    new_nodes, new_edges = build_graph_from_outbreaker_rds(
+        contents,
+        effective_label
+    )
+
+    # todo merging nodes properly...
+    #  refactor the merging into a function, there should be a merging option
+    #  merge using taxon, if not possible, use label as index, else new nodes?
+
+    existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
+    true_new_nodes = [
+        n for n in new_nodes
+        if n["data"]["id"] not in existing_ids
+    ]
+
+    logger.debug(f'Current nodes: {current_graph_data["nodes"]}')
+    logger.debug(f'New nodes: {new_nodes}')
+    logger.debug(f'True new nodes: {true_new_nodes}')
+
+    merged_nodes = current_graph_data["nodes"] + true_new_nodes
+
+    logger.info("Finished updating the graph with the .rds data.")
+
+    new_edge_labels = {e.get('data', {}).get('label', {}) for e in new_edges}
+    new_edge_label_selection = current_edge_selection + list(new_edge_labels)
+
+    return (
+        {
+            "nodes": merged_nodes,
+            "edges": current_graph_data["edges"] + new_edges
+        },
+        new_edge_label_selection,
+        False,
+        # Info toast stuff
+        "Successfully parsed the outbreaker2 data!",
+        True,
+        4000,
+        "info"
+    )

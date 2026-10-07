@@ -67,7 +67,7 @@ pyinstaller \
   --collect-all dash_cytoscape \
   --collect-all dash_iconify \
   --collect-all dash_bootstrap_templates \
-  --collect-all wiw_app \
+  --collect-all contagion \
   --hidden-import=dash.backends._flask
 ```
 

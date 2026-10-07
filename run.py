@@ -3,11 +3,11 @@ import threading
 import webbrowser
 import sys
 
-from wiw_app.dash_logger import logger
-from wiw_app import app as my_app
-import wiw_app.callbacks
+from contagion.dash_logger import logger
+from contagion import app as my_app
+import contagion.callbacks
 
-wiw_app.callbacks.register_callbacks(my_app)
+contagion.callbacks.register_callbacks(my_app)
 
 
 def open_browser(port):
