@@ -52,6 +52,10 @@ def build_graph_from_transphylo_rds(file_content, label, burnin, input_type):
 
     new_nodes, new_edges = build_graph_from_wiw_matrix(wiw_direct, label)
 
+    # proper initialization
+    new_nodes_indirect = []
+    new_edges_indirect = []
+
     if wiw_indirect is not None:
         new_nodes_indirect, new_edges_indirect = build_graph_from_wiw_matrix(
             wiw_direct, f"indirect-{label}"
