@@ -66,13 +66,13 @@ def update_graph_with_outbreaker_rds_data(
         if n["data"]["id"] not in existing_ids
     ]
 
-    logger.debug(f'Current nodes: {current_graph_data["nodes"]}')
-    logger.debug(f'New nodes: {new_nodes}')
-    logger.debug(f'True new nodes: {true_new_nodes}')
+    # logger.debug(f'Current nodes: {current_graph_data["nodes"]}')
+    # logger.debug(f'New nodes: {new_nodes}')
+    # logger.debug(f'True new nodes: {true_new_nodes}')
 
     merged_nodes = current_graph_data["nodes"] + true_new_nodes
 
-    logger.info("Finished updating the graph with the .rds data.")
+    logger.info("Finished updating the graph with the .rds outbreaker data.")
 
     new_edge_labels = {e.get('data', {}).get('label', {}) for e in new_edges}
     new_edge_label_selection = current_edge_selection + list(new_edge_labels)
