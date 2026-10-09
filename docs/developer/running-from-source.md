@@ -11,11 +11,10 @@ python -m venv appenv
 source appenv/bin/activate
 ```
 
-Install the application and dependencies:
+Install the application and dependencies (using `-e` to track local changes):
 
 ```bash
-pip install -r requirements.txt
-pip install .
+pip install -e /path/to/contagion
 ```
 
 Launch the application in debug mode:
@@ -24,22 +23,10 @@ Launch the application in debug mode:
 python run.py
 ```
 
-or alternatively, launch the packaging version: 
-
-```bash
-python spread_viz.py
-```
-
 The application will be available at:
 
 ```text
 http://127.0.0.1:8050/
-```
-
-or at
-
-```text
-http://127.0.0.1:12712/
 ```
 
 ---
@@ -58,17 +45,10 @@ Install build dependencies:
 pip install pyinstaller
 ```
 
-Build the executable:
+Build the executable form the `contagion.spec` file:
 
 ```bash
-pyinstaller \
-  --onefile \
-  spread_viz.py \
-  --collect-all dash_cytoscape \
-  --collect-all dash_iconify \
-  --collect-all dash_bootstrap_templates \
-  --collect-all contagion \
-  --hidden-import=dash.backends._flask
+pyinstaller contagion.spec
 ```
 
 The resulting executable will be placed in:
@@ -104,7 +84,6 @@ permissions:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os:
@@ -114,35 +93,30 @@ jobs:
           - macos-15-large
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.14"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install .
           pip install pyinstaller
+          pip install -e .
 
       - name: Build executable
         run: |
-          pyinstaller --onefile spread_viz.py \
-            --collect-all dash_cytoscape \
-            --collect-all dash_iconify \
-            --collect-all dash_bootstrap_templates \
-            --collect-all wiw_app \
-            --hidden-import=dash.backends._flask
-
+          pyinstaller contagion.spec
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SpreadViz-${{ runner.os }}-${{ runner.arch }}
+          name: CONTAGION-${{ runner.os }}-${{ runner.arch }}
           path: |
-            dist/spread_viz
-            dist/spread_viz.exe
+            dist/CONTAGION
+            dist/CONTAGION.exe
 ```
 
 ---
