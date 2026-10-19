@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  buildwin:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
