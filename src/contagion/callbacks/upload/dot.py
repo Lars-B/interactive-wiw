@@ -29,8 +29,6 @@ def update_graph_with_dot_file(n_clicks, contents, filename, label, current_edge
     effective_label = label or filename
     new_nodes, new_edges = build_graph_from_dot_file(contents, effective_label)
 
-    # todo from here onwards
-
     existing_ids = {n["data"]["id"] for n in current_graph_data["nodes"]}
     true_new_nodes = [
         n for n in new_nodes

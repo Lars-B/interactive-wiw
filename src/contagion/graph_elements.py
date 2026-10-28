@@ -5,6 +5,7 @@ import os
 import tempfile
 from collections import defaultdict
 from io import StringIO
+import json
 
 import networkx as nx
 import pandas as pd
@@ -57,9 +58,8 @@ def build_graph_from_custom_csv_file(file_content, label):
 
 
 def handle_uploaded_custom_csv_file(base64_content, label):
-    _, content = base64_content.split(",", 1)
 
-    decoded = base64.b64decode(content).decode("utf-8")
+    decoded = decode_base64_content(base64_content).decode("utf-8")
 
     df = pd.read_csv(
         StringIO(decoded),
@@ -107,8 +107,40 @@ def parse_custom_csv_dataframe(df, label):
     return nodes, edges
 
 
+def _parse_value(value):
+    try:
+        return json.loads(value)
+    except (json.JSONDecodeError, TypeError):
+        return value
+
+
 def build_graph_from_dot_file(file_content, label):
-    raise NotImplementedError("This is WIP")
+    logger.info("Processing DOT file content and building WIW network...")
+
+    decoded_content = decode_base64_content(file_content).decode("UTF8")
+
+    with log_time("Parsing DOT file"):
+        net = nx.nx_pydot.read_dot(io.StringIO(decoded_content))
+
+    nodes = [
+        {"data": {**{k: _parse_value(v) for k, v in attrs.items()}, "id": node_id}}
+        for node_id, attrs in net.nodes(data=True)
+    ]
+
+    edges = [
+        {"data": {
+            "id": f"e{i}",
+            "label": label,
+            **{k: _parse_value(v) for k, v in attrs.items()},
+            "source": source,
+            "target": target,
+        }}
+        for i, (source, target, attrs) in enumerate(net.edges(data=True), start=1)
+    ]
+
+    logger.info(f"Found {len(nodes)} nodes and {len(edges)} edges")
+
+    return nodes, edges
 
 
 class NoTreesFoundError(Exception):
